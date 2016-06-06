@@ -1,0 +1,69 @@
+<!doctype html>
+<html class="no-js" lang="en" ng-app="codeSide">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Share your pics.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code by Side</title>
+    <link rel="shortcut icon" href="./assets/images/favicon.png">
+    <!-- Disable tap highlight on IE -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- Web Application Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="CodebySide">
+    <meta name="theme-color" content="#303F9F">
+    <link rel="icon" sizes="192x192" href="./assets/images/touch/touch-icon-192x192.png">
+    <link rel="icon" sizes="128x128" href="./assets/images/touch/touch-icon-128x128.png">
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Codebyside">
+    <link rel="apple-touch-icon" href="./assets/images/touch/touch-icon-180x180.png">
+    <link rel="apple-touch-icon-precomposed" href="./assets/images/touch/touch-icon-180x180.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#303F9F">
+    <!-- Tile icon for Win8 -->
+    <meta name="msapplication-TileImage" content="./assets/images/touch/touch-icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#3372DF">
+    <meta name="msapplication-navbutton-color" content="#303F9F">
+    <!-- Foundation style -->
+    <link rel="stylesheet" href="vendor/foundation-sites/dist/foundation.min.css">
+    <link rel="stylesheet" href="./assets/styles/mycss.css">
+</head>
+
+<body>
+    <!-- Header menu -->
+    <div ng-include="'navbar/navBar.html'"></div>
+    <!-- Main body -->
+    <ui-view></ui-view>
+
+    <!-- Footer menu -->
+    <!-- Maybe -->
+
+    <!-- Setting 'Foundations' -->
+    <script src="vendor/jquery/dist/jquery.js"></script>
+    <script src="vendor/what-input/what-input.js"></script>
+    <script src="vendor/foundation-sites/dist/plugins/foundation.core.js"></script>
+    <script src="vendor/foundation-sites/dist/foundation.js"></script>
+    <script src="assets/scripts/init.js"></script>
+    
+    <!-- Foundation plugins we need -->
+    <script src="vendor/foundation-sites/dist/plugins/foundation.dropdown.js"></script>
+    <script src="vendor/foundation-sites/dist/plugins/foundation.util.keyboard.js"></script>
+    <script src="vendor/foundation-sites/dist/plugins/foundation.util.box.js"></script>
+    <script src="vendor/foundation-sites/dist/plugins/foundation.util.triggers.js"></script>
+    
+
+    <!-- Angular imports -->
+    <script src="vendor/angular/angular.js"></script>
+    <script src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="vendor/firebase/firebase.js"></script>
+    <script src="vendor/angularfire/dist/angularfire.js"></script>
+    <!-- Actual Angular App (AAA)-->
+    <script src="./app.js"></script>
+</body>
+
+</html>

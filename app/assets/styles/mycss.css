@@ -1,0 +1,15 @@
+.with-border {
+  border: 1px solid grey;
+}
+
+.padding {
+  padding:4px;
+}
+
+.myMenu {
+  border-bottom: 1px solid grey;
+}
+
+.margin-bottom {
+  margin-bottom: 10px;
+}
