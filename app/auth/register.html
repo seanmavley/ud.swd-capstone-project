@@ -1,0 +1,40 @@
+<div ng-controller="RegisterController">
+{{ errorCode }}
+{{ errorMessage }}
+    <div class="large-6 large-centered medium-8 medium-centered small-12 columns">
+        <form ng-submit="register()">
+            <fieldset class="fieldset">
+                <legend>Quick sign up</legend>
+                <!--             <div class="row">
+                <div class="small-12 columns">
+                    <label>Enter your full name
+                        <input type="text" placeholder="Rexford Nkansah" required>
+                    </label>
+                </div>
+            </div> -->
+                <div class="row">
+                    <div class="small-6 columns">
+                        <label>Email
+                            <input ng-model="formData.email" type="email" placeholder="my@email.com" required>
+                            <span class="form-error">
+                                  Email is required
+                                </span>
+                        </label>
+                    </div>
+                    <div class="small-6 columns">
+                        <label>Password
+                            <input type="password" placeholder="********" max="32" min="8" required>
+                        </label>
+                    </div>
+                </div>
+                <input type="submit" class="button"></input>
+            </fieldset>
+            <p>Login with...</p>
+            <div class="small button-group">
+                <a class="button">Google</a>
+                <a class="button">Facebook</a>
+                <a class="button">Github</a>
+            </div>
+        </form>
+    </div>
+</div>

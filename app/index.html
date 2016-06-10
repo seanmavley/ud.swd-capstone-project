@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en" ng-app="codeSide">
+<html class="no-js" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -34,36 +34,60 @@
     <link rel="stylesheet" href="./assets/styles/mycss.css">
 </head>
 
-<body>
+<body ng-app="codeSide">
     <!-- Header menu -->
-    <div ng-include="'navbar/navBar.html'"></div>
+    <div class="myMenu">
+        <a ui-sref="home" class="button">go.Home</a>
+        <button class="button" type="button" data-toggle="example-dropdown-1">Load(Menu)</button>
+        <div class="dropdown-pane" id="example-dropdown-1" data-dropdown data-hover="true" data-hover-pane="true">
+            <ul class="menu vertical">
+                <li><a href="#">show(allLanguages)</a></li>
+                <li><a href="#">show(about)</a></li>
+                <hr>
+                <li><a href="#">open(My Account)</a></li>
+                <li><a href="#">Logout.now()</a></li>
+                <li><a href="#">Login.now()</a></li>
+            </ul>
+        </div>
+        <a ui-sref="login" class="button">Login.now()</a>
+        <a ui-sref="signup" class="button">Register.now()</a>
+    </div>
     <!-- Main body -->
-    <ui-view></ui-view>
-
+    <div class="row">
+        <ui-view></ui-view>
+    </div>
     <!-- Footer menu -->
     <!-- Maybe -->
-
-    <!-- Setting 'Foundations' -->
+    <!-- Angular imports -->
     <script src="vendor/jquery/dist/jquery.js"></script>
+    <script src="vendor/angular/angular.js"></script>
+    <script src="vendor/firebase/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyBc8DUhpbsdh-ig3LB4YDOV4Ed3xhFZqzA",
+        authDomain: "localhost:3000",
+        databaseURL: "https://khophi-auth.firebaseio.com",
+        storageBucket: "",
+    };
+    firebase.initializeApp(config);
+    </script>
+    <script src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="vendor/angularfire/dist/angularfire.min.js"></script>
+    <!-- Actual Angular App (AAA)-->
+    <script src="app.js"></script>
+    <script src="auth/auth.controller.js"></script>
+    <script src="auth/auth.service.js"></script>
+    <!-- Setting 'Foundations' -->
     <script src="vendor/what-input/what-input.js"></script>
     <script src="vendor/foundation-sites/dist/plugins/foundation.core.js"></script>
     <script src="vendor/foundation-sites/dist/foundation.js"></script>
     <script src="assets/scripts/init.js"></script>
-    
     <!-- Foundation plugins we need -->
     <script src="vendor/foundation-sites/dist/plugins/foundation.dropdown.js"></script>
     <script src="vendor/foundation-sites/dist/plugins/foundation.util.keyboard.js"></script>
     <script src="vendor/foundation-sites/dist/plugins/foundation.util.box.js"></script>
     <script src="vendor/foundation-sites/dist/plugins/foundation.util.triggers.js"></script>
-    
-
-    <!-- Angular imports -->
-    <script src="vendor/angular/angular.js"></script>
-    <script src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="vendor/firebase/firebase.js"></script>
-    <script src="vendor/angularfire/dist/angularfire.js"></script>
-    <!-- Actual Angular App (AAA)-->
-    <script src="./app.js"></script>
 </body>
 
 </html>
