@@ -36,7 +36,7 @@
 
 <body ng-app="codeSide">
     <!-- Header menu -->
-    <div class="myMenu">
+    <div class="myMenu" ng-controller="MenuController">
         <a ui-sref="home" class="button">go.Home</a>
         <button class="button" type="button" data-toggle="example-dropdown-1">Load(Menu)</button>
         <div class="dropdown-pane" id="example-dropdown-1" data-dropdown data-hover="true" data-hover-pane="true">
@@ -45,8 +45,8 @@
                 <li><a href="#">show(about)</a></li>
                 <hr>
                 <li><a href="#">open(My Account)</a></li>
-                <li><a href="#">Logout.now()</a></li>
                 <li><a href="#">Login.now()</a></li>
+                <li><a ng-click="logout()">Logout.now()</a></li>
             </ul>
         </div>
         <a ui-sref="login" class="button">Login.now()</a>
@@ -65,8 +65,8 @@
     <script>
     // Initialize Firebase
     var config = {
-        apiKey: "AIzaSyBc8DUhpbsdh-ig3LB4YDOV4Ed3xhFZqzA",
-        authDomain: "localhost:3000",
+        apiKey: "AIzaSyCqil1HOCwMf8ZyeYGsAi8XjoG9_qhseWA",
+        authDomain: "khophi-auth.firebaseapp.com",
         databaseURL: "https://khophi-auth.firebaseio.com",
         storageBucket: "",
     };
@@ -76,7 +76,10 @@
     <script src="vendor/angularfire/dist/angularfire.min.js"></script>
     <!-- Actual Angular App (AAA)-->
     <script src="app.js"></script>
+    <script src="home/home.controller.js"></script>
+    <script src="admin/admin.controller.js"></script>
     <script src="auth/auth.controller.js"></script>
+    <script src="auth/menu.controller.js"></script>
     <script src="auth/auth.service.js"></script>
     <!-- Setting 'Foundations' -->
     <script src="vendor/what-input/what-input.js"></script>

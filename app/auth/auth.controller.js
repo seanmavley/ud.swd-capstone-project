@@ -1,13 +1,15 @@
 angular.module('codeSide')
-  .controller('RegisterController', function($scope, Auth) {
+  .controller('RegisterController', function($scope, Auth, $state) {
     $scope.register = function() {
-      console.log($scope.formData);
+      console.log($scope.email, $scope.password);
       $scope.message = null;
       $scope.error = null;
 
-      Auth.$createUserWithEmailAndPassword($scope.formData.email, $scope.formData.password)
+      Auth.$createUserWithEmailAndPassword($scope.email, $scope.password)
         .then(function(firebaseUser) {
           $scope.message = "User Created with uid " + firebaseUser.uid;
+          // pass in this message to home route
+          $state.go('home');
         })
         .catch(function(error) {
           $scope.error = error;
@@ -15,8 +17,21 @@ angular.module('codeSide')
     };
   })
 
-.controller('LoginController', function($scope, Auth) {
+.controller('LoginController', function($scope, Auth, $state) {
+  $scope.error = null;
+  $scope.message = null;
+
   $scope.login = function() {
-    console.log($scope.formData);
+    if (!$scope.email && !$scope.password) {
+      $scope.message = "Dude, please enter password and email";
+    } else {
+      Auth.$signInWithEmailAndPassword($scope.email, $scope.password)
+        .then(function(firebaseUser) {
+          $state.go('home');
+        })
+        .catch(function(error) {
+          $scope.error = error;
+        })
+    }
   }
 })

@@ -1,29 +1,32 @@
-<div class="small-12 large-6 large-centered medium-8 medium-centered columns">
-    <form>
-        <fieldset class="fieldset">
-            <legend>Login</legend>
-            <div class="row">
-                <div class="small-6 columns">
-                    <label>Email
-                        <input type="email" placeholder="my@email.com" required>
-                    </label>
-                </div>
-                <div class="small-6 columns">
-                    <label>Password
-                        <!-- Taken from here
+<div ng-controller="LoginController">
+    {{ message }} {{ error }}
+    <div class="small-12 large-6 large-centered medium-8 medium-centered columns">
+        <form ng-submit="login()">
+            <fieldset class="fieldset">
+                <legend>Login</legend>
+                <div class="row">
+                    <div class="small-6 columns">
+                        <label>Email
+                            <input type="email" ng-model="email" placeholder="my@email.com" required="">
+                        </label>
+                    </div>
+                    <div class="small-6 columns">
+                        <label>Password
+                            <!-- Taken from here
                             http://stackoverflow.com/a/21456918/1757321
                             The longest regex I've ever seen in my life-->
-                        <input type="password" placeholder="********" required>
-                    </label>
+                            <input type="password" ng-model="password" placeholder="********" required>
+                        </label>
+                    </div>
                 </div>
+                <input type="submit" class="button"></input>
+            </fieldset>
+            <p>Login with...</p>
+            <div class="small button-group">
+                <a class="button">Google</a>
+                <a class="button">Facebook</a>
+                <a class="button">Github</a>
             </div>
-            <input type="submit" class="button"></input>
-        </fieldset>
-        <p>Login with...</p>
-        <div class="small button-group">
-            <a class="button">Google</a>
-            <a class="button">Facebook</a>
-            <a class="button">Github</a>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
