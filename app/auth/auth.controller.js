@@ -17,7 +17,7 @@ angular.module('codeSide')
     };
   })
 
-.controller('LoginController', function($scope, Auth, $state) {
+.controller('LoginController', function($scope, Auth, $state, $rootScope) {
   $scope.error = null;
   $scope.message = null;
 

@@ -37,7 +37,7 @@ angular.module('codeSide', ['ui.router', 'firebase'])
   $urlRouterProvider.otherwise('/');
 })
 
-.run(function($rootScope, $state) {
+.run(function($rootScope, $state, Auth) {
   $rootScope.$on("$stateChangeError", function(even, toState, toParams, fromState, fromParams, error) {
     if (error === "AUTH_REQUIRED") {
       $state.go('login');
