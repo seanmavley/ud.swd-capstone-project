@@ -1,5 +1,5 @@
 angular.module('codeSide')
   
-  .controller('AdminController', function($scope) {
-    $scope.message = 'I am here';
+  .controller('AdminController', function($scope, currentAuth) {
+    $scope.user = currentAuth;
   })

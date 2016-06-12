@@ -41,15 +41,15 @@
         <button class="button" type="button" data-toggle="example-dropdown-1">Load(Menu)</button>
         <div class="dropdown-pane" id="example-dropdown-1" data-dropdown data-hover="true" data-hover-pane="true">
             <ul class="menu vertical">
-                <li><a href="#">show(allLanguages)</a></li>
-                <li><a href="#">show(about)</a></li>
-                <hr>
-                <li><a href="#">open(My Account)</a></li>
-                <li><a ui-sref="login">Login.now()</a></li>
-                <li><a ui-sref="signup">Register.now()</a></li>
-                <li><a ng-click="logout()">Logout.now()</a></li>
+                <li><a href="#">this.About();</a></li>
+                <li ng-show="loggedIn"><a ui-sref="admin">open(My Account)</a></li>
+                <li><a ng-click="logout()" ng-show="loggedIn">Logout.now()</a></li>
             </ul>
         </div>
+        <span ng-show="!loggedIn">
+            <a ui-sref="login" class="button small">Login.now()</a>
+            <a ui-sref="signup" class="button small">Register.now()</a>
+        </span>
     </div>
     <!-- Main body -->
     <div class="row">

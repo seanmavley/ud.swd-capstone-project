@@ -1,19 +1,21 @@
 angular.module('codeSide')
   .controller('RegisterController', function($scope, Auth, $state) {
     $scope.register = function() {
-      console.log($scope.email, $scope.password);
-      $scope.message = null;
-      $scope.error = null;
+      if ($scope.email && $scope.password) {
+        console.log($scope.email, $scope.password);
+        $scope.message = '';
+        $scope.error = '';
+        Auth.$createUserWithEmailAndPassword($scope.email, $scope.password)
+          .then(function(firebaseUser) {
+            $state.go('login');
+          })
+          .catch(function(error) {
+            $scope.error = error;
+          });
+      } else {
+        $scope.error = 'Do add email and password.';
+      }
 
-      Auth.$createUserWithEmailAndPassword($scope.email, $scope.password)
-        .then(function(firebaseUser) {
-          $scope.message = "User Created with uid " + firebaseUser.uid;
-          // pass in this message to home route
-          $state.go('home');
-        })
-        .catch(function(error) {
-          $scope.error = error;
-        });
     };
   })
 
@@ -21,9 +23,23 @@ angular.module('codeSide')
   $scope.error = null;
   $scope.message = null;
 
+  $scope.googleAuth = function() {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/plus.login');
+
+    Auth.$signInWithPopup(provider)
+      .then(function(firebaseUser) {
+        $state.go('home');
+      })
+      .catch(function(error) {
+        $scope.error = error;
+      })
+
+  }
+
   $scope.login = function() {
     if (!$scope.email && !$scope.password) {
-      $scope.message = "Dude, please enter password and email";
+      $scope.error = "Add email and password";
     } else {
       Auth.$signInWithEmailAndPassword($scope.email, $scope.password)
         .then(function(firebaseUser) {
