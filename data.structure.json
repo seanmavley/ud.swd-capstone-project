@@ -1,0 +1,20 @@
+[{
+  "title": "Fibonacci Function",
+  "createdAt": "19873092803984",
+  "createdBy": "uidOfUser",
+  "snippets": {
+    "python": {
+      "code": "The code in here",
+      "updatedAt": {
+        "datestamp": "380830928093",
+        "by": "uidOfUser"
+      },
+      "revisions": {
+        "uidOfUser": {
+          "datestamp": "98098409382",
+          "code": "Difference in code"
+        }
+      }
+    }
+  }
+}]
