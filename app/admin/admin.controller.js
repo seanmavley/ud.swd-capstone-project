@@ -1,14 +1,19 @@
 angular.module('codeSide')
 
-.controller('AdminController', function($scope, $firebaseObject, currentAuth, Auth) {
+.controller('AdminController', function($scope, $firebaseObject, currentAuth, Auth) {  
+  // init empty formData object
+  $scope.formData = {};
+
+  // bring in firebase db url
   var ref = firebase.database().ref();
-  var userData = $firebaseObject(ref.child('users').child(currentAuth.uid));
+  var userData = $firebaseObject(ref.child('users').child(currentAuth.uid)); // now at firebase.url/users/uid
   // prepopulate user form if any
+  // when userData arrives
   userData.$loaded()
     .then(function() {
-      console.log(userData);
+      $scope.user = userData;
+      $scope.authInfo = currentAuth.providerData[0];
       $scope.formData = userData;
-      $scope.formData.dob = new Date(userData.dob);
     })
 
   $scope.updateUser = function() {
@@ -22,8 +27,8 @@ angular.module('codeSide')
             .child('users')
             .child(currentAuth.uid)
             .set({
+              email: currentAuth.email,
               fullname: $scope.formData.fullname,
-              dob: new Date($scope.formData.dob).getTime(),
               country: $scope.formData.country
             })
         })
@@ -31,13 +36,12 @@ angular.module('codeSide')
     }
   }
 
-  $scope.user = currentAuth;
 
   $scope.updatePassword = function() {
     Auth.$updatePassword($scope.newPassword).then(function() {
       $scope.message = 'Successful';
     }).catch(function(error) {
-      console.error("Error: ", error);
+      $scope.error = error.message
     });
   }
 })

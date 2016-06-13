@@ -1,6 +1,17 @@
 <div class="small-12 medium-10 medium-centered columns">
-    <div class="small-12 medium-6 columns">
-        {{ user.displayName }} {{ user.email }}
+    <div class="small-12 columns">
+        <h2>Profile Info</h2>
+        <div ng-show="!authInfo">
+            <div class="loader">
+                <span>{</span><span>}</span>
+            </div>
+        </div>
+        <div ng-show="authInfo">
+            <h3>Logged in via: {{ authInfo.providerId }}</h3>
+            <p>Name: {{ authInfo.displayName }} </p>
+            <p>Email: {{ authInfo.email }} </p>
+            <img ng-src="{{ authInfo.photoURL }}">
+        </div>
     </div>
     <div class="small-12 medium-6 columns">
         <div class="success callout" data-closable ng-show="message">
@@ -10,16 +21,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form ng-submit="updateUser()">
+        <!--         <form ng-submit="updateUser()">
             <fieldset class="fieldset">
                 <legend>Update Profile</legend>
                 <div class="row">
                     <div class="small-12 columns">
                         <label>Your name
                             <input type="text" ng-model="formData.fullname" placeholder="eg. Abrakadabra Houdini" required>
-                        </label>
-                        <label>Date of Birth
-                            <input type="date" ng-model="formData.dob">
                         </label>
                         <label>Country
                             <input type="text" ng-model="formData.country" placeholder="eg. Ghana">
@@ -32,17 +40,17 @@
     </div>
     <div class="small-12 medium-6 columns">
         <form ng-submit="updatePassword()">
-          <fieldset class="fieldset">
-            <legend>Update Password</legend>
-            <div class="row">
-              <div class="small-12 columns">
-                <label>New Password
-                  <input type="password" name="password" ng-model="newPassword">
-                </label>
-              </div>
-            </div>
-            <input type="submit" class="button">
-          </fieldset>
-        </form>
+            <fieldset class="fieldset">
+                <legend>Update Password</legend>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <label>New Password
+                            <input type="password" name="password" ng-model="newPassword">
+                        </label>
+                    </div>
+                </div>
+                <input type="submit" class="button">
+            </fieldset>
+        </form>-->
     </div>
 </div>

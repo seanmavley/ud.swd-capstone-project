@@ -21,7 +21,10 @@ angular.module('codeSide', ['ui.router', 'firebase'])
     .state('login', {
       url: '/login',
       templateUrl: 'auth/login.html',
-      controller: 'LoginController'
+      controller: 'LoginController',
+      params: {
+        message: null
+      }
     })
     .state('admin', {
       url: '/admin',

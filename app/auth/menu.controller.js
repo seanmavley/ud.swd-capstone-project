@@ -1,5 +1,5 @@
 angular.module('codeSide')
-  .controller('MenuController', function($scope, Auth, $state, $rootScope) {
+  .controller('MenuController', function($scope, Auth, $state) {
 
     Auth.$onAuthStateChanged(function(firebaseUser) {
       if(firebaseUser != null) {

@@ -1,16 +1,19 @@
 angular.module('codeSide')
-  .controller('RegisterController', function($scope, Auth, $state) {
+  .controller('RegisterController', function($scope, Auth, $state, DatabaseRef) {
+
     $scope.register = function() {
-      if ($scope.email && $scope.password) {
-        console.log($scope.email, $scope.password);
+      if ($scope.formData.email && $scope.formData.password) {
+        console.log($scope.formData.email, $scope.formData.password);
         $scope.message = '';
         $scope.error = '';
-        Auth.$createUserWithEmailAndPassword($scope.email, $scope.password)
+        Auth.$createUserWithEmailAndPassword($scope.formData.email, $scope.formData.password)
           .then(function(firebaseUser) {
-            $state.go('login');
+            $state.go('login', { message: 'Created user successfully' });
           })
           .catch(function(error) {
-            $scope.error = error;
+            $scope.error = error.message;
+            // empty the form
+            $scope.formData = {};
           });
       } else {
         $scope.error = 'Do add email and password.';
@@ -19,7 +22,7 @@ angular.module('codeSide')
     };
   })
 
-.controller('LoginController', function($scope, Auth, $state, $rootScope) {
+.controller('LoginController', function($scope, Auth, $state, $rootScope, DatabaseRef) {
   $scope.error = null;
   $scope.message = null;
 
@@ -46,7 +49,7 @@ angular.module('codeSide')
           $state.go('home');
         })
         .catch(function(error) {
-          $scope.error = error;
+          $scope.error = error.message;
         })
     }
   }
