@@ -1,7 +1,8 @@
 angular.module('codeSide')
 
-.controller('AdminController', function($scope, $firebaseObject, currentAuth, Auth) {  
+.controller('AdminController', function($scope, $firebaseObject, currentAuth, Auth) {
   // init empty formData object
+  $scope.newPassword = ''
   $scope.formData = {};
 
   // bring in firebase db url
@@ -9,10 +10,11 @@ angular.module('codeSide')
   var userData = $firebaseObject(ref.child('users').child(currentAuth.uid)); // now at firebase.url/users/uid
   // prepopulate user form if any
   // when userData arrives
+
+  $scope.authInfo = currentAuth.providerData[0];
+
   userData.$loaded()
     .then(function() {
-      $scope.user = userData;
-      $scope.authInfo = currentAuth.providerData[0];
       $scope.formData = userData;
     })
 
@@ -36,10 +38,10 @@ angular.module('codeSide')
     }
   }
 
-
   $scope.updatePassword = function() {
     Auth.$updatePassword($scope.newPassword).then(function() {
-      $scope.message = 'Successful';
+      $scope.message = 'Password updated successfully';
+      $scope.newPassword = '';
     }).catch(function(error) {
       $scope.error = error.message
     });

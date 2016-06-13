@@ -1,4 +1,4 @@
 angular.module('codeSide')
 
-  .controller('HomeController', function($scope, currentAuth, $rootScope, Auth) {
+  .controller('HomeController', function($scope, $rootScope, Auth) {
   })

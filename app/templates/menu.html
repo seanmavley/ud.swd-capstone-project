@@ -1,0 +1,13 @@
+<div class="myMenu" ng-controller="MenuController">
+    <a ui-sref="home" class="button">go.Home()</a>
+    <a ui-sref="new" class="button success">code.New()</a>
+    <a ui-sref="about" class="button small">About()</a>
+    <span ng-show="loggedIn">
+      <a ui-sref="admin" class="button small">open(My Account)</a>
+      <a ng-click="logout()" class="button small">Logout.now()</a>
+    </span>
+    <span ng-show="!loggedIn">
+      <a ui-sref="login" class="button small">Login.now()</a>
+      <a ui-sref="signup" class="button small">Register.now()</a>
+    </span>
+</div>

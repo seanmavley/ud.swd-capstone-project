@@ -1,5 +1,5 @@
 <div class="small-12 medium-10 medium-centered columns">
-    <div class="small-12 columns">
+    <div class="small-12 medium-6 columns">
         <h2>Profile Info</h2>
         <div ng-show="!authInfo">
             <div class="loader">
@@ -7,10 +7,12 @@
             </div>
         </div>
         <div ng-show="authInfo">
-            <h3>Logged in via: {{ authInfo.providerId }}</h3>
+            <p>Provider: {{ authInfo.providerId }}</p>
             <p>Name: {{ authInfo.displayName }} </p>
             <p>Email: {{ authInfo.email }} </p>
-            <img ng-src="{{ authInfo.photoURL }}">
+            <p>Image:
+                <img ng-src="{{ authInfo.photoURL }}">
+            </p>
         </div>
     </div>
     <div class="small-12 medium-6 columns">
@@ -21,7 +23,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <!--         <form ng-submit="updateUser()">
+        <!-- <form ng-submit="updateUser()">
             <fieldset class="fieldset">
                 <legend>Update Profile</legend>
                 <div class="row">
@@ -36,7 +38,7 @@
                 </div>
                 <input type="submit" class="button">
             </fieldset>
-        </form>
+        </form> -->
     </div>
     <div class="small-12 medium-6 columns">
         <form ng-submit="updatePassword()">
@@ -51,6 +53,6 @@
                 </div>
                 <input type="submit" class="button">
             </fieldset>
-        </form>-->
+        </form>
     </div>
 </div>

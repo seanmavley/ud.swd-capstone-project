@@ -1,4 +1,4 @@
-angular.module('codeSide', ['ui.router', 'firebase'])
+angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
 
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -7,21 +7,40 @@ angular.module('codeSide', ['ui.router', 'firebase'])
       url: '/',
       templateUrl: 'home/home.html',
       controller: 'HomeController',
+      // resolve: {
+      //   currentAuth: function(Auth) {
+      //     return Auth.$waitForSignIn();
+      //   }
+      // }
+    })
+    .state('about', {
+      url: '/about',
+      templateUrl: 'templates/about.html'
+    })
+    .state('new', {
+      url: '/new',
+      templateUrl: 'codes/new.html',
+      controller: 'CreateController',
       resolve: {
         currentAuth: function(Auth) {
-          return Auth.$waitForSignIn();
+          return Auth.$requireSignIn()
         }
       }
+    })
+    .state('detail', {
+      url: '/:title/:from/to/:to',
+      templateUrl: 'code/detail.html',
+      controller: 'DetailController'
     })
     .state('signup', {
       url: '/register',
       templateUrl: 'auth/register.html',
-      controller: 'RegisterController'
+      controller: 'LogRegController'
     })
     .state('login', {
       url: '/login',
       templateUrl: 'auth/login.html',
-      controller: 'LoginController',
+      controller: 'LogRegController',
       params: {
         message: null
       }

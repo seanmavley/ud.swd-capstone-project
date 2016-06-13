@@ -32,25 +32,12 @@
     <!-- Foundation style -->
     <link rel="stylesheet" href="vendor/foundation-sites/dist/foundation.min.css">
     <link rel="stylesheet" href="./assets/styles/mycss.css">
+    <link rel="stylesheet" href="vendor/codemirror/lib/codemirror.css"></script>
 </head>
 
 <body ng-app="codeSide">
     <!-- Header menu -->
-    <div class="myMenu" ng-controller="MenuController">
-        <a ui-sref="home" class="button">go.Home</a>
-        <button class="button" type="button" data-toggle="example-dropdown-1">Load(Menu)</button>
-        <div class="dropdown-pane" id="example-dropdown-1" data-dropdown data-hover="true" data-hover-pane="true">
-            <ul class="menu vertical">
-                <li><a href="#">this.About();</a></li>
-                <li ng-show="loggedIn"><a ui-sref="admin">open(My Account)</a></li>
-                <li><a ng-click="logout()" ng-show="loggedIn">Logout.now()</a></li>
-            </ul>
-        </div>
-        <span ng-show="!loggedIn">
-            <a ui-sref="login" class="button small">Login.now()</a>
-            <!-- <a ui-sref="signup" class="button small">Register.now()</a> -->
-        </span>
-    </div>
+    <ng-include src="'templates/menu.html'"></ng-include>
     <!-- Main body -->
     <div class="row">
         <ui-view></ui-view>
@@ -73,12 +60,16 @@
     </script>
     <script src="vendor/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="vendor/angularfire/dist/angularfire.min.js"></script>
+    <script src="vendor/codemirror/lib/codemirror.js"></script>
+    <script src="vendor/angular-ui-codemirror/ui-codemirror.js"></script>
     <!-- Actual Angular App (AAA)-->
     <script src="app.js"></script>
     <script src="home/home.controller.js"></script>
     <script src="admin/admin.controller.js"></script>
     <script src="auth/auth.controller.js"></script>
     <script src="auth/menu.controller.js"></script>
+    <script src="codes/detail.controller.js"></script>
+    <script src="codes/create.controller.js"></script>
     <script src="auth/auth.service.js"></script>
     <script src="services/database.service.js"></script>
     <!-- Setting 'Foundations' -->

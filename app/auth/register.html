@@ -1,4 +1,4 @@
-<div ng-controller="RegisterController">
+<div ng-controller="LogRegController">
     <div class="large-6 large-centered medium-8 medium-centered small-12 columns">
         <div class="alert callout" data-closable ng-show="error">
             <h5>Duh!</h5>
@@ -7,7 +7,15 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form ng-submit="register()">
+        <div class="callout" style="margin-top:10px;">
+            <h4>Sign up with</h4>
+            <div class="button-group">
+                <a class="button" ng-click="googleAuth()" class="success">Google</a>
+                <a class="button" ng-click="facebookAuth()">Facebook</a>
+            </div>
+        </div>
+        <hr>
+        <form ng-submit="register()" name="registerForm">
             <fieldset class="fieldset">
                 <legend>Quick sign up</legend>
                 <div class="row">
@@ -27,12 +35,6 @@
                 </div>
                 <input type="submit" class="button"></input>
             </fieldset>
-            <p>Login with...</p>
-            <div class="small button-group">
-                <a class="button">Google</a>
-                <a class="button">Facebook</a>
-                <a class="button">Github</a>
-            </div>
         </form>
     </div>
 </div>
