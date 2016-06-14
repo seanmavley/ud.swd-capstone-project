@@ -1,6 +1,6 @@
 angular.module('codeSide')
 
-.controller('CreateController', function($scope, $firebaseObject, DatabaseRef, Auth) {
+.controller('CreateController', function($scope, $firebaseObject, $firebaseArray, DatabaseRef, Auth) {
   $scope.editorOptions = {
     lineWrapping: true,
     lineNumbers: true,
@@ -11,7 +11,7 @@ angular.module('codeSide')
   var currentAuth = Auth.$getAuth();
 
   var ref = DatabaseRef;
-  var codeData = $firebaseObject(ref.child('codes').child(currentAuth.uid))
+  var codeData = $firebaseArray(ref.child('codes'));
 
   $scope.addNew = function() {
     if ($scope.addForm.$invalid) {
@@ -19,14 +19,23 @@ angular.module('codeSide')
     } else {
       codeData.$loaded()
         .then(function() {
-          codeData.title = $scope.formData.title;
-          codeData.$save()
-            .then(function(ref) {
-              console.log('Saved it :' + ref.key )
+          console.log($scope.formData);
+          codeData.$add({
+              title: $scope.formData.title,
+              createdBy: currentAuth.uid,
+              createdAt: new Date().getTime(),
+              from: $scope.formData.from,
+              from_code: $scope.formData.fromCode,
+              to: $scope.formData.to,
+              to_code: $scope.formData.toCode,
+            })
+            .then(function(added) {
+              console.log(added);
+            })
+            .catch(function(error) {
+              console.log(error);
             })
         })
-      console.log($scope.formData);
-      console.log(new Date().getTime());
     }
   }
 })

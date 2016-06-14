@@ -1,20 +1,30 @@
 [{
+  "id": "uidString",
   "title": "Fibonacci Function",
   "createdAt": "19873092803984",
   "createdBy": "uidOfUser",
   "snippets": {
     "python": {
+      "createdBy": "uidOfUser",
       "code": "The code in here",
       "updatedAt": {
         "datestamp": "380830928093",
         "by": "uidOfUser"
       },
-      "revisions": {
-        "uidOfUser": {
-          "datestamp": "98098409382",
-          "code": "Difference in code"
-        }
-      }
+      "contributors": [{
+        "user": "uidOfUser",
+        "name": "nameOfUser"
+      }, {
+        "user": "uidOfUser",
+        "name": "nameOfUser"
+      }]
+    }
+  }
+}], [{
+  "revisions": {
+    "uidOfUser": {
+      "datestamp": "98098409382",
+      "code": "Difference in code"
     }
   }
 }]

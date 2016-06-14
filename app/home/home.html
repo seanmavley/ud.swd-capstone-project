@@ -10,6 +10,12 @@
     </div>
     <h5>Recent codesides:</h5>
     <div>
-        <a href="#">Fibonacci function</a> &bull; <a href="#">Hello world</a>
+        <div ng-show="!list">
+            <div class="loader">
+                <span>{</span><span>}</span>
+            </div>
+        </div>
+
+        <span ng-repeat="item in list"><a href="#" >{{ item.title }} </a> &bull; </span>
     </div>
 </div>
