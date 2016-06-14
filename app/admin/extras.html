@@ -1,0 +1,16 @@
+<form ng-submit="updateUser()">
+    <fieldset class="fieldset">
+        <legend>Update Profile</legend>
+        <div class="row">
+            <div class="small-12 columns">
+                <label>Your name
+                    <input type="text" ng-model="formData.fullname" placeholder="eg. Abrakadabra Houdini" required>
+                </label>
+                <label>Country
+                    <input type="text" ng-model="formData.country" placeholder="eg. Ghana">
+                </label>
+            </div>
+        </div>
+        <input type="submit" class="button">
+    </fieldset>
+</form>

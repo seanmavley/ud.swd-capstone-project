@@ -44,11 +44,6 @@
             </div>
             <textarea rows="7" ui-codemirror ng-model="formData.toCode" id="to_snippet" required>Write code here</textarea>
         </div>
-        <input type="submit" class="button large" />
+        <input type="submit" class="button large" ng-disabled="sending" />
     </form>
 </div>
-<script type="text/javascript">
-$(document).ready(function() {
-
-})
-</script>

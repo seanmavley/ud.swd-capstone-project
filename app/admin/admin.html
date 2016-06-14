@@ -1,6 +1,15 @@
-<div class="small-12 medium-10 medium-centered columns">
+<div class="small-12 columns">
+    <div class="small-12columns">
+        <div class="success callout" data-closable ng-show="message">
+            <h5>Nice!</h5>
+            <p>{{ message }}</p>
+            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
     <div class="small-12 medium-6 columns">
-        <h2>Profile Info</h2>
+        <h4>Profile Info</h4>
         <div ng-show="!authInfo">
             <div class="loader">
                 <span>{</span><span>}</span>
@@ -16,30 +25,11 @@
         </div>
     </div>
     <div class="small-12 medium-6 columns">
-        <div class="success callout" data-closable ng-show="message">
-            <h5>Nice!</h5>
-            <p>{{ message }}</p>
-            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <!-- <form ng-submit="updateUser()">
-            <fieldset class="fieldset">
-                <legend>Update Profile</legend>
-                <div class="row">
-                    <div class="small-12 columns">
-                        <label>Your name
-                            <input type="text" ng-model="formData.fullname" placeholder="eg. Abrakadabra Houdini" required>
-                        </label>
-                        <label>Country
-                            <input type="text" ng-model="formData.country" placeholder="eg. Ghana">
-                        </label>
-                    </div>
-                </div>
-                <input type="submit" class="button">
-            </fieldset>
-        </form> -->
+        <h4>My CodeSides</h4>
+        <span><a href="#" >Title of Item </a> &bull; <a href="#" >Title of Item </a></span>
     </div>
+</div>
+<div class="small-12 columns">
     <div class="small-12 medium-6 columns">
         <form ng-submit="updatePassword()">
             <fieldset class="fieldset">
