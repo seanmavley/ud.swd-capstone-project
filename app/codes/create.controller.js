@@ -11,7 +11,8 @@ angular.module('codeSide')
   var currentAuth = Auth.$getAuth();
 
   var ref = DatabaseRef;
-  var codeData = $firebaseArray(ref.child('codes'));
+  var codeDataRef = ref.child('codes');
+  var codeData = $firebaseArray(codeDataRef);
 
   $scope.addNew = function() {
     if ($scope.addForm.$invalid) {
@@ -20,17 +21,33 @@ angular.module('codeSide')
       codeData.$loaded()
         .then(function() {
           console.log($scope.formData);
+
+          var now = new Date().getTime();
+
           codeData.$add({
               title: $scope.formData.title,
               createdBy: currentAuth.uid,
-              createdAt: new Date().getTime(),
-              from: $scope.formData.from,
-              from_code: $scope.formData.fromCode,
-              to: $scope.formData.to,
-              to_code: $scope.formData.toCode,
+              createdAt: now
             })
             .then(function(added) {
-              console.log(added);
+              // add first snippet
+              codeDataRef
+                .child(added.key)
+                  .child('snippets')
+                    .child($scope.formData.from)
+                      .set({
+                        whatIwant: 'What i want'
+                      });
+
+              // add second snippet
+              codeDataRef
+                .child(added.key)
+                  .child('snippets')
+                    .child($scope.formData.to)
+                      .set({
+                        whatIwant: 'What i want'
+                      })
+              console.log('Hands are clean now');
             })
             .catch(function(error) {
               console.log(error);
