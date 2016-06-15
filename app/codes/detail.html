@@ -3,17 +3,31 @@
         <span>{</span><span>}</span>
     </div>
 </div>
-<form ng-show="!loading">
-    <div class="small-12 colums">
-        <div class="callout">
-            <h2> {{ formData.title }}</h2>
-            <p>Created by: {{ formData.createdBy }} @ {{ formData.createdAt }}</p>
+<div class="row" ng-show="!loading">
+    <div class="small-12 columns">
+        <div class="medium-6 columns">
+            <div class="callout">
+                <h5> {{ formData.title }}</h5>
+                <p>Created by: {{ formData.createdBy }} &bull; {{ formData.createdAt }}</p>
+            </div>
+        </div>
+        <div class="medium-6 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <a ng-click="enableEditing()" class="button margin-top">Enable editing</a>
+                </div>
+                <div class="small-12 columns" ng-show="!editAllowed">
+                    <label>Choose code title
+                        <input type="text" ng-model="formData.title">
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="medium-6 large-6 column with-border padding">
+    <div class="small-12 medium-6 large-6 column with-border padding">
         <div class="input-group">
             <span class="input-group-label">From</span>
-            <input class="input-group-field" list='from_language' type='text' ng-model="codeOne.name" required/>
+            <input class="input-group-field" list='from_language' ng-disabled="editAllowed" type='text' ng-model="codeOne.name" required/>
             <datalist id="from_language">
                 <select name="from_language">
                     <option></option>
@@ -23,11 +37,11 @@
                 </select>
             </datalist>
         </div>
-        <textarea ui-codemirror ng-model="codeOne.code" id="from_snippet" required></textarea>
+        <textarea ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
     </div>
-    <div class="medium-6 large-6 column with-border padding">
+    <div class="small-12 medium-6 large-6 column with-border padding">
         <div class="input-group">
-            <input class="input-group-field" list='from_language' type='text' ng-model="codeTwo.name" required />
+            <input class="input-group-field" list='from_language' type='text' ng-disabled="editAllowed" ng-model="codeTwo.name" required />
             <datalist id="from_language">
                 <select name="from_language">
                     <option></option>
@@ -38,7 +52,6 @@
             </datalist>
             <span class="input-group-label">To</span>
         </div>
-        <textarea rows="7" ui-codemirror ng-model="codeTwo.code" id="to_snippet" required></textarea>
+        <textarea rows="7" ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
     </div>
-    <input type="submit" class="button large">
-</form>
+</div>

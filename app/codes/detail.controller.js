@@ -5,15 +5,20 @@ angular.module('codeSide')
     lineWrapping: true,
     lineNumbers: true,
     readOnly: 'nocursor',
-    mode: 'xml',
   };
+
   $scope.loading = true;
+  $scope.editAllowed = true;
+  $scope.id = $stateParams.codeId;
 
   $scope.saveLanguage = function() {
-    console.log('Language was fired');
+    console.log('Language saving was fired');
   }
 
-  $scope.id = $stateParams.codeId;
+  $scope.enableEditing = function () {
+    $scope.editorOptions.readOnly = false;
+    $scope.editAllowed = false;
+  }
 
   var ref = DatabaseRef;
   var codeRef = ref.child('codes')
@@ -27,7 +32,7 @@ angular.module('codeSide')
       $scope.formData = {
         createdBy: codeObject.createdBy,
         title: codeObject.title,
-        createdAt: codeObject.createdAt
+        createdAt: new Date(codeObject.createdAt)
       }
 
       $scope.codeOne = loadLanguage('javascript');
