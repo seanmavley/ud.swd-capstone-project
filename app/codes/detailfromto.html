@@ -1,19 +1,13 @@
-<div ng-show="loading" class="small-6 small-centered columns">
-    <div class="loader">
-        <span>{</span><span>}</span>
+<div class="small-12 colums">
+    <div class="callout">
+        <h2>{{ id }}</h2>
     </div>
 </div>
-<form ng-show="!loading">
-    <div class="small-12 colums">
-        <div class="callout">
-            <h2> {{ formData.title }}</h2>
-            <p>Created by: {{ formData.createdBy }} @ {{ formData.createdAt }}</p>
-        </div>
-    </div>
-    <div class="medium-6 large-6 column with-border padding">
+<div class="small-12 columns">
+    <div class="medium-6 large-6 column with-border padding margin-bottom">
         <div class="input-group">
             <span class="input-group-label">From</span>
-            <input class="input-group-field" list='from_language' type='text' ng-model="codeOne.name" required/>
+            <input class="input-group-field" list='from_language' type='text' />
             <datalist id="from_language">
                 <select name="from_language">
                     <option></option>
@@ -23,11 +17,14 @@
                 </select>
             </datalist>
         </div>
-        <textarea ui-codemirror ng-model="codeOne.code" id="from_snippet" required></textarea>
+        <form>
+            <textarea rows="7" name="myTextArea">code in here</textarea>
+            <input type="submit" value="Submit" class="button" />
+        </form>
     </div>
     <div class="medium-6 large-6 column with-border padding">
         <div class="input-group">
-            <input class="input-group-field" list='from_language' type='text' ng-model="codeTwo.name" required />
+            <input class="input-group-field" list='from_language' type='text' />
             <datalist id="from_language">
                 <select name="from_language">
                     <option></option>
@@ -38,7 +35,19 @@
             </datalist>
             <span class="input-group-label">To</span>
         </div>
-        <textarea rows="7" ui-codemirror ng-model="codeTwo.code" id="to_snippet" required></textarea>
+        <form>
+            <textarea rows="7" name="myTextArea">code in here</textarea>
+            <input type="submit" value="Submit" class="button" />
+        </form>
     </div>
-    <input type="submit" class="button large">
-</form>
+    <hr>
+    <div class="small-12 columns">
+        <div class="large-6 columns">
+            <h3>Comments</h3>
+            <p>Display disqus here</p>
+        </div>
+        <div class="large-6 columns">
+            <h3>Revisions</h3>
+        </div>
+    </div>
+</div>

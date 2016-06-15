@@ -15,6 +15,6 @@
                 <span>{</span><span>}</span>
             </div>
         </div>
-        <span ng-repeat="item in list"><a href="#" >{{ item.title }} </a> &bull; </span>
+        <span ng-repeat="item in list" ng-show="list"><a ui-sref="detail({ codeId: item.$id })" >{{ item.title }}</a> &bull; </span>
     </div>
 </div>

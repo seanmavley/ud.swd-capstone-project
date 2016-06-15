@@ -28,9 +28,13 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
       }
     })
     .state('detail', {
-      url: '/:title/:from/to/:to',
-      templateUrl: 'code/detail.html',
+      url: '/codes/:codeId',
+      templateUrl: 'codes/detail.html',
       controller: 'DetailController'
+    })
+    .state('detailFromTo', {
+      url: '/:title/:from/to/:to',
+      templateUrl: 'codes/detailfromto.html',
     })
     .state('signup', {
       url: '/register',

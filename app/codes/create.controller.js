@@ -15,7 +15,7 @@ angular.module('codeSide')
   var codeDataRef = ref.child('codes');
   var codeData = $firebaseArray(codeDataRef);
 
-  var $scope.sending = false;
+  $scope.sending = false;
 
   $scope.addNew = function() {
     $scope.sending = true;
@@ -40,7 +40,7 @@ angular.module('codeSide')
                   .child('snippets')
                     .child($scope.formData.from)
                       .set({
-                        whatIwant: 'What i want'
+                        code: $scope.formData.fromCode,
                       });
 
               // add second snippet
@@ -49,7 +49,7 @@ angular.module('codeSide')
                   .child('snippets')
                     .child($scope.formData.to)
                       .set({
-                        whatIwant: 'What i want'
+                        code: $scope.formData.toCode
                       })
               console.log('Hands are clean now');
               // TODO: go to detail page of added item instead here
