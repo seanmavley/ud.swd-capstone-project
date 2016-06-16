@@ -17,29 +17,19 @@
         <div class="medium-6 large-6 column with-border padding margin-bottom">
             <div class="input-group">
                 <span class="input-group-label">From</span>
-                <input class="input-group-field" list='from_language' type='text' ng-model="formData.from" required/>
-                <datalist id="from_language">
-                    <select name="from_language">
-                        <option></option>
-                        <option value="php">PHP</option>
-                        <option value="python">Python</option>
-                        <option value="javascript">JavaScript</option>
-                    </select>
-                </datalist>
+                <select class="input-group-field" ng-model="formData.from" type='text' required>
+                    <option></option>
+                    <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                </select>
             </div>
             <textarea ui-codemirror ng-model="formData.fromCode" id="from_snippet" required>Write code here</textarea>
         </div>
         <div class="medium-6 large-6 column with-border padding">
             <div class="input-group">
-                <input class="input-group-field" list='from_language' ng-model="formData.to" type='text' required />
-                <datalist id="from_language">
-                    <select name="from_language">
-                        <option></option>
-                        <option value="php">PHP</option>
-                        <option value="python">Python</option>
-                        <option value="javascript">JavaScript</option>
-                    </select>
-                </datalist>
+                <select class="input-group-field" ng-model="formData.to" type='text' required>
+                    <option></option>
+                    <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                </select>
                 <span class="input-group-label">To</span>
             </div>
             <textarea rows="7" ui-codemirror ng-model="formData.toCode" id="to_snippet" required>Write code here</textarea>

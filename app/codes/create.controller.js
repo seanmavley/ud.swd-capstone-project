@@ -2,65 +2,77 @@ angular.module('codeSide')
 
 .controller('CreateController',
   function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth) {
-  // codemirror settings
-  $scope.editorOptions = {
-    lineWrapping: true,
-    lineNumbers: true,
-    readOnly: 'nocursor',
-    mode: 'xml',
-  };
+    // codemirror settings
+    $scope.editorOptions = {
+      lineWrapping: true,
+      lineNumbers: true,
+      readOnly: 'nocursor',
+      mode: 'xml',
+    };
 
-  var currentAuth = Auth.$getAuth();
-  var ref = DatabaseRef;
-  var codeDataRef = ref.child('codes');
-  var codeData = $firebaseArray(codeDataRef);
+    var currentAuth = Auth.$getAuth();
+    var ref = DatabaseRef;
+    var codeDataRef = ref.child('codes');
+    var codeData = $firebaseArray(codeDataRef);
 
-  $scope.sending = false;
+    var langObject = $firebaseObject(ref.child('languages'));
 
-  $scope.addNew = function() {
-    $scope.sending = true;
-    if ($scope.addForm.$invalid) {
-      $scope.error = 'Please fill the form, all of it! Throw in the best of your coding spices. It means a lot!';
-    } else {
-      codeData.$loaded()
-        .then(function() {
-          console.log($scope.formData);
+    langObject.$loaded()
+      .then(function(data) {
+        $scope.languages = data;
+        console.log(data);
+      });
 
-          var now = new Date().getTime();
+    $scope.sending = false;
 
-          codeData.$add({
-              title: $scope.formData.title,
-              createdBy: currentAuth.uid,
-              createdAt: now
-            })
-            .then(function(added) {
-              // add first snippet
-              codeDataRef
-                .child(added.key)
+    $scope.addNew = function() {
+      $scope.sending = true;
+      if ($scope.addForm.$invalid) {
+        $scope.error = 'Please fill the form, all of it! Throw in the best of your coding spices. It means a lot!';
+      } else {
+        codeData.$loaded()
+          .then(function() {
+            console.log($scope.formData);
+
+            var now = new Date().getTime();
+
+            codeData.$add({
+                title: $scope.formData.title,
+                createdBy: currentAuth.uid,
+                createdAt: now
+              })
+              .then(function(added) {
+                // add first snippet
+                codeDataRef
+                  .child(added.key)
                   .child('snippets')
-                    .child($scope.formData.from)
-                      .set({
-                        code: $scope.formData.fromCode,
-                      });
+                  .child($scope.formData.from)
+                  .set({
+                    name: $scope.formData.from,
+                    code: $scope.formData.fromCode,
+                    timestamp: now
+                  });
 
-              // add second snippet
-              codeDataRef
-                .child(added.key)
+                // add second snippet
+                codeDataRef
+                  .child(added.key)
                   .child('snippets')
-                    .child($scope.formData.to)
-                      .set({
-                        code: $scope.formData.toCode
-                      })
-              console.log('Hands are clean now');
-              // TODO: go to detail page of added item instead here
-              // Pass param to route
-              $state.go('admin');
-            })
-            .catch(function(error) {
-              console.log(error);
-              $scope.error = error.message;
-            })
-        })
+                  .child($scope.formData.to)
+                  .set({
+                    name: $scope.formData.to,
+                    code: $scope.formData.toCode,
+                    timestamp: now
+                  })
+                console.log('Hands are clean now');
+                // TODO: go to detail page of added item instead here
+                // Pass param to route
+                $state.go('admin');
+              })
+              .catch(function(error) {
+                console.log(error);
+                $scope.error = error.message;
+              })
+          })
+      }
     }
-  }
-})
+  })

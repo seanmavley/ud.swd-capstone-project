@@ -9,6 +9,7 @@
             <div class="callout">
                 <h5> {{ formData.title }}</h5>
                 <p>Created by: {{ formData.createdBy }} &bull; {{ formData.createdAt }}</p>
+                <p>Available in these languages: <span ng-repeat="name in formData.snippets">{{ name.name }} &bull; </span> </p>
             </div>
         </div>
         <div class="medium-6 columns">
@@ -25,27 +26,31 @@
         </div>
     </div>
     <div class="small-12 medium-6 large-6 column with-border padding">
-        <div class="input-group">
-            <span class="input-group-label">From</span>
-            <select class="input-group-field" list='from_language' ng-model="codeOne.name" ng-model-options="{ updateOn: 'blur' }" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed" type='text' required>
-                <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-            </select>
-            <div class="input-group-button" ng-show="!editAllowed">
-                <input type="submit" class="button" value="Submit">
+        <form ng-submit="saveLanguage(codeOne)" name="myForm" novalidate>
+            <div class="input-group">
+                <span class="input-group-label">From</span>
+                <select class="input-group-field" ng-model="codeOne.name" ng-model-options="{ updateOn: 'blur' }" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed" ng-class="{ dimmed: refreshOne == true }" type='text' required>
+                    <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                </select>
+                <div class="input-group-button" ng-show="!editAllowed">
+                    <input type="submit" class="button" value="Submit">
+                </div>
             </div>
-        </div>
-        <textarea ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
+            <textarea ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
+        </form>
     </div>
     <div class="small-12 medium-6 large-6 column with-border padding">
-        <div class="input-group">
-            <span class="input-group-label">To</span>
-            <select class="input-group-field" list='from_language' ng-model="codeOne.name" ng-model-options="{ updateOn: 'blur' }" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed" type='text' required>
-                <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-            </select>
-            <div class="input-group-button" ng-show="!editAllowed">
-                <input type="submit" class="button" value="Submit">
+        <form ng-submit="saveLanguage(codeTwo)" novalidate>
+            <div class="input-group">
+                <span class="input-group-label">To</span>
+                <select class="input-group-field" ng-model="codeTwo.name" ng-model-options="{ updateOn: 'blur' }" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed" ng-class="{ dimmed: refreshOne == true }" type='text' required>
+                    <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                </select>
+                <div class="input-group-button" ng-show="!editAllowed">
+                    <input type="submit" class="button" value="Submit">
+                </div>
             </div>
-        </div>
-        <textarea rows="7" ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
+            <textarea rows="7" ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
+        </form>
     </div>
 </div>

@@ -16,7 +16,8 @@
     "angularfire": "^2.0.1",
     "angular-messages": "^1.5.6",
     "angular-ui-codemirror": "^0.3.0",
-    "codemirror": "^5.15.2"
+    "codemirror": "^5.15.2",
+    "toastr": "^2.1.2"
   },
   "ignore": [
     "**/.*",
