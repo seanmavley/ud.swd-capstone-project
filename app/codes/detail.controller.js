@@ -11,11 +11,15 @@ angular.module('codeSide')
   $scope.editAllowed = true;
   $scope.id = $stateParams.codeId;
 
+  $scope.codeOneChanged = function(language) {
+    console.log('Code One changed with: ' + language);
+  }
+
   $scope.saveLanguage = function() {
     console.log('Language saving was fired');
   }
 
-  $scope.enableEditing = function () {
+  $scope.enableEditing = function() {
     $scope.editorOptions.readOnly = false;
     $scope.editAllowed = false;
   }
@@ -25,6 +29,15 @@ angular.module('codeSide')
     .child($stateParams.codeId);
 
   var codeObject = $firebaseObject(codeRef);
+
+  var langRef = ref.child('languages');
+  var langObject = $firebaseObject(langRef);
+
+  langObject.$loaded()
+    .then(function(data) {
+      $scope.languages = data;
+      console.log(data);
+    });
 
   codeObject.$loaded()
     .then(function() {
@@ -37,8 +50,16 @@ angular.module('codeSide')
 
       $scope.codeOne = loadLanguage('javascript');
       $scope.codeTwo = loadLanguage('python');
-
     })
+
+  $scope.codeOneChanged = function(language) {
+    codeObject.$loaded()
+      .then(function() {
+        console.log('Code One changed with: ' + language.toLowerCase());
+        $scope.codeOne = loadLanguage(language);
+        console.log($scope.codeOne);
+      })
+  }
 
 
   function loadLanguage(language) {
