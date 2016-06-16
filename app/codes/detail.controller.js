@@ -37,10 +37,12 @@ angular.module('codeSide')
     console.log(update);
     var toSave = ref.child('codes')
       .child($stateParams.codeId)
-      .child('snippets')
-      .child(data.name)
-      .update(update);
+        .child('snippets')
+          .child(data.name)
+            .update(update);
+    
     console.log('Thanks for saving this: ', toSave);
+    toastr.success('Changes saved!');
     return toSave;
   }
 
@@ -77,6 +79,7 @@ angular.module('codeSide')
   $scope.codeOneChanged = function(language) {
     codeObject.$loaded()
       .then(function() {
+        toastr.success('Running to fetch the code');
         $scope.refreshOne = true;
         console.log('Code One changed with: ' + language.toLowerCase());
         $scope.codeOne = loadLanguage(language);
@@ -88,12 +91,20 @@ angular.module('codeSide')
   $scope.codeTwoChanged = function(language) {
     codeObject.$loaded()
       .then(function() {
+        toastr.success('Running to fetch the code');
         $scope.refreshTwo = true;
-        console.log('Code One changed with: ' + language.toLowerCase());
-        $scope.codeTwo = loadLanguage(language);
+        var returnedCode = loadLanguage(language);
+        if ($scope.returnedCode.code) {
+          console.log('something came out');
+          $scope.codeTwo = returnedCode;
+        } else {
+          console.log('nothing came out');
+          $scope.codeTwo.name = language;
+        }
         console.log($scope.codeTwo);
         $scope.refreshOne = false;
       })
+
   }
 
 
