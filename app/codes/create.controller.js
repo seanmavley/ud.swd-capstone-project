@@ -3,7 +3,13 @@ angular.module('codeSide')
 .controller('CreateController',
   function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth) {
     // codemirror settings
-    $scope.editorOptions = {
+    $scope.editor1Options = {
+      lineWrapping: true,
+      lineNumbers: true,
+      readOnly: false,
+    };
+
+    $scope.editor2Options = {
       lineWrapping: true,
       lineNumbers: true,
       readOnly: false,
@@ -14,40 +20,79 @@ angular.module('codeSide')
     var codeDataRef = ref.child('codes');
     var codeData = $firebaseArray(codeDataRef);
 
+    // load languages
+    $scope.notReady = true; // disable dropdown if languages not ready
     var langObject = $firebaseObject(ref.child('languages'));
-
-    $scope.notReady = true;
-
     langObject.$loaded()
       .then(function(data) {
         toastr.info('All is set. Code away!', 'Document ready!');
         $scope.languages = data;
         console.log(data);
         $scope.notReady = false;
+      }, function(error) {
+        toastr.error(error.message, 'Oh no, error!');
       });
 
-    $scope.sending = false;
-
-    $scope.codeChange = function(language) {
-      console.log('code changed to: ' + language);
-      if (['csharp', 'cpp'].includes(language)) {
-        console.log('I am one of clike: ' + language);
-        $scope.editorOptions.mode = language;
-        console.log($scope.editorOptions.mode);
+    $scope.code1Change = function(language) {
+      $scope.codeDuplicate = false;
+      if ($scope.formData.to == $scope.formData.from) {
+        toastr.warning('You cannot select same progamming language on both sides', 'Fix it!', {
+          tapToDismiss: false,
+          timeOut: 0
+        });
+        $scope.codeDuplicate = true;
       } else {
-        $scope.editorOptions.mode = $scope.formData.from;
-        console.log($scope.editorOptions.mode);
+        toastr.clear();
+        $scope.codeDuplicate = true;
+        console.log('code changed to: ' + language);
+        if (['csharp', 'cpp'].includes(language)) {
+          console.log('I am one of clike: ' + language);
+          $scope.editor1Options.mode = language;
+          console.log($scope.editor1Options.mode);
+        } else {
+          $scope.editor1Options.mode = $scope.formData.from;
+          console.log($scope.editor1Options.mode);
+        }
       }
     }
 
+    $scope.code2Change = function(language) {
+      $scope.codeDuplicate = false;
+      if ($scope.formData.to == $scope.formData.from) {
+        toastr.warning('You cannot select same progamming language on both sides', 'Fix it!', {
+          tapToDismiss: false,
+          timeOut: 0
+        });
+        $scope.codeDuplicate = true;
+      } else {
+        toastr.clear();
+        $scope.codeDuplicate = true;
+        console.log('code changed to: ' + language);
+        if (['csharp', 'cpp'].includes(language)) {
+          console.log('I am one of clike: ' + language);
+          $scope.editor2Options.mode = language;
+          console.log($scope.editor2Options.mode);
+        } else {
+          $scope.editor2Options.mode = $scope.formData.to;
+          console.log($scope.editor2Options.mode);
+        }
+      }
+    }
+
+    $scope.sending = false;
+
+
     $scope.addNew = function() {
-      toastr.info('data.sending($scope.data, callback(detailPage, { param: $scope.data.id }));', 'Invoked function...');
-      $scope.sending = true;
       if ($scope.addForm.$invalid) {
         toastr.error('Please fill the form, all of it!',
           'Throw in the best of your coding spices.',
           'It means a lot!', 'Incomplete form');
+      } else if ($scope.formData.from == $scope.formData.to) {
+        toastr.warning('You cannot select same progamming languages on both sides', 'Fix it!');
       } else {
+        toastr.info('data.sending($scope.data, callback(detailPage, { param: $scope.data.id }));', 'Invoked function...');
+        $scope.sending = true;
+
         codeData.$loaded()
           .then(function() {
             console.log($scope.formData);
