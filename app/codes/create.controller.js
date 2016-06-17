@@ -19,6 +19,7 @@ angular.module('codeSide')
 
     langObject.$loaded()
       .then(function(data) {
+        toastr.info('All is set. Code away!', 'Document ready!');
         $scope.languages = data;
         console.log(data);
       });
@@ -26,9 +27,12 @@ angular.module('codeSide')
     $scope.sending = false;
 
     $scope.addNew = function() {
+      toastr.info('data.sending($scope.data, callback(detailPage, { param: $scope.data.id }));', 'Invoked function...');
       $scope.sending = true;
       if ($scope.addForm.$invalid) {
-        $scope.error = 'Please fill the form, all of it! Throw in the best of your coding spices. It means a lot!';
+        toastr.error('Please fill the form, all of it!',
+                     'Throw in the best of your coding spices.',
+                     'It means a lot!', 'Incomplete form');
       } else {
         codeData.$loaded()
           .then(function() {
@@ -64,13 +68,11 @@ angular.module('codeSide')
                     timestamp: now
                   })
                 console.log('Hands are clean now');
-                // TODO: go to detail page of added item instead here
-                // Pass param to route
-                $state.go('admin');
+                $state.go('detail', { codeId: added.key});
               })
               .catch(function(error) {
                 console.log(error);
-                $scope.error = error.message;
+                toastr.error(error.message, 'Error');
               })
           })
       }

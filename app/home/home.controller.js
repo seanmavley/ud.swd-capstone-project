@@ -1,6 +1,7 @@
 angular.module('codeSide')
 
 .controller('HomeController', function($scope, $rootScope, Auth, DatabaseRef, $firebaseArray) {
+  // toastr.info('function(loadRecent, callback);', 'Running fetch function', { timeOut: 5000 })
   var ref = DatabaseRef;
   var codeDataRef = ref.child('codes');
   var query = codeDataRef.orderByChild("createdAt").limitToLast(10);
@@ -12,6 +13,6 @@ angular.module('codeSide')
       $scope.list = data;
     })
     .catch(function(error) {
-      console.log(error);
+      toastr.error(error.message);
     })
 })
