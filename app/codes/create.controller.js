@@ -25,7 +25,7 @@ angular.module('codeSide')
     var langObject = $firebaseObject(ref.child('languages'));
     langObject.$loaded()
       .then(function(data) {
-        toastr.info('All is set. Code away!', 'Document ready!');
+        toastr.success('All is set. Code away!', 'Document ready!');
         $scope.languages = data;
         console.log(data);
         $scope.notReady = false;
