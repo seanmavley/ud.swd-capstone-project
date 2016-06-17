@@ -6,8 +6,7 @@ angular.module('codeSide')
     $scope.editorOptions = {
       lineWrapping: true,
       lineNumbers: true,
-      readOnly: 'nocursor',
-      mode: 'xml',
+      readOnly: false,
     };
 
     var currentAuth = Auth.$getAuth();
@@ -17,22 +16,37 @@ angular.module('codeSide')
 
     var langObject = $firebaseObject(ref.child('languages'));
 
+    $scope.notReady = true;
+
     langObject.$loaded()
       .then(function(data) {
         toastr.info('All is set. Code away!', 'Document ready!');
         $scope.languages = data;
         console.log(data);
+        $scope.notReady = false;
       });
 
     $scope.sending = false;
+
+    $scope.codeChange = function(language) {
+      console.log('code changed to: ' + language);
+      if (['csharp', 'cpp'].includes(language)) {
+        console.log('I am one of clike: ' + language);
+        $scope.editorOptions.mode = language;
+        console.log($scope.editorOptions.mode);
+      } else {
+        $scope.editorOptions.mode = $scope.formData.from;
+        console.log($scope.editorOptions.mode);
+      }
+    }
 
     $scope.addNew = function() {
       toastr.info('data.sending($scope.data, callback(detailPage, { param: $scope.data.id }));', 'Invoked function...');
       $scope.sending = true;
       if ($scope.addForm.$invalid) {
         toastr.error('Please fill the form, all of it!',
-                     'Throw in the best of your coding spices.',
-                     'It means a lot!', 'Incomplete form');
+          'Throw in the best of your coding spices.',
+          'It means a lot!', 'Incomplete form');
       } else {
         codeData.$loaded()
           .then(function() {
@@ -54,7 +68,8 @@ angular.module('codeSide')
                   .set({
                     name: $scope.formData.from,
                     code: $scope.formData.fromCode,
-                    timestamp: now
+                    createdAt: now,
+                    createdBy: currentAuth.uid
                   });
 
                 // add second snippet
@@ -65,10 +80,11 @@ angular.module('codeSide')
                   .set({
                     name: $scope.formData.to,
                     code: $scope.formData.toCode,
-                    timestamp: now
+                    createdAt: now,
+                    createdBy: currentAuth.uid
                   })
                 console.log('Hands are clean now');
-                $state.go('detail', { codeId: added.key});
+                $state.go('detail', { codeId: added.key });
               })
               .catch(function(error) {
                 console.log(error);

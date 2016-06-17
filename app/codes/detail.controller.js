@@ -9,6 +9,11 @@ angular.module('codeSide')
     lineNumbers: true,
     readOnly: 'nocursor',
   };
+  
+  $scope.enableEditing = function() {
+    $scope.editorOptions.readOnly = false;
+    $scope.editAllowed = !$scope.editAllowed;
+  }
 
   // global ref to root of app db
   var ref = DatabaseRef;
@@ -47,10 +52,6 @@ angular.module('codeSide')
     return toSave;
   }
 
-  $scope.enableEditing = function() {
-    $scope.editorOptions.readOnly = false;
-    $scope.editAllowed = !$scope.editAllowed;
-  }
 
   langObject.$loaded()
     .then(function(data) {
