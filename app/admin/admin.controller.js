@@ -1,6 +1,6 @@
 angular.module('codeSide')
 
-.controller('AdminController', function($scope, $firebaseObject, currentAuth, Auth, DatabaseRef) {
+.controller('AdminController', function($scope, $firebaseObject, $firebaseArray, currentAuth, Auth, DatabaseRef) {
   // init empty formData object
   $scope.newPassword = ''
   $scope.formData = {};
@@ -12,6 +12,19 @@ angular.module('codeSide')
     .then(function() {
       $scope.authInfo = userData;
       $scope.formData = userData;
+    })
+
+  // retrieve codes created by 
+  var query = DatabaseRef.child('codes').orderByChild('createdBy').equalTo(currentAuth.uid);
+  var list = $firebaseArray(query);
+
+  list.$loaded()
+    .then(function(data) {
+      console.log(data);
+      $scope.list = data
+    })
+    .catch(function(error) {
+      toastr.error(error.message);
     })
 
   $scope.updateUser = function() {
@@ -44,15 +57,15 @@ angular.module('codeSide')
   $scope.loadLanguages = function() {
     DatabaseRef
       .child('languages')
-        .set({
-          php: 'PHP',
-          python: 'Python',
-          csharp: 'C#',
-          cpp: 'C++',
-          javascript: 'Javascript',
-          java: 'Java' 
-        }, function(error) {
-          toastr.error(error.message, error.reason);
-        })
+      .set({
+        php: 'PHP',
+        python: 'Python',
+        csharp: 'C#',
+        cpp: 'C++',
+        javascript: 'Javascript',
+        java: 'Java'
+      }, function(error) {
+        toastr.error(error.message, error.reason);
+      })
   }
 })

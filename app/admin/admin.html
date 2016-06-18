@@ -17,7 +17,7 @@
     </div>
     <div class="small-12 medium-6 columns">
         <h4>My CodeSides</h4>
-        <span><a href="#" >Title of Item </a> &bull; <a href="#" >Title of Item </a></span>
+        <span ng-repeat="item in list" ng-show="list"><a ui-sref="detail({ codeId: item.$id })" >{{ item.title }}</a> &bull; </span>
     </div>
 </div>
 <div class="small-12 columns">

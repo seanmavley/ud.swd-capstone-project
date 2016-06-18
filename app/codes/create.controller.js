@@ -43,7 +43,7 @@ angular.module('codeSide')
         $scope.codeDuplicate = true;
       } else {
         toastr.clear();
-        $scope.codeDuplicate = true;
+        $scope.codeDuplicate = false;
         console.log('code changed to: ' + language);
         if (['csharp', 'cpp'].includes(language)) {
           console.log('I am one of clike: ' + language);
@@ -66,7 +66,7 @@ angular.module('codeSide')
         $scope.codeDuplicate = true;
       } else {
         toastr.clear();
-        $scope.codeDuplicate = true;
+        $scope.codeDuplicate = false;
         console.log('code changed to: ' + language);
         if (['csharp', 'cpp'].includes(language)) {
           console.log('I am one of clike: ' + language);
@@ -90,7 +90,7 @@ angular.module('codeSide')
       } else if ($scope.formData.from == $scope.formData.to) {
         toastr.warning('You cannot select same progamming languages on both sides', 'Fix it!');
       } else {
-        toastr.info('data.sending($scope.data, callback(detailPage, { param: $scope.data.id }));', 'Invoked function...');
+        toastr.info('data.sending($scope.data, callback(detailPage, { param: $scope.data.id }));', 'Saved Successfully');
         $scope.sending = true;
 
         codeData.$loaded()
