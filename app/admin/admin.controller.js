@@ -1,40 +1,34 @@
 angular.module('codeSide')
 
-.controller('AdminController', function($scope, $firebaseObject, currentAuth, Auth) {
+.controller('AdminController', function($scope, $firebaseObject, currentAuth, Auth, DatabaseRef) {
   // init empty formData object
   $scope.newPassword = ''
   $scope.formData = {};
 
   // bring in firebase db url
-  var ref = firebase.database().ref();
-  var userData = $firebaseObject(ref.child('users').child(currentAuth.uid)); // now at firebase.url/users/uid
-  // prepopulate user form if any
-  // when userData arrives
-
-  $scope.authInfo = currentAuth.providerData[0];
+  var userData = $firebaseObject(DatabaseRef.child('users').child(currentAuth.uid)); // now at firebase.url/users/uid
 
   userData.$loaded()
     .then(function() {
+      $scope.authInfo = userData;
       $scope.formData = userData;
     })
 
   $scope.updateUser = function() {
-    if (!$scope.formData.fullname) {
-      $scope.error = 'Please add full name'
+    if (!$scope.formData.displayName) {
+      toastr.error('Please add full name');
     } else {
       console.log($scope.formData);
       userData.$loaded()
         .then(function() {
-          ref
+          DatabaseRef
             .child('users')
             .child(currentAuth.uid)
-            .set({
-              email: currentAuth.email,
-              fullname: $scope.formData.fullname,
-              country: $scope.formData.country
+            .update({
+              displayName: $scope.formData.displayName,
             })
         })
-      $scope.message = 'User profile saved';
+      toastr.info('User updated');
     }
   }
 
@@ -45,5 +39,20 @@ angular.module('codeSide')
     }).catch(function(error) {
       $scope.error = error.message
     });
+  }
+
+  $scope.loadLanguages = function() {
+    DatabaseRef
+      .child('languages')
+        .set({
+          php: 'PHP',
+          python: 'Python',
+          csharp: 'C#',
+          cpp: 'C++',
+          javascript: 'Javascript',
+          java: 'Java' 
+        }, function(error) {
+          toastr.error(error.message, error.reason);
+        })
   }
 })

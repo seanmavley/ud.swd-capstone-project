@@ -1,12 +1,24 @@
 angular.module('codeSide')
 
 .controller('HomeController', function($scope, $rootScope, Auth, DatabaseRef, $firebaseArray) {
-  // toastr.info('function(loadRecent, callback);', 'Running fetch function', { timeOut: 5000 })
   var ref = DatabaseRef;
   var codeDataRef = ref.child('codes');
   var query = codeDataRef.orderByChild("createdAt").limitToLast(10);
 
   var list = $firebaseArray(query);
+
+  // TODO email verification
+  // Auth.$onAuthStateChanged(function(firebaseUser) {
+  //   if (firebaseUser) {
+  //     console.log(firebaseUser);
+  //     if (firebaseUser.emailVerified) {
+  //       console.log(firebaseUser);
+  //       toastr.success('Email verified');
+  //     } else {
+  //       toastr.info('Do verify email');
+  //     }
+  //   }
+  // })
 
   list.$loaded()
     .then(function(data) {

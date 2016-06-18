@@ -5,6 +5,9 @@
                 <label>Choose code title
                     <input type="text" ng-model="formData.title" required autofocus placeholder="eg. Fibonacci Function">
                 </label>
+                <label>
+                    <textarea ng-model="formData.description" required>Add description</textarea>
+                </label>
             </div>
             <div class="small-12 medium-3 columns">
                 <input type="submit" class="button large expanded" ng-disabled="sending || addForm.$invalid || codeDuplicate" style="margin-top:13px;" />

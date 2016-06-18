@@ -102,7 +102,8 @@ angular.module('codeSide')
             codeData.$add({
                 title: $scope.formData.title,
                 createdBy: currentAuth.uid,
-                createdAt: now
+                createdAt: now,
+                description: $scope.formData.description
               })
               .then(function(added) {
                 // add first snippet

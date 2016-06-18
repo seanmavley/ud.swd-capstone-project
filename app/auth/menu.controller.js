@@ -11,6 +11,9 @@ angular.module('codeSide')
 
     $scope.logout = function() {
       Auth.$signOut();
+      Auth.$onAuthStateChanged(function(firebaseUser) {
+        console.log('loggedout');
+      });
       $state.go('login');
     }
   })

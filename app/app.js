@@ -9,9 +9,19 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
       controller: 'HomeController',
       // resolve: {
       //   currentAuth: function(Auth) {
-      //     return Auth.$waitForSignIn();
+      //     return Auth.$getAuth();
       //   }
       // }
+    })
+    .state('emailVerify', {
+      url: '/verify-email?mode&oobCode',
+      templateUrl: 'templates/verify-email.html',
+      controller: 'emailVerifyController',
+      resolve: {
+        currentAuth: function(Auth) {
+          return Auth.$requireSignIn()
+        }
+      }
     })
     .state('about', {
       url: '/about',
