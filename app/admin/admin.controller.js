@@ -12,6 +12,17 @@ angular.module('codeSide')
     .then(function() {
       $scope.authInfo = userData;
       $scope.formData = userData;
+
+      $scope.hideUsername = true; 
+
+      if(!$scope.formData.username) {
+        $scope.hideUsername = false;
+        toastr.error('Please set your username. Once set, cannot be changed.', 'Username required!', { timeOut: 0});
+      }
+
+      if(!currentAuth.password) {
+        toastr.info('Set password in order to log in');
+      }
     })
 
   // retrieve codes created by 
@@ -38,26 +49,29 @@ angular.module('codeSide')
             .child('users')
             .child(currentAuth.uid)
             .update({
+              username: $scope.formData.username,
               displayName: $scope.formData.displayName,
             })
         })
+      $scope.hideUsername = true;
+      toastr.clear();
       toastr.info('User updated');
     }
   }
 
   $scope.updatePassword = function() {
     Auth.$updatePassword($scope.newPassword).then(function() {
-      $scope.message = 'Password updated successfully';
+      toastr.success('Password updated successfully', 'Successful!');
       $scope.newPassword = '';
     }).catch(function(error) {
-      $scope.error = error.message
+      toastr.error(error.message, error.reason);
     });
   }
 
   $scope.loadLanguages = function() {
     DatabaseRef
       .child('languages')
-      .set({
+      .update({
         php: 'PHP',
         python: 'Python',
         csharp: 'C#',

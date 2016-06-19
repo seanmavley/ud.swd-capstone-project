@@ -7,26 +7,34 @@
             </div>
         </div>
         <div ng-show="authInfo">
-            <p>Name: {{ authInfo.displayName }} </p>
-            <p>Email: {{ authInfo.email }} &bull; Verified: {{ authInfo.emailVerified }}
+            <p>Username: {{ authInfo.username || "No Username"}} &bull; <span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex="1" title="Username, once set, is permanent!">Help</span>
+            </p>
+            <p>Name: {{ authInfo.displayName || "No name" }} </p>
+            <p>Email: {{ authInfo.email || "No email" }} &bull; Verified: {{ authInfo.emailVerified }}
                 <br/> <a href="">Verify Email</a></p>
-            <p>Image:
+            <p ng-show="authInfo.photoURL">Image:
                 <img ng-src="{{ authInfo.photoURL }}">
             </p>
         </div>
     </div>
     <div class="small-12 medium-6 columns">
         <h4>My CodeSides</h4>
+        <span ng-show="!list.length">You have not started any new CodeSides</span>
         <span ng-repeat="item in list" ng-show="list"><a ui-sref="detail({ codeId: item.$id })" >{{ item.title }}</a> &bull; </span>
     </div>
 </div>
-<div class="small-12 columns">
+<div class="small-12 columns" ng-show="authInfo">
     <div class="row">
         <div class="small-12 medium-6 columns">
             <form ng-submit="updateUser()">
                 <fieldset class="fieldset">
                     <legend>Update Profile</legend>
                     <div class="row">
+                        <div class="small-12 columns" ng-hide="formData.username && hideUsername">
+                            <label>Username
+                                <input type="text" ng-model="formData.username" placeholder="eg. e-equals-mcsquare">
+                            </label>
+                        </div>
                         <div class="small-12 columns">
                             <label>Your name
                                 <input type="text" ng-model="formData.displayName" placeholder="eg. Abrakadabra Houdini" required>

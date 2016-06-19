@@ -65,8 +65,9 @@ angular.module('codeSide')
       $scope.formData = {
         createdBy: codeObject.createdBy,
         title: codeObject.title,
-        createdAt: new Date(codeObject.createdAt),
-        snippets: codeObject.snippets
+        createdAt: codeObject.createdAt,
+        snippets: codeObject.snippets,
+        description: codeObject.description
       }
 
       snippetsArray.$loaded()

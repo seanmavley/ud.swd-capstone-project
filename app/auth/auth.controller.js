@@ -25,7 +25,7 @@ angular.module('codeSide')
     };
 
     $scope.register = function() {
-      if ($scope.formData.email && $scope.formData.password) {
+      if ($scope.formData.email && $scope.formData.password && $scope.formData.username) {
         console.log($scope.formData.email, $scope.formData.password);
         Auth.$createUserWithEmailAndPassword($scope.formData.email, $scope.formData.password)
           .then(function(firebaseUser) {
@@ -38,14 +38,16 @@ angular.module('codeSide')
               .child('users')
               .child(firebaseUser.uid)
               .set({
-                displayName: firebaseUser.displayName,
+                username: $scope.formData.username,
+                displayName: firebaseUser.displayName || '',
                 email: firebaseUser.email,
                 emailVerified: firebaseUser.emailVerified,
                 admin: admin
               })
 
             toastr.success('Awesome! Welcome aboard. Login to begin coding!', 'Register Successful', { timeOut: 7000 });
-            $state.go('login');
+            // Auth.$signOut();
+            $state.go('admin');
           })
           .catch(function(error) {
             toastr.error(error.message, error.reason);
@@ -53,7 +55,7 @@ angular.module('codeSide')
             $scope.formData = {};
           });
       } else {
-        $scope.error = 'Do add email and password.';
+        toastr.error('Kindly complete the form', 'Some parts missing!');
       }
     };
 
@@ -65,9 +67,28 @@ angular.module('codeSide')
 
       Auth.$signInWithPopup(provider)
         .then(function(firebaseUser) {
+          var admin = false;
+          if (firebaseUser.user.email == 'seanmavley@gmail.com') {
+            admin = true;
+          };
+
+          console.log(firebaseUser.user);
+          var userObject = $firebaseObject(DatabaseRef.child('users').child(firebaseUser.user.uid));
+          userObject.$loaded()
+            .then(function(data) {
+              // don't override
+              // data if exist
+              userObject.$save({
+                displayName: data.displayName || firebaseUser.user.displayName,
+                email: data.email || firebaseUser.user.email,
+                emailVerified: data.emailVerified || firebaseUser.user.emailVerified,
+                admin: data.admin || admin
+              })
+            })
+
           toastr.success('Logged in with Google successfully', 'Success');
           // updateUserIfEmpty(firebaseUser);
-          $state.go('home');
+          $state.go('admin');
         })
         .catch(function(error) {
           toastr.error(error.message, error.reason);

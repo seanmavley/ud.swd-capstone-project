@@ -1,31 +1,25 @@
-<div ng-show="loading" class="small-6 small-centered columns">
-    <div class="loader">
-        <span>{</span><span>}</span>
+<div class="row">
+    <div class="small-4 medium-4 medium-centered small-centered columns" ng-show="loading">
+        <div class="loader">
+            <span>{</span><span>}</span>
+        </div>
     </div>
 </div>
-<div class="row" ng-show="!loading">
-    <div class="small-12 columns">
-        <div class="small-12 medium-8 columns">
-            <div class="callout">
-                <h5> {{ formData.title }}</h5>
-                <p>Created by: {{ formData.createdBy }} &bull; {{ formData.createdAt }}</p>
-                <p>Available in these languages: <span ng-repeat="name in formData.snippets">{{ name.name }} &bull; </span> </p>
-            </div>
-        </div>
-        <div class="small-12 medium-4 columns">
-            <div class="row">
-                <div class="small-12 columns">
-                    <a ng-click="enableEditing()" class="button small expand margin-top">{{ editAllowed ? 'Enable' : 'Disable' }} editing</a>
-                </div>
-                <!-- <div class="small-12 columns" ng-show="!editAllowed">
-                    <label>Choose code title
-                        <input type="text" ng-model="formData.title">
-                    </label>
-                </div> -->
-            </div>
+<div class="row">
+    <div class="small-12 medium-8 medium-centered columns" ng-show="!loading">
+        <div class="callout">
+            <p>
+                <strong>Title:</strong> {{ formData.title }} &#x2299; <strong>Created by:</strong> <a href="">{{ formData.createdBy }}</a> &#x2299; <strong>On</strong> {{ formData.createdAt | date : 'medium' }}
+                <br/> <strong>Description:</strong> {{ formData.description }}
+                <br/> Available in these languages: <span ng-repeat="name in formData.snippets">{{ name.name }} &bull; </span>
+                <br/>
+                <a ng-click="enableEditing()" class="button small expand margin-top">{{ editAllowed ? 'Enable' : 'Disable' }} editing</a>
+            </p>
         </div>
     </div>
-    <div class="small-12 medium-6 large-6 column with-border padding">
+</div>
+<div class="row">
+    <div class="small-12 medium-6 large-6 column with-border padding" ng-show="!loading">
         <form ng-submit="saveLanguage(codeOne)" name="myForm" novalidate>
             <div class="input-group">
                 <span class="input-group-label">From</span>
@@ -37,9 +31,10 @@
                 </div>
             </div>
             <textarea ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
+            <span style="border-top:1px solid grey;">By: <a href="">{{ codeOne.createdBy }}</a> on {{ codeOne.createdAt | date : 'medium' }}</span>
         </form>
     </div>
-    <div class="small-12 medium-6 large-6 column with-border padding">
+    <div class="small-12 medium-6 large-6 column with-border padding" ng-show="!loading">
         <form ng-submit="saveLanguage(codeTwo)" novalidate>
             <div class="input-group">
                 <span class="input-group-label">To</span>
@@ -51,6 +46,7 @@
                 </div>
             </div>
             <textarea rows="7" ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
+            <span style="border-top:1px solid grey;">By: <a href="">{{ codeTwo.createdBy }}</a> on {{ codeTwo.createdAt | date : 'medium' }}</span>
         </form>
     </div>
 </div>

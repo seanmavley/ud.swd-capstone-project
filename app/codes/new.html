@@ -2,11 +2,11 @@
     <form ng-submit="addNew()" name="addForm">
         <div class="row callout margin-top">
             <div class="small-12 medium-9 columns">
-                <label>Choose code title
+                <label>Choose code title and describe 
                     <input type="text" ng-model="formData.title" required autofocus placeholder="eg. Fibonacci Function">
                 </label>
                 <label>
-                    <textarea ng-model="formData.description" required>Add description</textarea>
+                    <textarea ng-model="formData.description" placeholder="Add description here" required>Add description</textarea>
                 </label>
             </div>
             <div class="small-12 medium-3 columns">

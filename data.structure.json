@@ -22,9 +22,37 @@
   }
 }], [{
   "revisions": {
-    "uidOfUser": {
-      "datestamp": "98098409382",
-      "code": "Difference in code"
+    "idOfCode": {
+      "python": [{
+        "createdBy": "uidOfUser",
+        "codeChange": "new code snippet",
+        "timestamp": "9304809238"
+      }, {
+        "createdBy": "uidOfUser",
+        "codeChange": "new code snippet",
+        "timestamp": "98302834"
+      }],
+      "cpp": [{
+        "createdBy": "uidString",
+        "codeChange": "new code snippet",
+        "timestamp": "93840923840"
+      }]
+    },
+    "idOfCode": {
+      "python": [{
+        "createdBy": "uidOfUser",
+        "codeChange": "new code snippet",
+        "timestamp": "9304809238"
+      }, {
+        "createdBy": "uidOfUser",
+        "codeChange": "new code snippet",
+        "timestamp": "98302834"
+      }],
+      "cpp": [{
+        "createdBy": "uidString",
+        "codeChange": "new code snippet",
+        "timestamp": "93840923840"
+      }]
     }
   }
 }]
