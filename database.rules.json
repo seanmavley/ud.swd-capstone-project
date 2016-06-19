@@ -1,4 +1,18 @@
 {
-  ".read": true,
-  ".write": true
+  "rules": {
+    "codes": {
+      ".read": "true",
+      ".write": "auth.uid != null"
+    },
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "languages": {
+      ".write": "true",
+      ".read": "true"
+    }
+  }
 }

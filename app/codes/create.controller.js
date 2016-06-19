@@ -1,8 +1,7 @@
 angular.module('codeSide')
 
 .controller('CreateController',
-  function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth, PageTitle) {
-
+  function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth) {
     // codemirror settings
     $scope.editor1Options = {
       lineWrapping: true,
