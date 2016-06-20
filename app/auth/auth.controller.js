@@ -11,11 +11,10 @@ angular.module('codeSide')
             .then(function(firebaseUser) {
               // TODO send email verification after login after
               // first time
-
-              // if (!firebaseUser.emailVerified) {
-              //   firebaseUser.sendEmailVerification();
-              //   toastr.info('Email verification sent', 'Verify email!');
-              // }
+              if (!firebaseUser.emailVerified) {
+                firebaseUser.sendEmailVerification();
+                toastr.info('Email verification sent', 'Verify email!');
+              }
               $state.go('home');
             })
             .catch(function(error) {

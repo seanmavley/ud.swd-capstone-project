@@ -18,9 +18,9 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
       templateUrl: 'templates/verify-email.html',
       controller: 'emailVerifyController',
       resolve: {
-        currentAuth: function(Auth) {
+        currentAuth:['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }
+        }]
       }
     })
     .state('about', {
@@ -32,9 +32,9 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
       templateUrl: 'codes/new.html',
       controller: 'CreateController',
       resolve: {
-        currentAuth: function(Auth) {
+        currentAuth:['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }
+        }]
       }
     })
     .state('detail', {
@@ -64,9 +64,9 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
       templateUrl: 'admin/admin.html',
       controller: 'AdminController',
       resolve: {
-        currentAuth: function(Auth) {
+        currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }
+        }]
       }
     })
 
@@ -181,11 +181,10 @@ angular.module('codeSide')
             .then(function(firebaseUser) {
               // TODO send email verification after login after
               // first time
-
-              // if (!firebaseUser.emailVerified) {
-              //   firebaseUser.sendEmailVerification();
-              //   toastr.info('Email verification sent', 'Verify email!');
-              // }
+              if (!firebaseUser.emailVerified) {
+                firebaseUser.sendEmailVerification();
+                toastr.info('Email verification sent', 'Verify email!');
+              }
               $state.go('home');
             })
             .catch(function(error) {

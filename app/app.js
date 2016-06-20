@@ -18,9 +18,9 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
       templateUrl: 'templates/verify-email.html',
       controller: 'emailVerifyController',
       resolve: {
-        currentAuth: function(Auth) {
+        currentAuth:['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }
+        }]
       }
     })
     .state('about', {
@@ -32,9 +32,9 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
       templateUrl: 'codes/new.html',
       controller: 'CreateController',
       resolve: {
-        currentAuth: function(Auth) {
+        currentAuth:['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }
+        }]
       }
     })
     .state('detail', {
@@ -64,9 +64,9 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
       templateUrl: 'admin/admin.html',
       controller: 'AdminController',
       resolve: {
-        currentAuth: function(Auth) {
+        currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }
+        }]
       }
     })
 
