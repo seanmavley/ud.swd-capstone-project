@@ -1,0 +1,13 @@
+[debug] ----------------------------------------------------------------------
+[debug] Command:      /usr/bin/nodejs /home/khophi/npm-global/bin/firebase deploy
+[debug] CLI Version:  3.0.2
+[debug] Platform:     linux
+[debug] Node Version: v5.11.1
+[debug] Time:         Mon Jun 20 2016 13:03:16 GMT+0000 (GMT)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[debug] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase"]
+[debug] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/khophi-auth 
