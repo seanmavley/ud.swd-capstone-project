@@ -1,6 +1,6 @@
 angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
   $stateProvider
     .state('home', {
@@ -71,19 +71,20 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
     })
 
   $urlRouterProvider.otherwise('/');
-})
+}])
 
-.run(function($rootScope, $state, Auth) {
+.run(['$rootScope', '$state', 'Auth', function($rootScope, $state, Auth) {
   $rootScope.$on("$stateChangeError", function(even, toState, toParams, fromState, fromParams, error) {
     if (error === "AUTH_REQUIRED") {
       $state.go('login');
     }
   })
-})
+}])
 
 angular.module('codeSide')
 
-.controller('AdminController', function($scope, $firebaseObject, $firebaseArray, currentAuth, Auth, DatabaseRef) {
+.controller('AdminController', ['$scope', '$firebaseObject', '$firebaseArray', 'currentAuth', 'Auth', 'DatabaseRef', 
+  function($scope, $firebaseObject, $firebaseArray, currentAuth, Auth, DatabaseRef) {
   // init empty formData object
   $scope.newPassword = ''
   $scope.formData = {};
@@ -165,162 +166,166 @@ angular.module('codeSide')
         toastr.error(error.message, error.reason);
       })
   }
-})
+}])
 
 angular.module('codeSide')
-  .controller('LogRegController', function($scope, Auth, $state, DatabaseRef, $firebaseObject) {
-    // init empty form
-    $scope.formData = {};
-    $scope.login = function() {
-      if (!$scope.formData.email && !$scope.formData.password) {
-        toastr.error("Add email and password");
-      } else {
-        Auth.$signInWithEmailAndPassword($scope.formData.email, $scope.formData.password)
-          .then(function(firebaseUser) {
-            // TODO send email verification after login after
-            // first time
+  .controller('LogRegController', ['$scope', 'Auth', '$state', 'DatabaseRef', '$firebaseObject',
+    function($scope, Auth, $state, DatabaseRef, $firebaseObject) {
+      // init empty form
+      $scope.formData = {};
+      $scope.login = function() {
+        if (!$scope.formData.email && !$scope.formData.password) {
+          toastr.error("Add email and password");
+        } else {
+          Auth.$signInWithEmailAndPassword($scope.formData.email, $scope.formData.password)
+            .then(function(firebaseUser) {
+              // TODO send email verification after login after
+              // first time
 
-            // if (!firebaseUser.emailVerified) {
-            //   firebaseUser.sendEmailVerification();
-            //   toastr.info('Email verification sent', 'Verify email!');
-            // }
-            $state.go('home');
-          })
-          .catch(function(error) {
-            toastr.error(error.message, error.reason, { timeOut: 10000 });
-            $scope.formData = {};
-          })
-      }
-    };
+              // if (!firebaseUser.emailVerified) {
+              //   firebaseUser.sendEmailVerification();
+              //   toastr.info('Email verification sent', 'Verify email!');
+              // }
+              $state.go('home');
+            })
+            .catch(function(error) {
+              toastr.error(error.message, error.reason, { timeOut: 10000 });
+              $scope.formData = {};
+            })
+        }
+      };
 
-    $scope.register = function() {
-      if ($scope.formData.email && $scope.formData.password && $scope.formData.username) {
-        console.log($scope.formData.email, $scope.formData.password);
-        Auth.$createUserWithEmailAndPassword($scope.formData.email, $scope.formData.password)
+      $scope.register = function() {
+        if ($scope.formData.email && $scope.formData.password && $scope.formData.username) {
+          console.log($scope.formData.email, $scope.formData.password);
+          Auth.$createUserWithEmailAndPassword($scope.formData.email, $scope.formData.password)
+            .then(function(firebaseUser) {
+              // create user at /users/ endpoint
+              var admin = false;
+              if ($scope.formData.email == 'seanmavley@gmail.com') {
+                admin = true;
+              }
+              DatabaseRef
+                .child('users')
+                .child(firebaseUser.uid)
+                .set({
+                  username: $scope.formData.username,
+                  displayName: firebaseUser.displayName || '',
+                  email: firebaseUser.email,
+                  emailVerified: firebaseUser.emailVerified,
+                  admin: admin
+                })
+
+              toastr.success('Awesome! Welcome aboard. Login to begin coding!', 'Register Successful', { timeOut: 7000 });
+              // Auth.$signOut();
+              $state.go('admin');
+            })
+            .catch(function(error) {
+              toastr.error(error.message, error.reason);
+              // empty the form
+              $scope.formData = {};
+            });
+        } else {
+          toastr.error('Kindly complete the form', 'Some parts missing!');
+        }
+      };
+
+      // Social Auths
+      // GOOGLE AUTH
+      $scope.googleAuth = function() {
+        var provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('https://www.googleapis.com/auth/plus.login');
+
+        Auth.$signInWithPopup(provider)
           .then(function(firebaseUser) {
-            // create user at /users/ endpoint
             var admin = false;
-            if ($scope.formData.email == 'seanmavley@gmail.com') {
+            if (firebaseUser.user.email == 'seanmavley@gmail.com') {
               admin = true;
-            }
-            DatabaseRef
-              .child('users')
-              .child(firebaseUser.uid)
-              .set({
-                username: $scope.formData.username,
-                displayName: firebaseUser.displayName || '',
-                email: firebaseUser.email,
-                emailVerified: firebaseUser.emailVerified,
-                admin: admin
+            };
+
+            console.log(firebaseUser.user);
+            var userObject = $firebaseObject(DatabaseRef.child('users').child(firebaseUser.user.uid));
+            userObject.$loaded()
+              .then(function(data) {
+                // don't override
+                // data if exist
+                userObject.$save({
+                  displayName: data.displayName || firebaseUser.user.displayName,
+                  email: data.email || firebaseUser.user.email,
+                  emailVerified: data.emailVerified || firebaseUser.user.emailVerified,
+                  admin: data.admin || admin,
+                  createdAt: new Date().getTime()
+                })
               })
 
-            toastr.success('Awesome! Welcome aboard. Login to begin coding!', 'Register Successful', { timeOut: 7000 });
-            // Auth.$signOut();
+            toastr.success('Logged in with Google successfully', 'Success');
+            // updateUserIfEmpty(firebaseUser);
             $state.go('admin');
           })
           .catch(function(error) {
             toastr.error(error.message, error.reason);
-            // empty the form
-            $scope.formData = {};
-          });
-      } else {
-        toastr.error('Kindly complete the form', 'Some parts missing!');
+          })
       }
-    };
 
-    // Social Auths
-    // GOOGLE AUTH
-    $scope.googleAuth = function() {
-      var provider = new firebase.auth.GoogleAuthProvider();
-      provider.addScope('https://www.googleapis.com/auth/plus.login');
+      // function updateUserIfEmpty(authData) {
+      //   // data from sign in
+      //   console.log(authData.user.uid);
+      //   // data from /users/uid/
+      //   var firebaseUser = $firebaseObject(DatabaseRef.child('users').child(authData.user.uid));
 
-      Auth.$signInWithPopup(provider)
-        .then(function(firebaseUser) {
-          var admin = false;
-          if (firebaseUser.user.email == 'seanmavley@gmail.com') {
-            admin = true;
-          };
+      //   firebaseUser.$loaded()
+      //     .then(function(user) {
+      //       if (!user.displayName) {
+      //         firebaseUser.displayName = authData.user.displayName;
+      //         firebaseUser.$save()
+      //           .then(function() {
+      //             console.log('saved displayname');
+      //           })
+      //       } else if (!user.photoURL) {
+      //         firebaseUser.photoURL = authData.user.photoURL;
+      //         firebaseUser.$save()
+      //           .then(function() {
+      //             console.log('saved photoURL');
+      //           })
+      //       }
+      //     })
+      // }
 
-          console.log(firebaseUser.user);
-          var userObject = $firebaseObject(DatabaseRef.child('users').child(firebaseUser.user.uid));
-          userObject.$loaded()
-            .then(function(data) {
-              // don't override
-              // data if exist
-              userObject.$save({
-                displayName: data.displayName || firebaseUser.user.displayName,
-                email: data.email || firebaseUser.user.email,
-                emailVerified: data.emailVerified || firebaseUser.user.emailVerified,
-                admin: data.admin || admin,
-                createdAt: new Date().getTime()
-              })
-            })
+      // FACEBOOK AUTH
+      $scope.facebookAuth = function() {
+        var provider = new firebase.auth.FacebookAuthProvider();
+        provider.addScope('email');
 
-          toastr.success('Logged in with Google successfully', 'Success');
-          // updateUserIfEmpty(firebaseUser);
-          $state.go('admin');
-        })
-        .catch(function(error) {
-          toastr.error(error.message, error.reason);
-        })
+        Auth.$signInWithPopup(provider)
+          .then(function(firebaseUser) {
+            toastr.success('Logged in with Google successfully', 'Success');
+            $state.go('home');
+          })
+          .catch(function(error) {
+            toastr.error(error.message, error.reason);
+          })
+      }
     }
+  ])
 
-    // function updateUserIfEmpty(authData) {
-    //   // data from sign in
-    //   console.log(authData.user.uid);
-    //   // data from /users/uid/
-    //   var firebaseUser = $firebaseObject(DatabaseRef.child('users').child(authData.user.uid));
-
-    //   firebaseUser.$loaded()
-    //     .then(function(user) {
-    //       if (!user.displayName) {
-    //         firebaseUser.displayName = authData.user.displayName;
-    //         firebaseUser.$save()
-    //           .then(function() {
-    //             console.log('saved displayname');
-    //           })
-    //       } else if (!user.photoURL) {
-    //         firebaseUser.photoURL = authData.user.photoURL;
-    //         firebaseUser.$save()
-    //           .then(function() {
-    //             console.log('saved photoURL');
-    //           })
-    //       }
-    //     })
-    // }
-
-    // FACEBOOK AUTH
-    $scope.facebookAuth = function() {
-      var provider = new firebase.auth.FacebookAuthProvider();
-      provider.addScope('email');
-
-      Auth.$signInWithPopup(provider)
-        .then(function(firebaseUser) {
-          toastr.success('Logged in with Google successfully', 'Success');
-          $state.go('home');
-        })
-        .catch(function(error) {
-          toastr.error(error.message, error.reason);
-        })
-    }
-  })
-
-.controller('emailVerifyController', function($scope, $stateParams, Auth) {
-  $scope.mode = $stateParams.mode;
-  $scope.oobCode = $stateParams.oobCode;
-})
+.controller('emailVerifyController', ['$scope', '$stateParams', 'Auth',
+  function($scope, $stateParams, Auth) {
+    $scope.mode = $stateParams.mode;
+    $scope.oobCode = $stateParams.oobCode;
+  }
+])
 
 angular.module("codeSide")
 
-.factory("Auth", function($firebaseAuth) {
+.factory("Auth", ['$firebaseAuth', function($firebaseAuth) {
   return $firebaseAuth();
-});
+}]);
 
 angular.module('codeSide')
-  .controller('MenuController', function($scope, Auth, $state) {
+  .controller('MenuController', ['$scope', 'Auth', '$state', function($scope, Auth, $state) {
 
     Auth.$onAuthStateChanged(function(firebaseUser) {
-      if(firebaseUser != null) {
+      if (firebaseUser != null) {
         $scope.loggedIn = true;
       } else {
         $scope.loggedIn = false;
@@ -334,11 +339,11 @@ angular.module('codeSide')
       });
       $state.go('login');
     }
-  })
+  }])
 
 angular.module('codeSide')
 
-.controller('CreateController',
+.controller('CreateController', ['$scope', '$state', '$firebaseObject', '$firebaseArray', 'DatabaseRef', 'Auth',
   function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth) {
     // codemirror settings
     $scope.editor1Options = {
@@ -487,210 +492,216 @@ angular.module('codeSide')
           })
       }
     }
-  })
+  }
+])
 
 angular.module('codeSide')
 
-.controller('DetailController', function($scope, $state, $stateParams, DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
-  // codemirror options
-  $scope.editorOptions = {
-    lineWrapping: true,
-    lineNumbers: true,
-    readOnly: 'nocursor',
-  };
+.controller('DetailController', ['$scope', '$state',
+      '$stateParams', 'DatabaseRef', '$firebaseObject',
+      '$firebaseArray', 'Auth',
+      function($scope, $state, $stateParams, DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
+        // codemirror options
+        $scope.editorOptions = {
+          lineWrapping: true,
+          lineNumbers: true,
+          readOnly: 'nocursor',
+        };
 
-  $scope.loading = true;
-  $scope.editAllowed = true;
+        $scope.loading = true;
+        $scope.editAllowed = true;
 
-  $scope.enableEditing = function() {
-    $scope.editorOptions.readOnly = false;
-    $scope.editAllowed = !$scope.editAllowed;
-  }
+        $scope.enableEditing = function() {
+          $scope.editorOptions.readOnly = false;
+          $scope.editAllowed = !$scope.editAllowed;
+        }
 
-  // global ref to root of app db
-  var ref = DatabaseRef;
-  var codeRef = ref.child('codes')
-    .child($stateParams.codeId);
+        // global ref to root of app db
+        var ref = DatabaseRef;
+        var codeRef = ref.child('codes')
+          .child($stateParams.codeId);
 
-  var codeObject = $firebaseObject(codeRef);
-  var snippetsArray = $firebaseArray(codeRef.child('snippets'));
+        var codeObject = $firebaseObject(codeRef);
+        var snippetsArray = $firebaseArray(codeRef.child('snippets'));
 
-  var langRef = ref.child('languages');
-  var langObject = $firebaseObject(langRef);
+        var langRef = ref.child('languages');
+        var langObject = $firebaseObject(langRef);
 
-  var currentAuth = Auth.$getAuth();
+        var currentAuth = Auth.$getAuth();
 
-  if (currentAuth) {
-    var userData = $firebaseObject(DatabaseRef.child('users').child(currentAuth.uid));
-    userData.$loaded()
+        if (currentAuth) {
+          var userData = $firebaseObject(DatabaseRef.child('users').child(currentAuth.uid));
+          userData.$loaded()
+            .then(function(data) {
+              $scope.profile = data;
+              console.log($scope.profile);
+            })
+        }
+
+        $scope.saveLanguage = function(data) {
+          if ($scope.profile) {
+            saveLanguage(data);
+          } else {
+            toastr.error('You are not logged in', 'Log in first!');
+          }
+        }
+
+        function saveLanguage(data) {
+          console.log(data);
+          var update = {
+            // $id: data.name,
+            name: data.name,
+            code: data.code,
+            createdAt: new Date().getTime(),
+            createdBy: $scope.profile.username
+          }
+          console.log(update);
+          var toSave = ref.child('codes')
+            .child($stateParams.codeId)
+            .child('snippets')
+            .child(data.name)
+            .update(update);
+
+          console.log('Thanks for saving this: ', toSave);
+          toastr.success('Changes saved!');
+          return toSave;
+        }
+
+
+        langObject.$loaded()
+          .then(function(data) {
+            $scope.languages = data;
+            console.log(data);
+          });
+
+        codeObject.$loaded()
+          .then(function() {
+            $scope.loading = false;
+            $scope.formData = {
+              createdBy: codeObject.createdBy,
+              title: codeObject.title,
+              createdAt: codeObject.createdAt,
+              snippets: codeObject.snippets,
+              description: codeObject.description
+            }
+
+            snippetsArray.$loaded()
+              // default languages to load on load
+              // based on first two items in snippets array
+              .then(function(snippets) {
+                $scope.codeOne = loadLanguage(snippets.$keyAt(0));
+                $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
+              })
+          })
+
+        $scope.codeOneChanged = function(language) {
+          codeObject.$loaded()
+            .then(function() {
+              toastr.success('Running to fetch the code');
+              $scope.refreshOne = true;
+              var returnedCode = loadLanguage(language);
+              returnedCode
+                .$loaded()
+                .then(function() {
+                  if (returnedCode.code) {
+                    console.log('something came out');
+                    $scope.codeOne = returnedCode;
+                  } else {
+                    console.log('nothing came out');
+                    $scope.codeOne = {
+                      name: language,
+                      code: ''
+                    }
+                  }
+                })
+
+              console.log($scope.codeOne);
+              $scope.refreshOne = false;
+            })
+        };
+
+        $scope.codeTwoChanged = function(language) {
+          codeObject.$loaded()
+            .then(function() {
+              toastr.success('Running to fetch the code');
+              $scope.refreshTwo = true;
+              var returnedCode = loadLanguage(language);
+              returnedCode
+                .$loaded()
+                .then(function() {
+                  if (returnedCode.code) {
+                    console.log('something came out');
+                    $scope.codeTwo = returnedCode;
+                  } else {
+                    console.log('nothing came out');
+                    $scope.codeTwo = {
+                      name: language,
+                      code: ''
+                    }
+                  }
+                })
+
+              console.log($scope.codeTwo);
+              $scope.refreshOne = false;
+            })
+        };
+
+
+        function loadLanguage(language) {
+          var snippetRef = codeRef
+            .child('snippets')
+            .child(language)
+
+          return $firebaseObject(snippetRef);
+        };
+
+        // codeObject.$bindTo($scope, "formData")
+        //   .then(function() {
+        //     console.log('bound');
+        //     $scope.loading = false;
+        //   });
+
+        // codeRef
+        //   .child($stateParams.codeId)
+        //   .once('value', function(snap) {
+        //     console.log(snap.val());
+        //     $scope.data = snap.val();
+        //   })
+
+      }]);
+
+angular.module('codeSide')
+
+.controller('HomeController', ['$scope', '$rootScope', 'Auth', 'DatabaseRef', '$firebaseArray',
+  function($scope, $rootScope, Auth, DatabaseRef, $firebaseArray) {
+    var ref = DatabaseRef;
+    var codeDataRef = ref.child('codes');
+    var query = codeDataRef.orderByChild("createdAt").limitToLast(10);
+
+    var list = $firebaseArray(query);
+
+    // TODO email verification
+    // Auth.$onAuthStateChanged(function(firebaseUser) {
+    //   if (firebaseUser) {
+    //     console.log(firebaseUser);
+    //     if (firebaseUser.emailVerified) {
+    //       console.log(firebaseUser);
+    //       toastr.success('Email verified');
+    //     } else {
+    //       toastr.info('Do verify email');
+    //     }
+    //   }
+    // })
+
+    list.$loaded()
       .then(function(data) {
-        $scope.profile = data;
-        console.log($scope.profile);
+        $scope.list = data;
+      })
+      .catch(function(error) {
+        toastr.error(error.message);
       })
   }
-
-  $scope.saveLanguage = function(data) {
-    if ($scope.profile) {
-      saveLanguage(data);
-    } else {
-      toastr.error('You are not logged in', 'Log in first!');
-    }
-  }
-
-  function saveLanguage(data) {
-    console.log(data);
-    var update = {
-      // $id: data.name,
-      name: data.name,
-      code: data.code,
-      createdAt: new Date().getTime(),
-      createdBy: $scope.profile.username
-    }
-    console.log(update);
-    var toSave = ref.child('codes')
-      .child($stateParams.codeId)
-      .child('snippets')
-      .child(data.name)
-      .update(update);
-
-    console.log('Thanks for saving this: ', toSave);
-    toastr.success('Changes saved!');
-    return toSave;
-  }
-
-
-  langObject.$loaded()
-    .then(function(data) {
-      $scope.languages = data;
-      console.log(data);
-    });
-
-  codeObject.$loaded()
-    .then(function() {
-      $scope.loading = false;
-      $scope.formData = {
-        createdBy: codeObject.createdBy,
-        title: codeObject.title,
-        createdAt: codeObject.createdAt,
-        snippets: codeObject.snippets,
-        description: codeObject.description
-      }
-
-      snippetsArray.$loaded()
-        // default languages to load on load
-        // based on first two items in snippets array
-        .then(function(snippets) {
-          $scope.codeOne = loadLanguage(snippets.$keyAt(0));
-          $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
-        })
-    })
-
-  $scope.codeOneChanged = function(language) {
-    codeObject.$loaded()
-      .then(function() {
-        toastr.success('Running to fetch the code');
-        $scope.refreshOne = true;
-        var returnedCode = loadLanguage(language);
-        returnedCode
-          .$loaded()
-          .then(function() {
-            if (returnedCode.code) {
-              console.log('something came out');
-              $scope.codeOne = returnedCode;
-            } else {
-              console.log('nothing came out');
-              $scope.codeOne = {
-                name: language,
-                code: ''
-              }
-            }
-          })
-
-        console.log($scope.codeOne);
-        $scope.refreshOne = false;
-      })
-  };
-
-  $scope.codeTwoChanged = function(language) {
-    codeObject.$loaded()
-      .then(function() {
-        toastr.success('Running to fetch the code');
-        $scope.refreshTwo = true;
-        var returnedCode = loadLanguage(language);
-        returnedCode
-          .$loaded()
-          .then(function() {
-            if (returnedCode.code) {
-              console.log('something came out');
-              $scope.codeTwo = returnedCode;
-            } else {
-              console.log('nothing came out');
-              $scope.codeTwo = {
-                name: language,
-                code: ''
-              }
-            }
-          })
-
-        console.log($scope.codeTwo);
-        $scope.refreshOne = false;
-      })
-  };
-
-
-  function loadLanguage(language) {
-    var snippetRef = codeRef
-      .child('snippets')
-      .child(language)
-
-    return $firebaseObject(snippetRef);
-  };
-
-  // codeObject.$bindTo($scope, "formData")
-  //   .then(function() {
-  //     console.log('bound');
-  //     $scope.loading = false;
-  //   });
-
-  // codeRef
-  //   .child($stateParams.codeId)
-  //   .once('value', function(snap) {
-  //     console.log(snap.val());
-  //     $scope.data = snap.val();
-  //   })
-
-});
-
-angular.module('codeSide')
-
-.controller('HomeController', function($scope, $rootScope, Auth, DatabaseRef, $firebaseArray) {
-  var ref = DatabaseRef;
-  var codeDataRef = ref.child('codes');
-  var query = codeDataRef.orderByChild("createdAt").limitToLast(10);
-
-  var list = $firebaseArray(query);
-
-  // TODO email verification
-  // Auth.$onAuthStateChanged(function(firebaseUser) {
-  //   if (firebaseUser) {
-  //     console.log(firebaseUser);
-  //     if (firebaseUser.emailVerified) {
-  //       console.log(firebaseUser);
-  //       toastr.success('Email verified');
-  //     } else {
-  //       toastr.info('Do verify email');
-  //     }
-  //   }
-  // })
-
-  list.$loaded()
-    .then(function(data) {
-      $scope.list = data;
-    })
-    .catch(function(error) {
-      toastr.error(error.message);
-    })
-})
+])
 
 angular.module("codeSide")
 .factory("DatabaseRef", function() {

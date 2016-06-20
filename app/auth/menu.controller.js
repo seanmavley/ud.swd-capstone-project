@@ -1,8 +1,8 @@
 angular.module('codeSide')
-  .controller('MenuController', function($scope, Auth, $state) {
+  .controller('MenuController', ['$scope', 'Auth', '$state', function($scope, Auth, $state) {
 
     Auth.$onAuthStateChanged(function(firebaseUser) {
-      if(firebaseUser != null) {
+      if (firebaseUser != null) {
         $scope.loggedIn = true;
       } else {
         $scope.loggedIn = false;
@@ -16,4 +16,4 @@ angular.module('codeSide')
       });
       $state.go('login');
     }
-  })
+  }])

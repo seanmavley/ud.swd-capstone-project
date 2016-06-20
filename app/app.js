@@ -1,6 +1,6 @@
 angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
   $stateProvider
     .state('home', {
@@ -71,12 +71,12 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
     })
 
   $urlRouterProvider.otherwise('/');
-})
+}])
 
-.run(function($rootScope, $state, Auth) {
+.run(['$rootScope', '$state', 'Auth', function($rootScope, $state, Auth) {
   $rootScope.$on("$stateChangeError", function(even, toState, toParams, fromState, fromParams, error) {
     if (error === "AUTH_REQUIRED") {
       $state.go('login');
     }
   })
-})
+}])

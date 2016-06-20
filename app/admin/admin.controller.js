@@ -1,6 +1,7 @@
 angular.module('codeSide')
 
-.controller('AdminController', function($scope, $firebaseObject, $firebaseArray, currentAuth, Auth, DatabaseRef) {
+.controller('AdminController', ['$scope', '$firebaseObject', '$firebaseArray', 'currentAuth', 'Auth', 'DatabaseRef', 
+  function($scope, $firebaseObject, $firebaseArray, currentAuth, Auth, DatabaseRef) {
   // init empty formData object
   $scope.newPassword = ''
   $scope.formData = {};
@@ -82,4 +83,4 @@ angular.module('codeSide')
         toastr.error(error.message, error.reason);
       })
   }
-})
+}])

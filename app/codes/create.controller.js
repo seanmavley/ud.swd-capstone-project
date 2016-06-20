@@ -1,6 +1,6 @@
 angular.module('codeSide')
 
-.controller('CreateController',
+.controller('CreateController', ['$scope', '$state', '$firebaseObject', '$firebaseArray', 'DatabaseRef', 'Auth',
   function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth) {
     // codemirror settings
     $scope.editor1Options = {
@@ -149,4 +149,5 @@ angular.module('codeSide')
           })
       }
     }
-  })
+  }
+])

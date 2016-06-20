@@ -1,5 +1,5 @@
 angular.module("codeSide")
 
-.factory("Auth", function($firebaseAuth) {
+.factory("Auth", ['$firebaseAuth', function($firebaseAuth) {
   return $firebaseAuth();
-});
+}]);
