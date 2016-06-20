@@ -136,6 +136,7 @@ angular.module('codeSide')
                     name: $scope.formData.to,
                     code: $scope.formData.toCode,
                     uid: currentAuth.uid,
+                    createdAt: now,
                     createdBy: $scope.profile.username,
                   })
                 console.log('Hands are clean now');
