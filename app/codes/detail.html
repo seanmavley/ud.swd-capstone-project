@@ -19,11 +19,11 @@
     </div>
 </div>
 <div class="row">
-    <div class="small-12 medium-6 large-6 column with-border padding" ng-show="!loading">
+    <div class="small-12 medium-6 column" ng-show="!loading">
         <form ng-submit="saveLanguage(codeOne)" name="myForm" novalidate>
             <div class="input-group">
                 <span class="input-group-label">From</span>
-                <select class="input-group-field" ng-model="codeOne.name" ng-model-options="{ updateOn: 'blur' }" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
+                <select class="input-group-field" ng-model="codeOne.name" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
                     <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                 </select>
                 <div class="input-group-button" ng-show="!editAllowed ">
@@ -34,11 +34,11 @@
             <span style="border-top:1px solid grey;">By: <a href="">{{ codeOne.createdBy }}</a> on {{ codeOne.createdAt | date : 'medium' }}</span>
         </form>
     </div>
-    <div class="small-12 medium-6 large-6 column with-border padding" ng-show="!loading">
+    <div class="small-12 medium-6 large-6 column" ng-show="!loading">
         <form ng-submit="saveLanguage(codeTwo)" novalidate>
             <div class="input-group">
                 <span class="input-group-label">To</span>
-                <select class="input-group-field" ng-model="codeTwo.name" ng-model-options="{ updateOn: 'blur' }" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
+                <select class="input-group-field" ng-model="codeTwo.name" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
                     <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                 </select>
                 <div class="input-group-button" ng-show="!editAllowed">
