@@ -11,9 +11,9 @@
             <p>
                 <strong>Title:</strong> {{ formData.title }} &#x2299; <strong>Created by:</strong> <a href="">{{ formData.createdBy }}</a> &#x2299; <strong>On</strong> {{ formData.createdAt | date : 'medium' }}
                 <br/> <strong>Description:</strong> {{ formData.description }}
-                <br/> Available in these languages: <span ng-repeat="name in formData.snippets">{{ name.name }} &bull; </span>
+                <br/> <strong>Languages available:</strong> <span ng-repeat="name in formData.snippets">{{ name.name }} &bull; </span>
                 <br/>
-                <a ng-click="enableEditing()" class="button small expand margin-top">{{ editAllowed ? 'Enable' : 'Disable' }} editing</a>
+                <a ng-click="enableEditing()" class="button small expand margin-top" ng-show="profile">{{ editAllowed ? 'Enable' : 'Disable' }} editing</a>
             </p>
         </div>
     </div>
@@ -23,10 +23,10 @@
         <form ng-submit="saveLanguage(codeOne)" name="myForm" novalidate>
             <div class="input-group">
                 <span class="input-group-label">From</span>
-                <select class="input-group-field" ng-model="codeOne.name" ng-model-options="{ updateOn: 'blur' }" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed" ng-class="{ dimmed: refreshOne == true }" type='text' required>
+                <select class="input-group-field" ng-model="codeOne.name" ng-model-options="{ updateOn: 'blur' }" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
                     <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                 </select>
-                <div class="input-group-button" ng-show="!editAllowed">
+                <div class="input-group-button" ng-show="!editAllowed ">
                     <input type="submit" class="button" value="Submit">
                 </div>
             </div>
@@ -38,7 +38,7 @@
         <form ng-submit="saveLanguage(codeTwo)" novalidate>
             <div class="input-group">
                 <span class="input-group-label">To</span>
-                <select class="input-group-field" ng-model="codeTwo.name" ng-model-options="{ updateOn: 'blur' }" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed" ng-class="{ dimmed: refreshOne == true }" type='text' required>
+                <select class="input-group-field" ng-model="codeTwo.name" ng-model-options="{ updateOn: 'blur' }" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
                     <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                 </select>
                 <div class="input-group-button" ng-show="!editAllowed">

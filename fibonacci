@@ -29,8 +29,6 @@ fib[0] = 0;
 fib[1] = 1;
 for(i=2; i<=10; i++)
 {
-    // Next fibonacci number = previous + one before previous
-    // Translated to JavaScript:
     fib[i] = fib[i-2] + fib[i-1];
     alert(fib[i]);
 }
@@ -44,4 +42,18 @@ int fib(int x) {
         return 1;
 
     return fib(x-1)+fib(x-2);
+}
+
+// C#
+static void Main(string[] args)
+{
+    Console.WriteLine("Please enter a number");
+    int number = Convert.ToInt32(Console.ReadLine());
+    Fibonacci(0, 1, 1, number);
+}   
+
+public static void Fibonacci(int a, int b, int counter, int number)
+{
+    Console.WriteLine(a);
+    if (counter < number) Fibonacci(b, a+b, counter+1, number);
 }

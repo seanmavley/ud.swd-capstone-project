@@ -11,7 +11,7 @@
       }
     },
     "languages": {
-      ".write": "true",
+      ".write": "auth.uid != null && auth.email == 'seanmavley@gmail.com'",
       ".read": "true"
     }
   }

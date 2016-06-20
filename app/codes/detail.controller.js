@@ -1,15 +1,16 @@
 angular.module('codeSide')
 
-.controller('DetailController', function($scope, $state, $stateParams, DatabaseRef, $firebaseObject, $firebaseArray) {
+.controller('DetailController', function($scope, $state, $stateParams, DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
   // codemirror options
-  // TODO dynamically change mode
-  // to match language
   $scope.editorOptions = {
     lineWrapping: true,
     lineNumbers: true,
     readOnly: 'nocursor',
   };
-  
+
+  $scope.loading = true;
+  $scope.editAllowed = true;
+
   $scope.enableEditing = function() {
     $scope.editorOptions.readOnly = false;
     $scope.editAllowed = !$scope.editAllowed;
@@ -26,19 +27,33 @@ angular.module('codeSide')
   var langRef = ref.child('languages');
   var langObject = $firebaseObject(langRef);
 
-  $scope.loading = true;
-  $scope.editAllowed = true;
+  var currentAuth = Auth.$getAuth();
+
+  if (currentAuth) {
+    var userData = $firebaseObject(DatabaseRef.child('users').child(currentAuth.uid));
+    userData.$loaded()
+      .then(function(data) {
+        $scope.profile = data;
+        console.log($scope.profile);
+      })
+  }
 
   $scope.saveLanguage = function(data) {
-    saveLanguage(data);
+    if ($scope.profile) {
+      saveLanguage(data);
+    } else {
+      toastr.error('You are not logged in', 'Log in first!');
+    }
   }
 
   function saveLanguage(data) {
     console.log(data);
     var update = {
-      $id: data.name,
+      // $id: data.name,
       name: data.name,
-      code: data.code
+      code: data.code,
+      createdAt: new Date().getTime(),
+      createdBy: $scope.profile.username
     }
     console.log(update);
     var toSave = ref.child('codes')

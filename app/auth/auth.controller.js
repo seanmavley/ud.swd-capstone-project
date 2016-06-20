@@ -82,7 +82,8 @@ angular.module('codeSide')
                 displayName: data.displayName || firebaseUser.user.displayName,
                 email: data.email || firebaseUser.user.email,
                 emailVerified: data.emailVerified || firebaseUser.user.emailVerified,
-                admin: data.admin || admin
+                admin: data.admin || admin,
+                createdAt: new Date().getTime()
               })
             })
 
