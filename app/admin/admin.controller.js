@@ -37,7 +37,7 @@ angular.module('codeSide')
 
   list.$loaded()
     .then(function(data) {
-      console.log(data);
+      // console.log(data);
       $scope.list = data
     })
     .catch(function(error) {
