@@ -1,24 +1,27 @@
 <div class="small-12 columns">
     <div class="small-12 medium-6 columns">
-        <h4>Profile Info</h4>
         <div ng-show="!authInfo">
             <div class="loader">
                 <span>{</span><span>}</span>
             </div>
         </div>
         <div ng-show="authInfo">
+            <h3>Profile Info</h3>
             <p>Username: {{ authInfo.username || "No Username"}} &bull; <span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex="1" title="Username, once set, is permanent!">Help</span>
             </p>
             <p>Name: {{ authInfo.displayName || "No name" }} </p>
-            <p>Email: {{ authInfo.email || "No email" }} &bull; Verified: {{ authInfo.emailVerified }}
-                <br/> <a href="">Verify Email</a></p>
+            <p>Email: {{ authInfo.email || "No email" }}</p>
+            <p ng-show="{{ authInfo.emailVerified }}">
+                Verified
+                <a ng-click="sendVerifyEmail()">Verify Email</a>
+            </p>
             <p ng-show="authInfo.photoURL">Image:
                 <img ng-src="{{ authInfo.photoURL }}">
             </p>
         </div>
     </div>
     <div class="small-12 medium-6 columns">
-        <h4>My CodeSides</h4>
+        <h3>My CodeSides</h3>
         <span ng-show="!list.length">You have not started any new CodeSides</span>
         <span ng-repeat="item in list" ng-show="list"><a ui-sref="detail({ codeId: item.$id })" >{{ item.title }}</a> &bull; </span>
     </div>

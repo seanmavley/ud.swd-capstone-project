@@ -15,7 +15,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
     })
     .state('emailVerify', {
       url: '/verify-email?mode&oobCode',
-      templateUrl: 'templates/verify-email.html',
+      templateUrl: 'auth/verify-email.html',
       controller: 'emailVerifyController',
       resolve: {
         currentAuth:['Auth', function(Auth) {
@@ -94,6 +94,10 @@ angular.module('codeSide')
 
   userData.$loaded()
     .then(function() {
+      if(!userData.emailVerified) {
+        toastr.error('You have not verified your email', 'Verify Email', { timeOut: 0 });
+      };
+
       $scope.authInfo = userData;
       $scope.formData = userData;
 
@@ -104,13 +108,14 @@ angular.module('codeSide')
         toastr.error('Please set your username. Once set, cannot be changed.', 'Username required!', { timeOut: 0});
       }
 
-      if(!currentAuth.password) {
-        toastr.info('Set password in order to log in');
-      }
+      // Check if password is set
+      // if(!currentAuth.password) {
+      //   toastr.info('Set password in order to log in');
+      // }
     })
 
   // retrieve codes created by 
-  var query = DatabaseRef.child('codes').orderByChild('createdBy').equalTo(currentAuth.uid);
+  var query = DatabaseRef.child('codes').orderByChild('uid').equalTo(currentAuth.uid);
   var list = $firebaseArray(query);
 
   list.$loaded()
@@ -121,6 +126,11 @@ angular.module('codeSide')
     .catch(function(error) {
       toastr.error(error.message);
     })
+
+  $scope.sendVerifyEmail = function() {
+    toastr.info('Sending email verification message to your email. Check inbox now!', 'Email Verification');
+    currentAuth.sendEmailVerification();
+  }
 
   $scope.updateUser = function() {
     if (!$scope.formData.displayName) {
@@ -215,6 +225,8 @@ angular.module('codeSide')
                   admin: admin
                 })
 
+              firebaseUser.sendEmailVerification();
+
               toastr.success('Awesome! Welcome aboard. Login to begin coding!', 'Register Successful', { timeOut: 7000 });
               // Auth.$signOut();
               $state.go('admin');
@@ -307,10 +319,19 @@ angular.module('codeSide')
     }
   ])
 
-.controller('emailVerifyController', ['$scope', '$stateParams', 'Auth',
-  function($scope, $stateParams, Auth) {
-    $scope.mode = $stateParams.mode;
-    $scope.oobCode = $stateParams.oobCode;
+.controller('emailVerifyController', ['$scope', '$stateParams', 'Auth', 'currentAuth',
+  function($scope, $stateParams, Auth, currentAuth) {
+
+    firebase.auth().applyActionCode($stateParams.oobCode)
+      .then(function(data) {
+        // change emailVerified for logged in User
+        DatabaseRef.child('users').child(currentAuth.uid)
+          .update({ emailVerified: true })
+      })
+      .catch(function(error) {
+        $scope.error = error.message;
+        toastr.error(error.message, error.reason, { timeOut: 0 });
+      })
   }
 ])
 

@@ -45,6 +45,8 @@ angular.module('codeSide')
                   admin: admin
                 })
 
+              firebaseUser.sendEmailVerification();
+
               toastr.success('Awesome! Welcome aboard. Login to begin coding!', 'Register Successful', { timeOut: 7000 });
               // Auth.$signOut();
               $state.go('admin');
@@ -137,9 +139,18 @@ angular.module('codeSide')
     }
   ])
 
-.controller('emailVerifyController', ['$scope', '$stateParams', 'Auth',
-  function($scope, $stateParams, Auth) {
-    $scope.mode = $stateParams.mode;
-    $scope.oobCode = $stateParams.oobCode;
+.controller('emailVerifyController', ['$scope', '$stateParams', 'Auth', 'currentAuth',
+  function($scope, $stateParams, Auth, currentAuth) {
+
+    firebase.auth().applyActionCode($stateParams.oobCode)
+      .then(function(data) {
+        // change emailVerified for logged in User
+        DatabaseRef.child('users').child(currentAuth.uid)
+          .update({ emailVerified: true })
+      })
+      .catch(function(error) {
+        $scope.error = error.message;
+        toastr.error(error.message, error.reason, { timeOut: 0 });
+      })
   }
 ])

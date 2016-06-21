@@ -15,7 +15,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
     })
     .state('emailVerify', {
       url: '/verify-email?mode&oobCode',
-      templateUrl: 'templates/verify-email.html',
+      templateUrl: 'auth/verify-email.html',
       controller: 'emailVerifyController',
       resolve: {
         currentAuth:['Auth', function(Auth) {
