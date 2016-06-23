@@ -31,7 +31,7 @@ gulp.task('serve', ['build'], function() {
   browser.init({ server: 'app/', port: port });
   // watch and rebuild scripts
   gulp.watch(['app/**/*.js', '!app/build/', '!app/build/**'], ['build'])
-    .on('change', browser.reload);
+    // .on('change', browser.reload);
 });
 
 gulp.task('default', ['serve']);
