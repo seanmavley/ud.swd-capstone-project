@@ -139,8 +139,8 @@ angular.module('codeSide')
     }
   ])
 
-.controller('emailVerifyController', ['$scope', '$stateParams', 'Auth', 'currentAuth',
-  function($scope, $stateParams, Auth, currentAuth) {
+.controller('emailVerifyController', ['$scope', '$stateParams', 'Auth', 'currentAuth', 'DatabaseRef',
+  function($scope, $stateParams, Auth, currentAuth, DatabaseRef) {
 
     firebase.auth().applyActionCode($stateParams.oobCode)
       .then(function(data) {

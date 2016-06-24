@@ -30,6 +30,9 @@ angular.module('codeSide')
     $scope.showRevOne = false;
     $scope.showRevTwo = false;
 
+    $scope.revisionTwo = {};
+    $scope.revisionOne = {};
+
     $scope.enableAlternative = function(number) {
       if (number == 'one') {
         $scope.showRevOne = !$scope.showRevOne;
@@ -47,12 +50,13 @@ angular.module('codeSide')
           .child($stateParams.codeId)
           .push({
             codeId: $stateParams.codeId,
-            code: revisionTwo.code,
+            code: revision.code,
             createdBy: $scope.profile.username,
             uid: currentAuth.uid,
             createdAt: now,
             language: code.name
           })
+        toastr.success('Added your code!', 'Successful');
       } else {
         toastr.error('Kindly add code', 'Code missing!');
       }
@@ -68,22 +72,41 @@ angular.module('codeSide')
     var codeRef = ref.child('codes')
       .child($stateParams.codeId);
 
+
     var codeObject = $firebaseObject(codeRef);
     var snippetsArray = $firebaseArray(codeRef.child('snippets'));
 
     var langRef = ref.child('languages');
     var langObject = $firebaseObject(langRef);
 
-    var currentAuth = Auth.$getAuth();
+    Auth.$waitForSignIn()
+      .then(function(loggedIn) {
+        var currentAuth = loggedIn;
 
-    if (currentAuth) {
-      var userData = $firebaseObject(DatabaseRef.child('users').child(currentAuth.uid));
-      userData.$loaded()
-        .then(function(data) {
-          $scope.profile = data;
-          console.log($scope.profile);
-        })
-    }
+        // load username
+        var userData = $firebaseObject(DatabaseRef.child('users').child(currentAuth.uid));
+        userData.$loaded()
+          .then(function(data) {
+            $scope.profile = data;
+            console.log($scope.profile);
+          })
+
+        // load revisions
+        var query = DatabaseRef
+          .child('revision')
+          .child($stateParams.codeId)
+          //   .orderByChild('uid')
+          //   .equalTo(currentAuth.uid);
+
+        var list = $firebaseArray(query);
+
+        list.$loaded()
+          .then(function(data) {
+            console.log(data);
+            $scope.revisionTwo = data;
+          })
+      })
+
 
     $scope.saveLanguage = function(data) {
       if ($scope.profile) {
@@ -94,25 +117,31 @@ angular.module('codeSide')
     }
 
     function saveLanguage(data) {
-      console.log(data);
-      var update = {
-        // $id: data.name,
-        name: data.name,
-        code: data.code,
-        createdAt: new Date().getTime(),
-        createdBy: $scope.profile.username
-      }
-      console.log(update);
-      var toSave = ref.child('codes')
-        .child($stateParams.codeId)
-        .child('snippets')
-        // use $getRecord here instead
-        .child(data.name)
-        .update(update);
+      // does editing user match created user?
+      if ($scope.profile.username = data.createdBy) {
+        console.log(data);
+        var update = {
+          // $id: data.name,
+          name: data.name,
+          code: data.code,
+          createdAt: new Date().getTime(),
+          createdBy: $scope.profile.username
+        };
 
-      console.log('Thanks for saving this: ', toSave);
-      toastr.success('Changes saved!');
-      return toSave;
+        console.log(update);
+        var toSave = ref.child('codes')
+          .child($stateParams.codeId)
+          .child('snippets')
+          // use $getRecord here instead
+          .child(data.name)
+          .update(update);
+
+        console.log('Thanks for saving this: ', toSave);
+        toastr.success('Changes saved!');
+        return toSave;
+      } else {
+        toastr.error('Because you did not create this snippet, you cannot edit', 'Not allowed')
+      }
     }
 
 
