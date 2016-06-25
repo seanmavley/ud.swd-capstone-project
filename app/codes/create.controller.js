@@ -115,9 +115,8 @@ angular.module('codeSide')
               })
               .then(function(added) {
                 // add first snippet
-                DatabaseRef.child('codes')
+                DatabaseRef.child('snippets')
                   .child(added.key)
-                  .child('snippets')
                   .child($scope.formData.from)
                   .set({
                     name: $scope.formData.from,
@@ -128,9 +127,8 @@ angular.module('codeSide')
                   });
 
                 // add second snippet
-                DatabaseRef.child('codes')
+                DatabaseRef.child('snippets')
                   .child(added.key)
-                  .child('snippets')
                   .child($scope.formData.to)
                   .set({
                     name: $scope.formData.to,

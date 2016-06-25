@@ -478,9 +478,8 @@ angular.module('codeSide')
               })
               .then(function(added) {
                 // add first snippet
-                DatabaseRef.child('codes')
+                DatabaseRef.child('snippets')
                   .child(added.key)
-                  .child('snippets')
                   .child($scope.formData.from)
                   .set({
                     name: $scope.formData.from,
@@ -491,9 +490,8 @@ angular.module('codeSide')
                   });
 
                 // add second snippet
-                DatabaseRef.child('codes')
+                DatabaseRef.child('snippets')
                   .child(added.key)
-                  .child('snippets')
                   .child($scope.formData.to)
                   .set({
                     name: $scope.formData.to,
@@ -589,9 +587,12 @@ angular.module('codeSide')
     var codeRef = ref.child('codes')
       .child($stateParams.codeId);
 
+    var snippetRef = ref.child('snippets')
+      .child($stateParams.codeId);
+
 
     var codeObject = $firebaseObject(codeRef);
-    var snippetsArray = $firebaseArray(codeRef.child('snippets'));
+    var snippetsArray = $firebaseArray(snippetRef);
 
     var langRef = ref.child('languages');
     var langObject = $firebaseObject(langRef);
@@ -627,7 +628,7 @@ angular.module('codeSide')
 
     $scope.saveLanguage = function(data) {
       if ($scope.profile) {
-        saveLanguage(data);
+        saveLanguage(data)
       } else {
         toastr.error('You are not logged in', 'Log in first!');
       }
@@ -635,7 +636,7 @@ angular.module('codeSide')
 
     function saveLanguage(data) {
       // does editing user match created user?
-      if ($scope.profile.username = data.createdBy) {
+      // if ($scope.profile.username = data.createdBy) {
         console.log(data);
         var update = {
           // $id: data.name,
@@ -646,19 +647,18 @@ angular.module('codeSide')
         };
 
         console.log(update);
-        var toSave = ref.child('codes')
+        var toSave = ref.child('snippets')
           .child($stateParams.codeId)
-          .child('snippets')
-          // use $getRecord here instead
+          // TODO use $getRecord here instead
           .child(data.name)
           .update(update);
 
-        console.log('Thanks for saving this: ', toSave);
+        console.log('Saving Done!');
         toastr.success('Changes saved!');
         return toSave;
-      } else {
-        toastr.error('Because you did not create this snippet, you cannot edit', 'Not allowed')
-      }
+      // } else {
+      //   toastr.error('Because you did not create this snippet, you cannot edit', 'Not allowed')
+      // }
     }
 
 
@@ -675,7 +675,6 @@ angular.module('codeSide')
           createdBy: codeObject.createdBy,
           title: codeObject.title,
           createdAt: codeObject.createdAt,
-          snippets: codeObject.snippets,
           description: codeObject.description
         }
 
@@ -742,11 +741,7 @@ angular.module('codeSide')
 
 
     function loadLanguage(language) {
-      var snippetRef = codeRef
-        .child('snippets')
-        .child(language)
-
-      return $firebaseObject(snippetRef);
+      return $firebaseObject(snippetRef.child(language));
     };
 
     // codeObject.$bindTo($scope, "formData")
