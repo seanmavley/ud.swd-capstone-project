@@ -26,7 +26,7 @@
                 <select class="input-group-field" ng-model="codeOne.name" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
                     <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                 </select>
-                <div class="input-group-button" ng-show="!editAllowed">
+                <div class="input-group-button" ng-show="!editAllowed && profile.username === codeOne.createdBy">
                     <input type="submit" class="button" value="Submit">
                 </div>
             </div>
@@ -61,7 +61,7 @@
                 <select class="input-group-field" ng-model="codeTwo.name" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
                     <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                 </select>
-                <div class="input-group-button" ng-show="!editAllowed">
+                <div class="input-group-button" ng-show="!editAllowed && profile.username === codeOne.createdBy">
                     <input type="submit" class="button" value="Submit">
                 </div>
             </div>

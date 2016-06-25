@@ -556,7 +556,6 @@ angular.module('codeSide')
       if (number == 'two') {
         $scope.showRevTwo = !$scope.showRevTwo;
       }
-
     };
 
     $scope.addAlternative = function(revision, code) {
@@ -584,25 +583,20 @@ angular.module('codeSide')
 
     // global ref to root of app db
     var ref = DatabaseRef;
-    var codeRef = ref.child('codes')
-      .child($stateParams.codeId);
-
-    var snippetRef = ref.child('snippets')
-      .child($stateParams.codeId);
-
+    var codeRef = ref.child('codes').child($stateParams.codeId);
+    var snippetRef = ref.child('snippets').child($stateParams.codeId);
+    var langRef = ref.child('languages');
+    var usersRef = ref.child('users');
 
     var codeObject = $firebaseObject(codeRef);
     var snippetsArray = $firebaseArray(snippetRef);
-
-    var langRef = ref.child('languages');
     var langObject = $firebaseObject(langRef);
 
     Auth.$waitForSignIn()
       .then(function(loggedIn) {
         var currentAuth = loggedIn;
-
         // load username
-        var userData = $firebaseObject(DatabaseRef.child('users').child(currentAuth.uid));
+        var userData = $firebaseObject(usersRef.child(currentAuth.uid));
         userData.$loaded()
           .then(function(data) {
             $scope.profile = data;
@@ -636,7 +630,7 @@ angular.module('codeSide')
 
     function saveLanguage(data) {
       // does editing user match created user?
-      // if ($scope.profile.username = data.createdBy) {
+      if ($scope.profile.username == data.createdBy) {
         console.log(data);
         var update = {
           // $id: data.name,
@@ -656,9 +650,9 @@ angular.module('codeSide')
         console.log('Saving Done!');
         toastr.success('Changes saved!');
         return toSave;
-      // } else {
-      //   toastr.error('Because you did not create this snippet, you cannot edit', 'Not allowed')
-      // }
+      } else {
+        toastr.error('Because you did not create this snippet, you cannot edit', 'Not allowed')
+      }
     }
 
 
