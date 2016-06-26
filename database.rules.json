@@ -2,13 +2,14 @@
   "rules": {
     "codes": {
       ".read": "true",
-      ".write": "auth.uid != null"
+      ".write": "auth.uid != null",
+      ".indexOn": "createdAt"
     },
     "snippets": {
       ".read": "true",
       "$snipId": {
         "$language": {
-          ".write": "auth.uid != null",
+          ".write": "auth.uid != null"
         }
       }
     },
