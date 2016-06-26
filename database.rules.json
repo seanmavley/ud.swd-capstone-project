@@ -5,10 +5,10 @@
       ".write": "auth.uid != null"
     },
     "snippets": {
+      ".read": "true",
       "$snipId": {
         "$language": {
-          ".read": "true",
-          ".write": "(!data.exists() && newData.child('uid').val() == auth.uid ) || (data.child('uid').val() == auth.uid && newData.child('uid').val() == auth.uid)"
+          ".write": "auth.uid != null",
         }
       }
     },

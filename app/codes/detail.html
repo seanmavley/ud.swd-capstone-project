@@ -26,12 +26,12 @@
                 <select class="input-group-field" ng-model="codeOne.name" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
                     <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                 </select>
-                <div class="input-group-button" ng-show="!editAllowed && profile.username === codeOne.createdBy">
+                <div class="input-group-button" ng-show="!editAllowed && profile.username === codeOne.createdBy || !codeOne.createdBy">
                     <input type="submit" class="button" value="Submit">
                 </div>
             </div>
             <textarea ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
-            <span style="border-top:1px solid grey;">By: <a href="">{{ codeOne.createdBy }}</a> on {{ codeOne.createdAt | date : 'medium' }}</span>
+            <span style="border-top:1px solid grey;" ng-show="codeOne.createdBy">By: <a href="">{{ codeOne.createdBy }}</a> <br/> On {{ codeOne.createdAt | date : 'medium' }}</span>
         </form>
         <!-- <div style="margin-top:10px;">
             <a ng-click="enableAlternative('one')" class="button">Add {{ codeOne.name }} alternative</a>
@@ -61,12 +61,12 @@
                 <select class="input-group-field" ng-model="codeTwo.name" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
                     <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                 </select>
-                <div class="input-group-button" ng-show="!editAllowed && profile.username === codeOne.createdBy">
+                <div class="input-group-button" ng-show="!editAllowed && profile.username === codeTwo.createdBy || !codeTwo.createdBy">
                     <input type="submit" class="button" value="Submit">
                 </div>
             </div>
             <textarea rows="7" ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
-            <span style="border-top:1px solid grey;">By: <a href="">{{ codeTwo.createdBy }}</a> on {{ codeTwo.createdAt | date : 'medium' }}</span>
+            <span style="border-top:1px solid grey;" ng-show="codeTwo.createdBy">By: <a href="">{{ codeTwo.createdBy }}</a> <br/>On {{ codeTwo.createdAt | date : 'medium' }}</span>
         </form>
         <!-- <div style="margin-top:10px;">
             <a ng-click="enableAlternative('two')" class="button">Add {{ codeTwo.name }} alternative</a>

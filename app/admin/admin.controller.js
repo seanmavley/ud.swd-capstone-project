@@ -12,6 +12,7 @@ angular.module('codeSide')
   userData.$loaded()
     .then(function() {
       if(!userData.emailVerified) {
+        toastr.clear();
         toastr.error('You have not verified your email', 'Verify Email', { timeOut: 0 });
       };
 

@@ -1,21 +1,25 @@
 angular.module('codeSide')
 
-.controller('CreateController', ['$scope', '$state', '$firebaseObject', '$firebaseArray', 'DatabaseRef', 'Auth',
-  function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth) {
+.controller('CreateController', ['$scope', '$state', '$firebaseObject', '$firebaseArray', 'DatabaseRef', 'Auth', 'currentAuth',
+  function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth, currentAuth) {
     // codemirror settings
-    $scope.editor1Options = {
+    $scope.editorOneOptions = {
       lineWrapping: true,
       lineNumbers: true,
       readOnly: false,
     };
 
-    $scope.editor2Options = {
+    $scope.editorTwoOptions = {
       lineWrapping: true,
       lineNumbers: true,
       readOnly: false,
     };
 
-    var currentAuth = Auth.$getAuth();
+    // init some values
+    $scope.sending = false; // form is being submitted
+    $scope.notReady = true; // disable dropdown if languages not ready
+
+    // load codes
     var codeData = $firebaseArray(DatabaseRef.child('codes'));
 
     // load userData
@@ -24,23 +28,24 @@ angular.module('codeSide')
     userData.$loaded()
       .then(function(data) {
         $scope.profile = data;
-        console.log($scope.profile);
+        // console.log($scope.profile);
       })
 
     // load languages
-    $scope.notReady = true; // disable dropdown if languages not ready
     var langObject = $firebaseObject(DatabaseRef.child('languages'));
     langObject.$loaded()
       .then(function(data) {
-        toastr.success('All is set. Code away!', 'Document ready!');
         $scope.languages = data;
-        console.log(data);
+        // console.log(data);
         $scope.notReady = false;
+        toastr.success('All is set. Code away!', 'Document ready!');
       }, function(error) {
-        toastr.error(error.message, 'Oh no, error!');
+        toastr.error(error.message, 'Couldnt not load languages');
       });
 
+    // when left side of code is changed
     $scope.code1Change = function(language) {
+      // is code2 same as this?
       $scope.codeDuplicate = false;
       if ($scope.formData.to == $scope.formData.from) {
         toastr.warning('You cannot select same progamming language on both sides', 'Fix it!', {
@@ -52,17 +57,20 @@ angular.module('codeSide')
         toastr.clear();
         $scope.codeDuplicate = false;
         console.log('code changed to: ' + language);
+        // change codemirror settings to match language
         if (['csharp', 'cpp'].includes(language)) {
           console.log('I am one of clike: ' + language);
-          $scope.editor1Options.mode = language;
-          console.log($scope.editor1Options.mode);
+          $scope.editorOneOptions.mode = language;
+          // console.log($scope.editorOneOptions.mode);
         } else {
-          $scope.editor1Options.mode = $scope.formData.from;
-          console.log($scope.editor1Options.mode);
+          $scope.editorOneOptions.mode = $scope.formData.from;
+          // console.log($scope.editorOneOptions.mode);
         }
       }
     }
 
+    // TODO: Refactor this to be one function for
+    // top code one change and code two change
     $scope.code2Change = function(language) {
       $scope.codeDuplicate = false;
       if ($scope.formData.to == $scope.formData.from) {
@@ -77,17 +85,14 @@ angular.module('codeSide')
         console.log('code changed to: ' + language);
         if (['csharp', 'cpp'].includes(language)) {
           console.log('I am one of clike: ' + language);
-          $scope.editor2Options.mode = language;
-          console.log($scope.editor2Options.mode);
+          $scope.editorTwoOptions.mode = language;
+          // console.log($scope.editorTwoOptions.mode);
         } else {
-          $scope.editor2Options.mode = $scope.formData.to;
-          console.log($scope.editor2Options.mode);
+          $scope.editorTwoOptions.mode = $scope.formData.to;
+          // console.log($scope.editorTwoOptions.mode);
         }
       }
     }
-
-    $scope.sending = false;
-
 
     $scope.addNew = function() {
       if ($scope.addForm.$invalid) {

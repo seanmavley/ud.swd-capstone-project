@@ -95,6 +95,7 @@ angular.module('codeSide')
   userData.$loaded()
     .then(function() {
       if(!userData.emailVerified) {
+        toastr.clear();
         toastr.error('You have not verified your email', 'Verify Email', { timeOut: 0 });
       };
 
@@ -363,22 +364,26 @@ angular.module('codeSide')
 
 angular.module('codeSide')
 
-.controller('CreateController', ['$scope', '$state', '$firebaseObject', '$firebaseArray', 'DatabaseRef', 'Auth',
-  function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth) {
+.controller('CreateController', ['$scope', '$state', '$firebaseObject', '$firebaseArray', 'DatabaseRef', 'Auth', 'currentAuth',
+  function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth, currentAuth) {
     // codemirror settings
-    $scope.editor1Options = {
+    $scope.editorOneOptions = {
       lineWrapping: true,
       lineNumbers: true,
       readOnly: false,
     };
 
-    $scope.editor2Options = {
+    $scope.editorTwoOptions = {
       lineWrapping: true,
       lineNumbers: true,
       readOnly: false,
     };
 
-    var currentAuth = Auth.$getAuth();
+    // init some values
+    $scope.sending = false; // form is being submitted
+    $scope.notReady = true; // disable dropdown if languages not ready
+
+    // load codes
     var codeData = $firebaseArray(DatabaseRef.child('codes'));
 
     // load userData
@@ -387,23 +392,24 @@ angular.module('codeSide')
     userData.$loaded()
       .then(function(data) {
         $scope.profile = data;
-        console.log($scope.profile);
+        // console.log($scope.profile);
       })
 
     // load languages
-    $scope.notReady = true; // disable dropdown if languages not ready
     var langObject = $firebaseObject(DatabaseRef.child('languages'));
     langObject.$loaded()
       .then(function(data) {
-        toastr.success('All is set. Code away!', 'Document ready!');
         $scope.languages = data;
-        console.log(data);
+        // console.log(data);
         $scope.notReady = false;
+        toastr.success('All is set. Code away!', 'Document ready!');
       }, function(error) {
-        toastr.error(error.message, 'Oh no, error!');
+        toastr.error(error.message, 'Couldnt not load languages');
       });
 
+    // when left side of code is changed
     $scope.code1Change = function(language) {
+      // is code2 same as this?
       $scope.codeDuplicate = false;
       if ($scope.formData.to == $scope.formData.from) {
         toastr.warning('You cannot select same progamming language on both sides', 'Fix it!', {
@@ -415,17 +421,20 @@ angular.module('codeSide')
         toastr.clear();
         $scope.codeDuplicate = false;
         console.log('code changed to: ' + language);
+        // change codemirror settings to match language
         if (['csharp', 'cpp'].includes(language)) {
           console.log('I am one of clike: ' + language);
-          $scope.editor1Options.mode = language;
-          console.log($scope.editor1Options.mode);
+          $scope.editorOneOptions.mode = language;
+          // console.log($scope.editorOneOptions.mode);
         } else {
-          $scope.editor1Options.mode = $scope.formData.from;
-          console.log($scope.editor1Options.mode);
+          $scope.editorOneOptions.mode = $scope.formData.from;
+          // console.log($scope.editorOneOptions.mode);
         }
       }
     }
 
+    // TODO: Refactor this to be one function for
+    // top code one change and code two change
     $scope.code2Change = function(language) {
       $scope.codeDuplicate = false;
       if ($scope.formData.to == $scope.formData.from) {
@@ -440,17 +449,14 @@ angular.module('codeSide')
         console.log('code changed to: ' + language);
         if (['csharp', 'cpp'].includes(language)) {
           console.log('I am one of clike: ' + language);
-          $scope.editor2Options.mode = language;
-          console.log($scope.editor2Options.mode);
+          $scope.editorTwoOptions.mode = language;
+          // console.log($scope.editorTwoOptions.mode);
         } else {
-          $scope.editor2Options.mode = $scope.formData.to;
-          console.log($scope.editor2Options.mode);
+          $scope.editorTwoOptions.mode = $scope.formData.to;
+          // console.log($scope.editorTwoOptions.mode);
         }
       }
     }
-
-    $scope.sending = false;
-
 
     $scope.addNew = function() {
       if ($scope.addForm.$invalid) {
@@ -558,6 +564,7 @@ angular.module('codeSide')
       }
     };
 
+    // TODO: get it fixed.
     $scope.addAlternative = function(revision, code) {
       if (revision.code) {
         DatabaseRef.child('revision')
@@ -596,12 +603,16 @@ angular.module('codeSide')
       .then(function(loggedIn) {
         var currentAuth = loggedIn;
         // load username
-        var userData = $firebaseObject(usersRef.child(currentAuth.uid));
-        userData.$loaded()
-          .then(function(data) {
-            $scope.profile = data;
-            console.log($scope.profile);
-          })
+        if (currentAuth) {
+          var userData = $firebaseObject(usersRef.child(currentAuth.uid));
+          userData.$loaded()
+            .then(function(data) {
+              $scope.profile = data;
+              // console.log($scope.profile);
+            })
+        } else {
+          console.log('You are not logged in!');
+        }
 
         // load revisions
         var query = DatabaseRef
@@ -619,7 +630,7 @@ angular.module('codeSide')
           })
       })
 
-
+    // Save changes to language
     $scope.saveLanguage = function(data) {
       if ($scope.profile) {
         saveLanguage(data)
@@ -629,9 +640,8 @@ angular.module('codeSide')
     }
 
     function saveLanguage(data) {
-      // does editing user match created user?
-      if ($scope.profile.username == data.createdBy) {
-        console.log(data);
+      if (data.createdBy == null) {
+        // console.log(data);
         var update = {
           // $id: data.name,
           name: data.name,
@@ -646,20 +656,36 @@ angular.module('codeSide')
           // TODO use $getRecord here instead
           .child(data.name)
           .update(update);
-
         console.log('Saving Done!');
         toastr.success('Changes saved!');
         return toSave;
+      } else if ($scope.profile.username == data.createdBy) {
+        // console.log(data);
+        var update = {
+          // $id: data.name,
+          name: data.name,
+          code: data.code,
+        };
+
+        console.log(update);
+        var toSave = ref.child('snippets')
+          .child($stateParams.codeId)
+          // TODO use $getRecord here instead
+          .child(data.name)
+          .update(update);
+        console.log('Saving Done!');
+        toastr.success('Changes saved!');
+        return toSave;
+        // does editing user match created user?
       } else {
         toastr.error('Because you did not create this snippet, you cannot edit', 'Not allowed')
       }
     }
 
-
     langObject.$loaded()
       .then(function(data) {
         $scope.languages = data;
-        console.log(data);
+        // console.log(data);
       });
 
     codeObject.$loaded()
@@ -702,7 +728,7 @@ angular.module('codeSide')
               }
             })
 
-          console.log($scope.codeOne);
+          // console.log($scope.codeOne);
           $scope.refreshOne = false;
         })
     };
@@ -728,29 +754,14 @@ angular.module('codeSide')
               }
             })
 
-          console.log($scope.codeTwo);
+          // console.log($scope.codeTwo);
           $scope.refreshOne = false;
         })
     };
 
-
     function loadLanguage(language) {
       return $firebaseObject(snippetRef.child(language));
     };
-
-    // codeObject.$bindTo($scope, "formData")
-    //   .then(function() {
-    //     console.log('bound');
-    //     $scope.loading = false;
-    //   });
-
-    // codeRef
-    //   .child($stateParams.codeId)
-    //   .once('value', function(snap) {
-    //     console.log(snap.val());
-    //     $scope.data = snap.val();
-    //   })
-
   }
 ]);
 
@@ -760,7 +771,7 @@ angular.module('codeSide')
   function($scope, $rootScope, Auth, DatabaseRef, $firebaseArray) {
     var ref = DatabaseRef;
     var codeDataRef = ref.child('codes');
-    var query = codeDataRef.orderByChild("createdAt").limitToLast(10);
+    var query = codeDataRef.orderByChild("createdAt").limitToLast(50);
 
     var list = $firebaseArray(query);
 

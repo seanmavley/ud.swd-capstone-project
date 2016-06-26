@@ -43,6 +43,7 @@ angular.module('codeSide')
       }
     };
 
+    // TODO: get it fixed.
     $scope.addAlternative = function(revision, code) {
       if (revision.code) {
         DatabaseRef.child('revision')
@@ -81,12 +82,16 @@ angular.module('codeSide')
       .then(function(loggedIn) {
         var currentAuth = loggedIn;
         // load username
-        var userData = $firebaseObject(usersRef.child(currentAuth.uid));
-        userData.$loaded()
-          .then(function(data) {
-            $scope.profile = data;
-            console.log($scope.profile);
-          })
+        if (currentAuth) {
+          var userData = $firebaseObject(usersRef.child(currentAuth.uid));
+          userData.$loaded()
+            .then(function(data) {
+              $scope.profile = data;
+              // console.log($scope.profile);
+            })
+        } else {
+          console.log('You are not logged in!');
+        }
 
         // load revisions
         var query = DatabaseRef
@@ -104,7 +109,7 @@ angular.module('codeSide')
           })
       })
 
-
+    // Save changes to language
     $scope.saveLanguage = function(data) {
       if ($scope.profile) {
         saveLanguage(data)
@@ -114,9 +119,8 @@ angular.module('codeSide')
     }
 
     function saveLanguage(data) {
-      // does editing user match created user?
-      if ($scope.profile.username == data.createdBy) {
-        console.log(data);
+      if (data.createdBy == null) {
+        // console.log(data);
         var update = {
           // $id: data.name,
           name: data.name,
@@ -131,20 +135,36 @@ angular.module('codeSide')
           // TODO use $getRecord here instead
           .child(data.name)
           .update(update);
-
         console.log('Saving Done!');
         toastr.success('Changes saved!');
         return toSave;
+      } else if ($scope.profile.username == data.createdBy) {
+        // console.log(data);
+        var update = {
+          // $id: data.name,
+          name: data.name,
+          code: data.code,
+        };
+
+        console.log(update);
+        var toSave = ref.child('snippets')
+          .child($stateParams.codeId)
+          // TODO use $getRecord here instead
+          .child(data.name)
+          .update(update);
+        console.log('Saving Done!');
+        toastr.success('Changes saved!');
+        return toSave;
+        // does editing user match created user?
       } else {
         toastr.error('Because you did not create this snippet, you cannot edit', 'Not allowed')
       }
     }
 
-
     langObject.$loaded()
       .then(function(data) {
         $scope.languages = data;
-        console.log(data);
+        // console.log(data);
       });
 
     codeObject.$loaded()
@@ -187,7 +207,7 @@ angular.module('codeSide')
               }
             })
 
-          console.log($scope.codeOne);
+          // console.log($scope.codeOne);
           $scope.refreshOne = false;
         })
     };
@@ -213,28 +233,13 @@ angular.module('codeSide')
               }
             })
 
-          console.log($scope.codeTwo);
+          // console.log($scope.codeTwo);
           $scope.refreshOne = false;
         })
     };
 
-
     function loadLanguage(language) {
       return $firebaseObject(snippetRef.child(language));
     };
-
-    // codeObject.$bindTo($scope, "formData")
-    //   .then(function() {
-    //     console.log('bound');
-    //     $scope.loading = false;
-    //   });
-
-    // codeRef
-    //   .child($stateParams.codeId)
-    //   .once('value', function(snap) {
-    //     console.log(snap.val());
-    //     $scope.data = snap.val();
-    //   })
-
   }
 ]);

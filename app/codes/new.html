@@ -1,11 +1,11 @@
 <div class="small-12 columns">
-<div class="show-for-small-only">
-    <p>Code is best written on a PC. Kindly switch to PC to bring the best in you!</p>
-</div>
+    <div class="show-for-small-only">
+        <p>Code is best written on a PC. Kindly switch to PC to bring the best in you!</p>
+    </div>
     <form ng-submit="addNew()" name="addForm">
         <div class="row callout margin-top">
             <div class="small-12 medium-9 columns">
-                <label>Choose code title and describe 
+                <label>Choose code title and describe
                     <input type="text" ng-model="formData.title" required autofocus placeholder="eg. Fibonacci Function">
                 </label>
                 <label>
@@ -23,7 +23,7 @@
                     <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                 </select>
             </div>
-            <textarea ui-codemirror ui-codemirror-opts="editor1Options" ng-model="formData.fromCode" id="from_snippet" required>Write code here</textarea>
+            <textarea ui-codemirror ui-codemirror-opts="editorOneOptions" ng-model="formData.fromCode" id="from_snippet" required>Write code here</textarea>
         </div>
         <div class="medium-6 large-6 column with-border padding">
             <div class="input-group">
@@ -32,7 +32,7 @@
                 </select>
                 <span class="input-group-label">To</span>
             </div>
-            <textarea rows="7" ui-codemirror ui-codemirror-opts="editor2Options" ng-model="formData.toCode" id="to_snippet" required>Write code here</textarea>
+            <textarea rows="7" ui-codemirror ui-codemirror-opts="editorTwoOptions" ng-model="formData.toCode" id="to_snippet" required>Write code here</textarea>
         </div>
     </form>
 </div>
