@@ -181,6 +181,7 @@ angular.module('codeSide')
           // default languages to load on load
           // based on first two items in snippets array
           .then(function(snippets) {
+            $scope.formData.snippets = snippets;
             $scope.codeOne = loadLanguage(snippets.$keyAt(0));
             $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
           })
