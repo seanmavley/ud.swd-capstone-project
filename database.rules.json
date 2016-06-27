@@ -3,7 +3,7 @@
     "codes": {
       ".read": "true",
       ".write": "auth.uid != null",
-      ".indexOn": "createdAt"
+      ".indexOn": ["createdAt", "uid"]
     },
     "snippets": {
       ".read": "true",

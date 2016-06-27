@@ -11,11 +11,11 @@ angular.module('codeSide')
 
   userData.$loaded()
     .then(function() {
-      if(!userData.emailVerified) {
+      if(!currentAuth.emailVerified) {
+        $scope.notVerified = true;
         toastr.clear();
         toastr.error('You have not verified your email', 'Verify Email', { timeOut: 0 });
       };
-
       $scope.authInfo = userData;
       $scope.formData = userData;
 

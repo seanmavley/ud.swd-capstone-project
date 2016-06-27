@@ -9,11 +9,10 @@ angular.module('codeSide')
         } else {
           Auth.$signInWithEmailAndPassword($scope.formData.email, $scope.formData.password)
             .then(function(firebaseUser) {
-              // TODO send email verification after login after
-              // first time
               if (!firebaseUser.emailVerified) {
-                firebaseUser.sendEmailVerification();
-                toastr.info('Email verification sent', 'Verify email!');
+                // firebaseUser.sendEmailVerification();
+                toastr.info('Your email is NOT verified.', 'Verify email!');
+                $state.go('admin');
               }
               $state.go('home');
             })
@@ -41,19 +40,18 @@ angular.module('codeSide')
                   username: $scope.formData.username,
                   displayName: firebaseUser.displayName || '',
                   email: firebaseUser.email,
-                  emailVerified: firebaseUser.emailVerified,
                   admin: admin
                 })
 
+              toastr.info('Sending email verification link. Check email!', "You've got mail!")
               firebaseUser.sendEmailVerification();
 
               toastr.success('Awesome! Welcome aboard. Login to begin coding!', 'Register Successful', { timeOut: 7000 });
-              // Auth.$signOut();
               $state.go('admin');
             })
             .catch(function(error) {
               toastr.error(error.message, error.reason);
-              // empty the form
+              // reset the form
               $scope.formData = {};
             });
         } else {
@@ -83,7 +81,6 @@ angular.module('codeSide')
                 userObject.$save({
                   displayName: data.displayName || firebaseUser.user.displayName,
                   email: data.email || firebaseUser.user.email,
-                  emailVerified: data.emailVerified || firebaseUser.user.emailVerified,
                   admin: data.admin || admin,
                   createdAt: new Date().getTime()
                 })
@@ -97,30 +94,6 @@ angular.module('codeSide')
             toastr.error(error.message, error.reason);
           })
       }
-
-      // function updateUserIfEmpty(authData) {
-      //   // data from sign in
-      //   console.log(authData.user.uid);
-      //   // data from /users/uid/
-      //   var firebaseUser = $firebaseObject(DatabaseRef.child('users').child(authData.user.uid));
-
-      //   firebaseUser.$loaded()
-      //     .then(function(user) {
-      //       if (!user.displayName) {
-      //         firebaseUser.displayName = authData.user.displayName;
-      //         firebaseUser.$save()
-      //           .then(function() {
-      //             console.log('saved displayname');
-      //           })
-      //       } else if (!user.photoURL) {
-      //         firebaseUser.photoURL = authData.user.photoURL;
-      //         firebaseUser.$save()
-      //           .then(function() {
-      //             console.log('saved photoURL');
-      //           })
-      //       }
-      //     })
-      // }
 
       // FACEBOOK AUTH
       $scope.facebookAuth = function() {
@@ -138,19 +111,3 @@ angular.module('codeSide')
       }
     }
   ])
-
-.controller('emailVerifyController', ['$scope', '$stateParams', 'Auth', 'currentAuth', 'DatabaseRef',
-  function($scope, $stateParams, Auth, currentAuth, DatabaseRef) {
-
-    firebase.auth().applyActionCode($stateParams.oobCode)
-      .then(function(data) {
-        // change emailVerified for logged in User
-        DatabaseRef.child('users').child(currentAuth.uid)
-          .update({ emailVerified: true })
-      })
-      .catch(function(error) {
-        $scope.error = error.message;
-        toastr.error(error.message, error.reason, { timeOut: 0 });
-      })
-  }
-])

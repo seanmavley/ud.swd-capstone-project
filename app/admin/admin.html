@@ -11,9 +11,8 @@
             </p>
             <p>Name: {{ authInfo.displayName || "No name" }} </p>
             <p>Email: {{ authInfo.email || "No email" }}</p>
-            <p ng-show="{{ authInfo.emailVerified }}">
-                Verified
-                <a ng-click="sendVerifyEmail()">Verify Email</a>
+            <p ng-show="{{ notVerified }}">
+                <a ng-click="sendVerifyEmail()" class="button small">Verify Email</a>
             </p>
             <p ng-show="authInfo.photoURL">Image:
                 <img ng-src="{{ authInfo.photoURL }}">
