@@ -1,5 +1,7 @@
-<div class="myMenu" ng-controller="MenuController">
-    <span class="show-for-small-only">
+<div class="row">
+    <div class="small-12 medium-10 medium-centered columns">
+        <div class="myMenu" ng-controller="MenuController">
+            <span class="show-for-small-only">
       <a ui-sref="home" class="button" title="Home"><i class="step fi-home size-18"></i></a>
         <a ui-sref="new" class="button success" title="Add Code"><i class="step fi-plus size-18"></i></a>
         <a ui-sref="about" class="button small" title="About CodeSide"><i class="step fi-info size-18"></i></a>
@@ -7,22 +9,24 @@
         <a ui-sref="admin" class="button small" title="Admin Page"><i class="step fi-widget size-18"></i></a>
         <a ng-click="logout()" class="button small" title="Logout"><i class="step fi-power size-18"></i></a>
         </span>
-        <span ng-show="!loggedIn">
+            <span ng-show="!loggedIn">
         <a ui-sref="login" class="button small" title="Login">Login</a>
         <a ui-sref="signup" class="button small" title="Register">Register</a>
         </span>
-    </span>
-    <div class="show-for-medium">
-        <a ui-sref="home" class="button">go.Home()</a>
-        <a ui-sref="new" class="button success">code.New()</a>
-        <a ui-sref="about" class="button small">About()</a>
-        <span ng-show="loggedIn">
+            </span>
+            <div class="show-for-medium">
+                <a ui-sref="home" class="button">go.Home()</a>
+                <a ui-sref="new" class="button success">code.New()</a>
+                <a ui-sref="about" class="button small">About()</a>
+                <span ng-show="loggedIn">
         <a ui-sref="admin" class="button small">open(Dash)</a>
         <a ng-click="logout()" class="button small">Logout.now()</a>
         </span>
-        <span ng-show="!loggedIn">
+                <span ng-show="!loggedIn">
         <a ui-sref="login" class="button small">Login.now()</a>
         <a ui-sref="signup" class="button small">Register.now()</a>
         </span>
+            </div>
+        </div>
     </div>
 </div>

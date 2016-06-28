@@ -41,8 +41,12 @@
     <!-- Header menu -->
     <ng-include src="'templates/menu.html'"></ng-include>
     <!-- Main body -->
-    <div class="row">
-        <ui-view></ui-view>
+    <div class="wrapper">
+        <div class="row">
+            <ui-view></ui-view>
+        </div>
+        <!-- Footer under wrapper -->
+        <ng-include src="'templates/footer.html'"></ng-include>
     </div>
     <!-- Footer menu -->
     <!-- Maybe -->
