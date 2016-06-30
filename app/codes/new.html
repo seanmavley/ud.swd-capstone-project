@@ -1,10 +1,18 @@
 <div class="small-12 columns">
-    <div class="show-for-small-only">
+    <div class="callout alert margin-top" ng-show="!emailVerified">
+        <p class="lead">
+            Please verify your email before you can add code!
+        </p>
+        <p>
+            Kindly visit the <a ui-sref="admin">Admin Page</a> to verify email. Thank you!
+        </p>
+    </div>
+    <div class="show-for-small-only margin-top" ng-show="emailVerified">
         <p>Code is best written on a PC. Kindly switch to PC to bring the best in you!</p>
     </div>
-    <form ng-submit="addNew()" name="addForm">
-        <div class="row callout margin-top">
-            <div class="small-12 medium-9 columns">
+    <form ng-submit="addNew()" name="addForm" ng-show="emailVerified" class="margin-top">
+        <div class="row">
+            <div class="small-12 medium-6 columns callout">
                 <label>Choose code title and describe
                     <input type="text" ng-model="formData.title" required autofocus placeholder="eg. Fibonacci Function">
                 </label>
@@ -12,7 +20,7 @@
                     <textarea ng-model="formData.description" placeholder="Add description here" required>Add description</textarea>
                 </label>
             </div>
-            <div class="small-12 medium-3 columns">
+            <div class="small-12 medium-3 columns end">
                 <input type="submit" class="button large expanded" ng-disabled="sending || addForm.$invalid || codeDuplicate" style="margin-top:13px;" />
             </div>
         </div>

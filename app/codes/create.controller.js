@@ -15,6 +15,10 @@ angular.module('codeSide')
       readOnly: false,
     };
 
+    // used to display form only after email 
+    // verified
+    $scope.emailVerified = currentAuth.emailVerified;
+
     // init some values
     $scope.sending = false; // form is being submitted
     $scope.notReady = true; // disable dropdown if languages not ready
@@ -38,7 +42,9 @@ angular.module('codeSide')
         $scope.languages = data;
         // console.log(data);
         $scope.notReady = false;
-        toastr.success('All is set. Code away!', 'Document ready!');
+        if (currentAuth.emailVerified) {
+          toastr.success('All is set. Code away!', 'Document ready!');
+        }
       }, function(error) {
         toastr.error(error.message, 'Couldnt not load languages');
       });

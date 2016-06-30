@@ -131,6 +131,6 @@
     margin: 10px 0 10px 0;
 }
 
-.column:hover {
+.hoverable:hover {
     border: 1px solid grey;
 }
