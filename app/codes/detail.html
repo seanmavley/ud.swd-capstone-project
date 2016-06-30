@@ -1,39 +1,60 @@
-<div class="row">
-    <div class="small-4 medium-4 medium-centered small-centered columns" ng-show="loading">
-        <div class="loader">
-            <span>{</span><span>}</span>
+<div class="small-12 columns">
+    <div class="row">
+        <div class="small-4 medium-4 medium-centered small-centered columns" ng-show="loading">
+            <div class="loader">
+                <span>{</span><span>}</span>
+            </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="small-12 medium-8 medium-centered columns" ng-show="!loading">
-        <div class="callout">
-            <p>
+    <div class="row">
+        <div class="small-12 medium-6 columns" ng-show="!loading">
+            <div class="callout margin-top">
                 <strong>Title:</strong> {{ formData.title }} &#x2299; <strong>Created by:</strong> <a href="">{{ formData.createdBy }}</a> &#x2299; <strong>On</strong> {{ formData.createdAt | date : 'medium' }}
                 <br/> <strong>Description:</strong> {{ formData.description }}
                 <br/> <strong>Languages available:</strong> <span ng-repeat="name in formData.snippets">{{ name.name }} &bull; </span>
                 <br/>
                 <a ng-click="enableEditing()" class="button small expand margin-top" ng-show="profile">{{ editAllowed ? 'Enable' : 'Disable' }} editing</a>
-            </p>
+            </div>
+        </div>
+        <div class="small-12 medium-6 columns" ng-show="!loading && !editAllowed && profile.username !== formData.createdBy">
+            <div class="callout margin-top">
+                <p class="lead">
+                    You can only edit the code 'Title' and 'Description' you created.
+                </p>
+            </div>
+        </div>
+        <div class="small-12 medium-6 columns" ng-show="!loading && !editAllowed && profile.username === formData.createdBy">
+            <div class="callout margin-top">
+                <form ng-submit="updateCode()" novalidate>
+                    <div class="small-12 columns">
+                        <label>Name
+                            <input type="text" ng-model="formData.title">
+                        </label>
+                    </div>
+                    <div class="small-12 columns">
+                        <textarea ng-model="formData.description" rows="3"></textarea>
+                    </div>
+                    <input type="submit" class="button" ng-disabled="updatingCode">
+                </form>
+            </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="small-12 medium-6 column" ng-show="!loading">
-        <form ng-submit="saveLanguage(codeOne)" name="myForm" novalidate>
-            <div class="input-group">
-                <span class="input-group-label">From</span>
-                <select class="input-group-field" ng-model="codeOne.name" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
-                    <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-                </select>
-                <div class="input-group-button" ng-show="!editAllowed && profile.username === codeOne.createdBy || !codeOne.createdBy">
-                    <input type="submit" class="button" value="Submit">
+    <div class="row">
+        <div class="small-12 medium-6 column" ng-show="!loading">
+            <form ng-submit="saveLanguage(codeOne)" name="myForm" novalidate>
+                <div class="input-group">
+                    <span class="input-group-label">From</span>
+                    <select class="input-group-field" ng-model="codeOne.name" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
+                        <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                    </select>
+                    <div class="input-group-button" ng-show="!editAllowed && profile.username === codeOne.createdBy || !codeOne.createdBy">
+                        <input type="submit" class="button" value="Submit">
+                    </div>
                 </div>
-            </div>
-            <textarea ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
-            <span style="border-top:1px solid grey;" ng-show="codeOne.createdBy">By: <a href="">{{ codeOne.createdBy }}</a> <br/> On {{ codeOne.createdAt | date : 'medium' }}</span>
-        </form>
-        <!-- <div style="margin-top:10px;">
+                <textarea ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
+                <span style="border-top:1px solid grey;" ng-show="codeOne.createdBy">By: <a href="">{{ codeOne.createdBy }}</a> <br/> On {{ codeOne.createdAt | date : 'medium' }}</span>
+            </form>
+            <!-- <div style="margin-top:10px;">
             <a ng-click="enableAlternative('one')" class="button">Add {{ codeOne.name }} alternative</a>
             <div class="callout" ng-show="showRevOne">
                 <form ng-submit="addAlternative(revisionOne, codeOne)" name="alternateOne" novalidate>
@@ -53,22 +74,22 @@
                 <textarea ui-codemirror ui-codemirror-opts="revisionsShow" ui-refresh="revisionTwo.code"></textarea>
             </div>
         </div> -->
-    </div>
-    <div class="small-12 medium-6 large-6 column" ng-show="!loading">
-        <form ng-submit="saveLanguage(codeTwo)" novalidate>
-            <div class="input-group">
-                <span class="input-group-label">To</span>
-                <select class="input-group-field" ng-model="codeTwo.name" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
-                    <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-                </select>
-                <div class="input-group-button" ng-show="!editAllowed && profile.username === codeTwo.createdBy || !codeTwo.createdBy">
-                    <input type="submit" class="button" value="Submit">
+        </div>
+        <div class="small-12 medium-6 large-6 column" ng-show="!loading">
+            <form ng-submit="saveLanguage(codeTwo)" novalidate>
+                <div class="input-group">
+                    <span class="input-group-label">To</span>
+                    <select class="input-group-field" ng-model="codeTwo.name" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
+                        <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                    </select>
+                    <div class="input-group-button" ng-show="!editAllowed && profile.username === codeTwo.createdBy || !codeTwo.createdBy">
+                        <input type="submit" class="button" value="Submit">
+                    </div>
                 </div>
-            </div>
-            <textarea rows="7" ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
-            <span style="border-top:1px solid grey;" ng-show="codeTwo.createdBy">By: <a href="">{{ codeTwo.createdBy }}</a> <br/>On {{ codeTwo.createdAt | date : 'medium' }}</span>
-        </form>
-        <!-- <div style="margin-top:10px;">
+                <textarea rows="7" ui-codemirror ui-codemirror-opts="editorOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
+                <span style="border-top:1px solid grey;" ng-show="codeTwo.createdBy">By: <a href="">{{ codeTwo.createdBy }}</a> <br/>On {{ codeTwo.createdAt | date : 'medium' }}</span>
+            </form>
+            <!-- <div style="margin-top:10px;">
             <a ng-click="enableAlternative('two')" class="button">Add {{ codeTwo.name }} alternative</a>
             <div class="callout" ng-show="showRevTwo">
                 <form ng-submit="addAlternative(revisionTwo, codeTwo)" name="alternateTwo" novalidate>
@@ -88,5 +109,6 @@
                 <textarea ui-codemirror ui-codemirror-opts="revisionsShow" ng-model="item.code" ui-refresh="item.code"></textarea>
             </div>
         </div> -->
+        </div>
     </div>
 </div>

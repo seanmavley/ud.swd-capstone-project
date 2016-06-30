@@ -341,39 +341,6 @@ angular.module('codeSide')
 
 angular.module('codeSide')
 
-.controller('HomeController', ['$scope', '$rootScope', 'Auth', 'DatabaseRef', '$firebaseArray',
-  function($scope, $rootScope, Auth, DatabaseRef, $firebaseArray) {
-    var ref = DatabaseRef;
-    var codeDataRef = ref.child('codes');
-    var query = codeDataRef.orderByChild("createdAt").limitToLast(50);
-
-    var list = $firebaseArray(query);
-
-    // TODO email verification
-    // Auth.$onAuthStateChanged(function(firebaseUser) {
-    //   if (firebaseUser) {
-    //     console.log(firebaseUser);
-    //     if (firebaseUser.emailVerified) {
-    //       console.log(firebaseUser);
-    //       toastr.success('Email verified');
-    //     } else {
-    //       toastr.info('Do verify email');
-    //     }
-    //   }
-    // })
-
-    list.$loaded()
-      .then(function(data) {
-        $scope.list = data;
-      })
-      .catch(function(error) {
-        toastr.error(error.message);
-      })
-  }
-])
-
-angular.module('codeSide')
-
 .controller('CreateController', ['$scope', '$state', '$firebaseObject', '$firebaseArray', 'DatabaseRef', 'Auth', 'currentAuth',
   function($scope, $state, $firebaseObject, $firebaseArray, DatabaseRef, Auth, currentAuth) {
     // codemirror settings
@@ -773,13 +740,79 @@ angular.module('codeSide')
     function loadLanguage(language) {
       return $firebaseObject(snippetRef.child(language));
     };
+
+    $scope.updateCode = function() {
+      var updateData = {
+        title: $scope.formData.title,
+        description: $scope.formData.description,
+        updatedAt: now
+      }
+
+      ref.child('codes')
+        .child($stateParams.codeId)
+        .update(updateData, function(error) {
+          if (error) {
+            toastr.error(error.message, error.reason)
+          } else {
+            toastr.success('Updated succefully');
+          }
+        })
+    };
   }
 ]);
+
+angular.module('codeSide')
+
+.controller('HomeController', ['$scope', '$rootScope', 'Auth', 'DatabaseRef', '$firebaseArray',
+  function($scope, $rootScope, Auth, DatabaseRef, $firebaseArray) {
+    var ref = DatabaseRef;
+    var codeDataRef = ref.child('codes');
+    var query = codeDataRef.orderByChild("createdAt").limitToLast(50);
+
+    var list = $firebaseArray(query);
+
+    // TODO email verification
+    // Auth.$onAuthStateChanged(function(firebaseUser) {
+    //   if (firebaseUser) {
+    //     console.log(firebaseUser);
+    //     if (firebaseUser.emailVerified) {
+    //       console.log(firebaseUser);
+    //       toastr.success('Email verified');
+    //     } else {
+    //       toastr.info('Do verify email');
+    //     }
+    //   }
+    // })
+
+    list.$loaded()
+      .then(function(data) {
+        $scope.list = data;
+      })
+      .catch(function(error) {
+        toastr.error(error.message);
+      })
+  }
+])
 
 angular.module("codeSide")
 .factory("DatabaseRef", function() {
   return firebase.database().ref();
 });
+
+(function(i, s, o, g, r, a, m) {
+  i['GoogleAnalyticsObject'] = r;
+  i[r] = i[r] || function() {
+    (i[r].q = i[r].q || []).push(arguments)
+  }, i[r].l = 1 * new Date();
+  a = s.createElement(o),
+    m = s.getElementsByTagName(o)[0];
+  a.async = 1;
+  a.src = g;
+  m.parentNode.insertBefore(a, m)
+})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+ga('create', 'UA-59418377-1', 'auto');
+ga('send', 'pageview');
 
 $(document).foundation();
 

@@ -242,5 +242,23 @@ angular.module('codeSide')
     function loadLanguage(language) {
       return $firebaseObject(snippetRef.child(language));
     };
+
+    $scope.updateCode = function() {
+      var updateData = {
+        title: $scope.formData.title,
+        description: $scope.formData.description,
+        updatedAt: now
+      }
+
+      ref.child('codes')
+        .child($stateParams.codeId)
+        .update(updateData, function(error) {
+          if (error) {
+            toastr.error(error.message, error.reason)
+          } else {
+            toastr.success('Updated succefully');
+          }
+        })
+    };
   }
 ]);
