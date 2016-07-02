@@ -22,7 +22,10 @@
                         <span>{</span><span>}</span>
                     </div>
                 </div>
-                <span ng-repeat="item in list | orderBy: '-createdAt'" ng-show="list"><a ui-sref="detail({ codeId: item.$id })" >{{ item.title }}</a> &bull; </span>
+                <div class="cards" ng-repeat="item in list | orderBy: '-createdAt'" ng-show="list">
+                    <a ui-sref="detail({ codeId: item.$id })">{{ item.title }}</a> | {{ item.description }} <br/>
+                    <small>{{ item.createdAt | date : 'medium' }} by <a href="">{{ item.createdBy }}</a></small>
+                </div>
             </div>
         </div>
     </div>
