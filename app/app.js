@@ -1,4 +1,4 @@
-angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
+angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress'])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
@@ -18,7 +18,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
       templateUrl: 'auth/verify-email.html',
       controller: 'emailVerifyController',
       resolve: {
-        currentAuth:['Auth', function(Auth) {
+        currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
         }]
       }
@@ -32,7 +32,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
       templateUrl: 'codes/new.html',
       controller: 'CreateController',
       resolve: {
-        currentAuth:['Auth', function(Auth) {
+        currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
         }]
       }
@@ -73,10 +73,20 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror'])
   $urlRouterProvider.otherwise('/');
 }])
 
-.run(['$rootScope', '$state', 'Auth', function($rootScope, $state, Auth) {
+.run(['$rootScope', '$state', 'Auth', 'ngProgressFactory', function($rootScope, $state, Auth, ngProgressFactory) {
   $rootScope.$on("$stateChangeError", function(even, toState, toParams, fromState, fromParams, error) {
     if (error === "AUTH_REQUIRED") {
       $state.go('login');
     }
-  })
+  });
+
+  var progress = ngProgressFactory.createInstance();
+
+  $rootScope.$on('$stateChangeStart', function() {
+    progress.start();
+  });
+
+  $rootScope.$on('$stateChangeSuccess', function() {
+    progress.complete();
+  });
 }])

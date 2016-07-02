@@ -32,7 +32,7 @@
     color: black;
     font-family: Consolas, Menlo, Monaco, monospace;
     font-weight: bold;
-    font-size: 30vh;
+    font-size: 22vh;
     opacity: 0.8;
 }
 
@@ -144,5 +144,5 @@
 }
 
 .cards:hover {
-    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 60px 0 rgba(0, 0, 0, 0.2), 0 5px 10px 0 rgba(0, 0, 0, 0.2);
 }
