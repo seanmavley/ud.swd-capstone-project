@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Your favorite languages, side by side!">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeBySide</title>
+    <title ng-bind="($title || 'Home') + ' :: CodeBySide'">CodeBySide</title>
     <link rel="shortcut icon" href="./assets/images/favicon.png">
     <!-- Disable tap highlight on IE -->
     <meta name="msapplication-tap-highlight" content="no">
@@ -69,6 +69,8 @@
     <script src="vendor/angularfire/dist/angularfire.min.js"></script>
     <script src="vendor/codemirror/lib/codemirror.js"></script>
     <script src="vendor/angular-ui-codemirror/ui-codemirror.js"></script>
+    <script src="vendor/angular-ui-router-title/angular-ui-router-title.js"></script>
+
     <!-- Setting 'Foundations' -->
     <script src="vendor/what-input/what-input.js"></script>
     <script src="vendor/foundation-sites/dist/plugins/foundation.core.js"></script>

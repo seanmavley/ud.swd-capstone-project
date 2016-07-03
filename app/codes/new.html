@@ -24,23 +24,25 @@
                 <input type="submit" class="button large expanded" ng-disabled="sending || addForm.$invalid || codeDuplicate" style="margin-top:13px;" />
             </div>
         </div>
-        <div class="medium-6 large-6 column with-border padding margin-bottom">
-            <div class="input-group">
-                <span class="input-group-label">From</span>
-                <select class="input-group-field" ng-disabled="notReady" ng-model="formData.from" ng-model-options="{ updateOn: 'blur' }" ng-change="code1Change(formData.from)" type='text' required>
-                    <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-                </select>
+        <div class="row">
+            <div class="medium-6 large-6 column with-border padding margin-bottom">
+                <div class="input-group">
+                    <span class="input-group-label">From</span>
+                    <select class="input-group-field" ng-disabled="notReady" ng-model="formData.from" ng-model-options="{ updateOn: 'blur' }" ng-change="code1Change(formData.from)" type='text' required>
+                        <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                    </select>
+                </div>
+                <textarea ui-codemirror ui-codemirror-opts="editorOneOptions" ng-model="formData.fromCode" id="from_snippet" required>Write code here</textarea>
             </div>
-            <textarea ui-codemirror ui-codemirror-opts="editorOneOptions" ng-model="formData.fromCode" id="from_snippet" required>Write code here</textarea>
-        </div>
-        <div class="medium-6 large-6 column with-border padding">
-            <div class="input-group">
-                <select class="input-group-field" ng-disabled="notReady" ng-change="code2Change(formData.to)" ng-model="formData.to" type='text' required>
-                    <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-                </select>
-                <span class="input-group-label">To</span>
+            <div class="medium-6 large-6 column with-border padding">
+                <div class="input-group">
+                    <select class="input-group-field" ng-disabled="notReady" ng-change="code2Change(formData.to)" ng-model="formData.to" type='text' required>
+                        <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                    </select>
+                    <span class="input-group-label">To</span>
+                </div>
+                <textarea rows="7" ui-codemirror ui-codemirror-opts="editorTwoOptions" ng-model="formData.toCode" id="to_snippet" required>Write code here</textarea>
             </div>
-            <textarea rows="7" ui-codemirror ui-codemirror-opts="editorTwoOptions" ng-model="formData.toCode" id="to_snippet" required>Write code here</textarea>
         </div>
     </form>
 </div>

@@ -1,4 +1,4 @@
-angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress'])
+angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress', 'ui.router.title'])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
@@ -7,11 +7,11 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       url: '/',
       templateUrl: 'home/home.html',
       controller: 'HomeController',
-      // resolve: {
-      //   currentAuth: function(Auth) {
-      //     return Auth.$getAuth();
-      //   }
-      // }
+      resolve: {
+        $title: function() {
+          return 'Homepage';
+        }
+      }
     })
     .state('emailVerify', {
       url: '/verify-email?mode&oobCode',
@@ -20,12 +20,20 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       resolve: {
         currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }]
+        }],
+        $title: function() {
+          return 'Verify Email';
+        }
       }
     })
     .state('about', {
       url: '/about',
-      templateUrl: 'templates/about.html'
+      templateUrl: 'templates/about.html',
+      resolve: {
+        $title: function() {
+          return 'About';
+        }
+      }
     })
     .state('new', {
       url: '/new',
@@ -34,13 +42,21 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       resolve: {
         currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }]
+        }],
+        $title: function() {
+          return 'Create New';
+        }
       }
     })
     .state('detail', {
       url: '/codes/:codeId',
       templateUrl: 'codes/detail.html',
-      controller: 'DetailController'
+      controller: 'DetailController',
+      resolve: {
+        $title: function() {
+          return 'Code Detail'
+        }
+      }
     })
     .state('detailFromTo', {
       url: '/:title/:from/to/:to',
@@ -49,7 +65,12 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
     .state('signup', {
       url: '/register',
       templateUrl: 'auth/register.html',
-      controller: 'LogRegController'
+      controller: 'LogRegController',
+      resolve: {
+        $title: function() {
+          return 'Sign up';
+        }
+      }
     })
     .state('login', {
       url: '/login',
@@ -57,6 +78,11 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       controller: 'LogRegController',
       params: {
         message: null
+      },
+      resolve: {
+        $title: function() {
+          return 'Login';
+        }
       }
     })
     .state('admin', {
@@ -66,7 +92,10 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       resolve: {
         currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }]
+        }],
+        $title: function() {
+          return 'Admin';
+        }
       }
     })
 
@@ -93,101 +122,104 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
 
 angular.module('codeSide')
 
-.controller('AdminController', ['$scope', '$firebaseObject', '$firebaseArray', 'currentAuth', 'Auth', 'DatabaseRef', 
+.controller('AdminController', ['$scope', '$firebaseObject', '$firebaseArray', 'currentAuth', 'Auth', 'DatabaseRef',
   function($scope, $firebaseObject, $firebaseArray, currentAuth, Auth, DatabaseRef) {
-  // init empty formData object
-  $scope.newPassword = ''
-  $scope.formData = {};
+    // init empty formData object
+    $scope.newPassword = ''
+    $scope.formData = {};
 
-  // bring in firebase db url
-  var userData = $firebaseObject(DatabaseRef.child('users').child(currentAuth.uid)); // now at firebase.url/users/uid
+    // bring in firebase db url
+    var userData = $firebaseObject(DatabaseRef.child('users').child(currentAuth.uid)); // now at firebase.url/users/uid
 
-  userData.$loaded()
-    .then(function() {
-      if(!currentAuth.emailVerified) {
-        $scope.notVerified = true;
-        toastr.clear();
-        toastr.error('You have not verified your email', 'Verify Email', { timeOut: 0 });
-      };
-      $scope.authInfo = userData;
-      $scope.formData = userData;
+    userData.$loaded()
+      .then(function() {
+        if (!currentAuth.emailVerified) {
+          $scope.notVerified = true;
+          toastr.clear();
+          toastr.error('You have not verified your email', 'Verify Email', { timeOut: 0 });
+        };
+        $scope.authInfo = userData;
+        $scope.formData = userData;
 
-      $scope.hideUsername = true; 
+        $scope.hideUsername = true;
 
-      if(!$scope.formData.username) {
-        $scope.hideUsername = false;
-        toastr.error('Please set your username. Once set, cannot be changed.', 'Username required!', { timeOut: 0});
+        if (!$scope.formData.username) {
+          $scope.hideUsername = false;
+          toastr.error('Please set your username. Once set, cannot be changed.', 'Username required!', { timeOut: 0 });
+        }
+      })
+
+    // retrieve codes created by 
+    var query = DatabaseRef.child('codes').orderByChild('uid').equalTo(currentAuth.uid);
+    var list = $firebaseArray(query);
+
+    list.$loaded()
+      .then(function(data) {
+        // console.log(data);
+        $scope.list = data
+      })
+      .catch(function(error) {
+        toastr.error(error.message);
+      })
+
+    $scope.sendVerifyEmail = function() {
+      toastr.info('Sending email verification message to your email. Check inbox now!', 'Email Verification');
+      currentAuth.sendEmailVerification();
+    }
+
+    $scope.updateUser = function() {
+      if (!$scope.formData.displayName) {
+        toastr.error('Please add full name');
+      } else {
+        console.log($scope.formData);
+        userData.$loaded()
+          .then(function() {
+            DatabaseRef
+              .child('users')
+              .child(currentAuth.uid)
+              .update({
+                username: $scope.formData.username,
+                displayName: $scope.formData.displayName,
+              }, function(error) {
+                if (!error) {
+                  $scope.hideUsername = true;
+                  toastr.clear();
+                  toastr.info('User updated');
+                } else {
+                  toastr.clear();
+                  toastr.error('You cannot edit your username. ' +
+                    'Username is set once', 'Not allowed', { timeOut: 0 });
+                }
+              })
+          })
       }
+    }
 
-      // Check if password is set
-      // if(!currentAuth.password) {
-      //   toastr.info('Set password in order to log in');
-      // }
-    })
+    $scope.updatePassword = function() {
+      Auth.$updatePassword($scope.newPassword).then(function() {
+        toastr.success('Password updated successfully', 'Successful!');
+        $scope.newPassword = '';
+      }).catch(function(error) {
+        toastr.error(error.message, error.reason);
+      });
+    }
 
-  // retrieve codes created by 
-  var query = DatabaseRef.child('codes').orderByChild('uid').equalTo(currentAuth.uid);
-  var list = $firebaseArray(query);
-
-  list.$loaded()
-    .then(function(data) {
-      // console.log(data);
-      $scope.list = data
-    })
-    .catch(function(error) {
-      toastr.error(error.message);
-    })
-
-  $scope.sendVerifyEmail = function() {
-    toastr.info('Sending email verification message to your email. Check inbox now!', 'Email Verification');
-    currentAuth.sendEmailVerification();
-  }
-
-  $scope.updateUser = function() {
-    if (!$scope.formData.displayName) {
-      toastr.error('Please add full name');
-    } else {
-      console.log($scope.formData);
-      userData.$loaded()
-        .then(function() {
-          DatabaseRef
-            .child('users')
-            .child(currentAuth.uid)
-            .update({
-              username: $scope.formData.username,
-              displayName: $scope.formData.displayName,
-            })
+    $scope.loadLanguages = function() {
+      DatabaseRef
+        .child('languages')
+        .update({
+          php: 'PHP',
+          python: 'Python',
+          csharp: 'C#',
+          cpp: 'C++',
+          javascript: 'Javascript',
+          java: 'Java'
+        }, function(error) {
+          toastr.error(error.message, error.reason);
         })
-      $scope.hideUsername = true;
-      toastr.clear();
-      toastr.info('User updated');
     }
   }
-
-  $scope.updatePassword = function() {
-    Auth.$updatePassword($scope.newPassword).then(function() {
-      toastr.success('Password updated successfully', 'Successful!');
-      $scope.newPassword = '';
-    }).catch(function(error) {
-      toastr.error(error.message, error.reason);
-    });
-  }
-
-  $scope.loadLanguages = function() {
-    DatabaseRef
-      .child('languages')
-      .update({
-        php: 'PHP',
-        python: 'Python',
-        csharp: 'C#',
-        cpp: 'C++',
-        javascript: 'Javascript',
-        java: 'Java'
-      }, function(error) {
-        toastr.error(error.message, error.reason);
-      })
-  }
-}])
+])
 
 angular.module('codeSide')
   .controller('LogRegController', ['$scope', 'Auth', '$state', 'DatabaseRef', '$firebaseObject',
@@ -456,8 +488,15 @@ angular.module('codeSide')
         toastr.error('Please fill the form, all of it!',
           'Throw in the best of your coding spices.',
           'It means a lot!', 'Incomplete form');
+        // if same code selected
       } else if ($scope.formData.from == $scope.formData.to) {
         toastr.warning('You cannot select same progamming languages on both sides', 'Fix it!');
+        // if no username
+      } else if (!$scope.profile.username) {
+        toastr.warning('Kindly visit the' +
+                    ' <a ui-sref="admin" style="text-decoration:underline;">Admin Page</a>' + 
+                    'to add username first. Thank you!',
+                    'Your Username is Missing!');
       } else {
         toastr.info('data.sending($scope.data, callback(detailPage, { param: $scope.data.id }));', 'Saved Successfully');
         $scope.sending = true;
@@ -519,7 +558,13 @@ angular.module('codeSide')
   '$firebaseArray', 'Auth',
   function($scope, $state, $stateParams, DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
     // codemirror options
-    $scope.editorOptions = {
+    $scope.editorOneOptions = {
+      lineWrapping: true,
+      lineNumbers: true,
+      readOnly: 'nocursor',
+    };    
+
+    $scope.editorTwoOptions = {
       lineWrapping: true,
       lineNumbers: true,
       readOnly: 'nocursor',
@@ -577,7 +622,8 @@ angular.module('codeSide')
     }
 
     $scope.enableEditing = function() {
-      $scope.editorOptions.readOnly = false;
+      $scope.editorOneOptions.readOnly = false;
+      $scope.editorTwoOptions.readOnly = false;
       $scope.editAllowed = !$scope.editAllowed;
     }
 
@@ -689,7 +735,8 @@ angular.module('codeSide')
           title: data.title,
           createdAt: data.createdAt,
           description: data.description,
-          codeId: data.$id
+          codeId: data.$id,
+          uid: data.uid
         }
 
         snippetsArray.$loaded()

@@ -105,8 +105,15 @@ angular.module('codeSide')
         toastr.error('Please fill the form, all of it!',
           'Throw in the best of your coding spices.',
           'It means a lot!', 'Incomplete form');
+        // if same code selected
       } else if ($scope.formData.from == $scope.formData.to) {
         toastr.warning('You cannot select same progamming languages on both sides', 'Fix it!');
+        // if no username
+      } else if (!$scope.profile.username) {
+        toastr.warning('Kindly visit the' +
+                    ' <a ui-sref="admin" style="text-decoration:underline;">Admin Page</a>' + 
+                    'to add username first. Thank you!',
+                    'Your Username is Missing!');
       } else {
         toastr.info('data.sending($scope.data, callback(detailPage, { param: $scope.data.id }));', 'Saved Successfully');
         $scope.sending = true;

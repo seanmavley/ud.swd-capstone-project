@@ -5,7 +5,13 @@ angular.module('codeSide')
   '$firebaseArray', 'Auth',
   function($scope, $state, $stateParams, DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
     // codemirror options
-    $scope.editorOptions = {
+    $scope.editorOneOptions = {
+      lineWrapping: true,
+      lineNumbers: true,
+      readOnly: 'nocursor',
+    };    
+
+    $scope.editorTwoOptions = {
       lineWrapping: true,
       lineNumbers: true,
       readOnly: 'nocursor',
@@ -63,7 +69,8 @@ angular.module('codeSide')
     }
 
     $scope.enableEditing = function() {
-      $scope.editorOptions.readOnly = false;
+      $scope.editorOneOptions.readOnly = false;
+      $scope.editorTwoOptions.readOnly = false;
       $scope.editAllowed = !$scope.editAllowed;
     }
 
@@ -175,7 +182,8 @@ angular.module('codeSide')
           title: data.title,
           createdAt: data.createdAt,
           description: data.description,
-          codeId: data.$id
+          codeId: data.$id,
+          uid: data.uid
         }
 
         snippetsArray.$loaded()

@@ -1,4 +1,4 @@
-angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress'])
+angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress', 'ui.router.title'])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
@@ -7,11 +7,11 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       url: '/',
       templateUrl: 'home/home.html',
       controller: 'HomeController',
-      // resolve: {
-      //   currentAuth: function(Auth) {
-      //     return Auth.$getAuth();
-      //   }
-      // }
+      resolve: {
+        $title: function() {
+          return 'Homepage';
+        }
+      }
     })
     .state('emailVerify', {
       url: '/verify-email?mode&oobCode',
@@ -20,12 +20,20 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       resolve: {
         currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }]
+        }],
+        $title: function() {
+          return 'Verify Email';
+        }
       }
     })
     .state('about', {
       url: '/about',
-      templateUrl: 'templates/about.html'
+      templateUrl: 'templates/about.html',
+      resolve: {
+        $title: function() {
+          return 'About';
+        }
+      }
     })
     .state('new', {
       url: '/new',
@@ -34,13 +42,21 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       resolve: {
         currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }]
+        }],
+        $title: function() {
+          return 'Create New';
+        }
       }
     })
     .state('detail', {
       url: '/codes/:codeId',
       templateUrl: 'codes/detail.html',
-      controller: 'DetailController'
+      controller: 'DetailController',
+      resolve: {
+        $title: function() {
+          return 'Code Detail'
+        }
+      }
     })
     .state('detailFromTo', {
       url: '/:title/:from/to/:to',
@@ -49,7 +65,12 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
     .state('signup', {
       url: '/register',
       templateUrl: 'auth/register.html',
-      controller: 'LogRegController'
+      controller: 'LogRegController',
+      resolve: {
+        $title: function() {
+          return 'Sign up';
+        }
+      }
     })
     .state('login', {
       url: '/login',
@@ -57,6 +78,11 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       controller: 'LogRegController',
       params: {
         message: null
+      },
+      resolve: {
+        $title: function() {
+          return 'Login';
+        }
       }
     })
     .state('admin', {
@@ -66,7 +92,10 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       resolve: {
         currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }]
+        }],
+        $title: function() {
+          return 'Admin';
+        }
       }
     })
 
