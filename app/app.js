@@ -77,7 +77,8 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       templateUrl: 'auth/login.html',
       controller: 'LogRegController',
       params: {
-        message: null
+        message: null,
+        toWhere: null
       },
       resolve: {
         $title: function() {
@@ -96,26 +97,31 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
         $title: function() {
           return 'Admin';
         }
-      }
+      },
+      restricted: true
     })
 
   $urlRouterProvider.otherwise('/');
 }])
 
-.run(['$rootScope', '$state', 'Auth', 'ngProgressFactory', function($rootScope, $state, Auth, ngProgressFactory) {
-  $rootScope.$on("$stateChangeError", function(even, toState, toParams, fromState, fromParams, error) {
-    if (error === "AUTH_REQUIRED") {
-      $state.go('login');
-    }
-  });
+.run(['$rootScope', '$state', '$location', 'Auth', 'ngProgressFactory',
+  function($rootScope, $state, $location, Auth, ngProgressFactory) {
+    var progress = ngProgressFactory.createInstance();
+    var afterLogin;
 
-  var progress = ngProgressFactory.createInstance();
+    $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
+      if (error === "AUTH_REQUIRED") {
+        $state.go('login', { toWhere: toState });
+        progress.complete();
+      }
+    });
 
-  $rootScope.$on('$stateChangeStart', function() {
-    progress.start();
-  });
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      progress.start();
+    });
 
-  $rootScope.$on('$stateChangeSuccess', function() {
-    progress.complete();
-  });
-}])
+    $rootScope.$on('$stateChangeSuccess', function() {
+      progress.complete();
+    });
+  }
+])

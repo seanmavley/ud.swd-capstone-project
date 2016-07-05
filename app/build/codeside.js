@@ -77,7 +77,8 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       templateUrl: 'auth/login.html',
       controller: 'LogRegController',
       params: {
-        message: null
+        message: null,
+        toWhere: null
       },
       resolve: {
         $title: function() {
@@ -96,29 +97,34 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
         $title: function() {
           return 'Admin';
         }
-      }
+      },
+      restricted: true
     })
 
   $urlRouterProvider.otherwise('/');
 }])
 
-.run(['$rootScope', '$state', 'Auth', 'ngProgressFactory', function($rootScope, $state, Auth, ngProgressFactory) {
-  $rootScope.$on("$stateChangeError", function(even, toState, toParams, fromState, fromParams, error) {
-    if (error === "AUTH_REQUIRED") {
-      $state.go('login');
-    }
-  });
+.run(['$rootScope', '$state', '$location', 'Auth', 'ngProgressFactory',
+  function($rootScope, $state, $location, Auth, ngProgressFactory) {
+    var progress = ngProgressFactory.createInstance();
+    var afterLogin;
 
-  var progress = ngProgressFactory.createInstance();
+    $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
+      if (error === "AUTH_REQUIRED") {
+        $state.go('login', { toWhere: toState });
+        progress.complete();
+      }
+    });
 
-  $rootScope.$on('$stateChangeStart', function() {
-    progress.start();
-  });
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      progress.start();
+    });
 
-  $rootScope.$on('$stateChangeSuccess', function() {
-    progress.complete();
-  });
-}])
+    $rootScope.$on('$stateChangeSuccess', function() {
+      progress.complete();
+    });
+  }
+])
 
 angular.module('codeSide')
 
@@ -222,8 +228,10 @@ angular.module('codeSide')
 ])
 
 angular.module('codeSide')
-  .controller('LogRegController', ['$scope', 'Auth', '$state', 'DatabaseRef', '$firebaseObject',
-    function($scope, Auth, $state, DatabaseRef, $firebaseObject) {
+  .controller('LogRegController', ['$scope', '$stateParams', 'Auth', '$state', '$rootScope', 'DatabaseRef', '$firebaseObject',
+    function($scope, $stateParams, Auth, $state, $rootScope, DatabaseRef, $firebaseObject) {
+      //checking rootscope;
+      console.log($stateParams.toWhere);
       // init empty form
       $scope.formData = {};
       $scope.login = function() {
@@ -232,12 +240,18 @@ angular.module('codeSide')
         } else {
           Auth.$signInWithEmailAndPassword($scope.formData.email, $scope.formData.password)
             .then(function(firebaseUser) {
+              // if rootscope is set
+              if ($stateParams.toWhere != null) {
+                // console.log('I should go to ', $stateParams.toWhere.name);
+                $state.go($stateParams.toWhere.name);
+              };
+
               if (!firebaseUser.emailVerified) {
                 // firebaseUser.sendEmailVerification();
                 toastr.info('Your email is NOT verified.', 'Verify email!');
                 $state.go('admin');
               }
-              $state.go('home');
+              // $state.go('home');
             })
             .catch(function(error) {
               toastr.error(error.message, error.reason, { timeOut: 10000 });
@@ -340,7 +354,6 @@ angular.module("codeSide")
 .factory("Auth", ['$firebaseAuth', function($firebaseAuth) {
   return $firebaseAuth();
 }]);
-
 angular.module('codeSide')
 
 .controller('emailVerifyController', ['$scope', '$stateParams', 'currentAuth', 'DatabaseRef',

@@ -1,6 +1,8 @@
 angular.module('codeSide')
-  .controller('LogRegController', ['$scope', 'Auth', '$state', 'DatabaseRef', '$firebaseObject',
-    function($scope, Auth, $state, DatabaseRef, $firebaseObject) {
+  .controller('LogRegController', ['$scope', '$stateParams', 'Auth', '$state', '$rootScope', 'DatabaseRef', '$firebaseObject',
+    function($scope, $stateParams, Auth, $state, $rootScope, DatabaseRef, $firebaseObject) {
+      //checking rootscope;
+      console.log($stateParams.toWhere);
       // init empty form
       $scope.formData = {};
       $scope.login = function() {
@@ -9,12 +11,18 @@ angular.module('codeSide')
         } else {
           Auth.$signInWithEmailAndPassword($scope.formData.email, $scope.formData.password)
             .then(function(firebaseUser) {
+              // if rootscope is set
+              if ($stateParams.toWhere != null) {
+                // console.log('I should go to ', $stateParams.toWhere.name);
+                $state.go($stateParams.toWhere.name);
+              };
+
               if (!firebaseUser.emailVerified) {
                 // firebaseUser.sendEmailVerification();
                 toastr.info('Your email is NOT verified.', 'Verify email!');
                 $state.go('admin');
               }
-              $state.go('home');
+              // $state.go('home');
             })
             .catch(function(error) {
               toastr.error(error.message, error.reason, { timeOut: 10000 });
