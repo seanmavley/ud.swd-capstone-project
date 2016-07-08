@@ -1,6 +1,6 @@
 <div class="small-12 medium-10 medium-centered large-8 large-centered columns">
     <div class="row">
-        <div class="small-12 columns">
+        <!-- <div class="small-12 columns">
             <div class="callout" style="margin-top:20px;">
                 <div class="input-group">
                     <span class="input-group-label">Search</span>
@@ -10,7 +10,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="small-12 columns">
             <div class="callout clearfix">
                 <h5 class="float-center">Recent codesides:</h5>
@@ -23,7 +23,8 @@
                     </div>
                 </div>
                 <div class="cards" ng-repeat="item in list | orderBy: '-createdAt'" ng-show="list">
-                    <a ui-sref="detail({ codeId: item.$id })">{{ item.title }}</a> | {{ item.description }} <br/>
+                    <a ui-sref="detail({ codeId: item.$id })">{{ item.title }}</a> | {{ item.description }}
+                    <br/>
                     <small>{{ item.createdAt | date : 'medium' }} by <a href="">{{ item.createdBy }}</a></small>
                 </div>
             </div>

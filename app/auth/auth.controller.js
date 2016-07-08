@@ -1,8 +1,6 @@
 angular.module('codeSide')
   .controller('LogRegController', ['$scope', '$stateParams', 'Auth', '$state', '$rootScope', 'DatabaseRef', '$firebaseObject',
     function($scope, $stateParams, Auth, $state, $rootScope, DatabaseRef, $firebaseObject) {
-      //checking rootscope;
-      console.log($stateParams.toWhere);
       // init empty form
       $scope.formData = {};
       $scope.login = function() {
