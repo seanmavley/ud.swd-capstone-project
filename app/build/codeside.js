@@ -34,6 +34,15 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
           return 'About';
         }
       }
+    })    
+    .state('tos', {
+      url: '/tos-privacy',
+      templateUrl: 'templates/privacy-terms.html',
+      resolve: {
+        $title: function() {
+          return 'ToS and Privacy Policy';
+        }
+      }
     })
     .state('new', {
       url: '/new',
