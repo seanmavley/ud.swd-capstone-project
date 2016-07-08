@@ -1,15 +1,16 @@
 angular.module('codeSide')
 
-.controller('DetailController', ['$scope', '$state',
+.controller('DetailController', ['$scope', '$rootScope', '$state',
   '$stateParams', 'DatabaseRef', '$firebaseObject',
   '$firebaseArray', 'Auth',
-  function($scope, $state, $stateParams, DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
+  function($scope, $rootScope, $state, $stateParams,
+    DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
     // codemirror options
     $scope.editorOneOptions = {
       lineWrapping: true,
       lineNumbers: true,
       readOnly: 'nocursor',
-    };    
+    };
 
     $scope.editorTwoOptions = {
       lineWrapping: true,
@@ -111,7 +112,7 @@ angular.module('codeSide')
 
         list.$loaded()
           .then(function(data) {
-            console.log(data);
+            // console.log(data);
             $scope.revisionTwo = data;
           })
       })
@@ -177,13 +178,16 @@ angular.module('codeSide')
     codeObject.$loaded()
       .then(function(data) {
         $scope.loading = false;
+        // change page title dynamically
+        $rootScope.title = data.title;
+
         $scope.formData = {
           createdBy: data.createdBy,
           title: data.title,
           createdAt: data.createdAt,
           description: data.description,
           codeId: data.$id,
-          uid: data.uid
+          uid: data.uid,
         }
 
         snippetsArray.$loaded()

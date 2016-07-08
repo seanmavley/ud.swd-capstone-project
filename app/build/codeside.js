@@ -7,10 +7,8 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       url: '/',
       templateUrl: 'home/home.html',
       controller: 'HomeController',
-      resolve: {
-        $title: function() {
-          return 'Homepage';
-        }
+      data: {
+        title: 'Homepage'
       }
     })
     .state('emailVerify', {
@@ -29,19 +27,15 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
     .state('about', {
       url: '/about',
       templateUrl: 'templates/about.html',
-      resolve: {
-        $title: function() {
-          return 'About';
-        }
+      data: {
+        title: 'About'
       }
     })    
     .state('tos', {
       url: '/tos-privacy',
       templateUrl: 'templates/privacy-terms.html',
-      resolve: {
-        $title: function() {
-          return 'ToS and Privacy Policy';
-        }
+      data: {
+        title: 'ToS and Privacy Policy'
       }
     })
     .state('new', {
@@ -51,20 +45,18 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       resolve: {
         currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }],
-        $title: function() {
-          return 'Create New';
-        }
+        }]
+      },
+      data: {
+        title: 'Create new'
       }
     })
     .state('detail', {
       url: '/codes/:codeId',
       templateUrl: 'codes/detail.html',
       controller: 'DetailController',
-      resolve: {
-        $title: function() {
-          return 'Code Detail'
-        }
+      data: {
+        title: 'Code Detail'
       }
     })
     .state('detailFromTo', {
@@ -75,10 +67,8 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       url: '/register',
       templateUrl: 'auth/register.html',
       controller: 'LogRegController',
-      resolve: {
-        $title: function() {
-          return 'Sign up';
-        }
+      data: {
+        title: 'Sign up'
       }
     })
     .state('login', {
@@ -89,10 +79,8 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
         message: null,
         toWhere: null
       },
-      resolve: {
-        $title: function() {
-          return 'Login';
-        }
+      data: {
+        title: 'Login'
       }
     })
     .state('admin', {
@@ -102,12 +90,12 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       resolve: {
         currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }],
-        $title: function() {
-          return 'Admin';
-        }
+        }]
       },
-      restricted: true
+      data: {
+        title: 'Admin',
+        restricted: true
+      }
     })
 
   $urlRouterProvider.otherwise('/');
@@ -130,6 +118,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
     });
 
     $rootScope.$on('$stateChangeSuccess', function() {
+      $rootScope.title = $state.current.data.title;
       progress.complete();
     });
   }
@@ -575,16 +564,17 @@ angular.module('codeSide')
 
 angular.module('codeSide')
 
-.controller('DetailController', ['$scope', '$state',
+.controller('DetailController', ['$scope', '$rootScope', '$state',
   '$stateParams', 'DatabaseRef', '$firebaseObject',
   '$firebaseArray', 'Auth',
-  function($scope, $state, $stateParams, DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
+  function($scope, $rootScope, $state, $stateParams,
+    DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
     // codemirror options
     $scope.editorOneOptions = {
       lineWrapping: true,
       lineNumbers: true,
       readOnly: 'nocursor',
-    };    
+    };
 
     $scope.editorTwoOptions = {
       lineWrapping: true,
@@ -686,7 +676,7 @@ angular.module('codeSide')
 
         list.$loaded()
           .then(function(data) {
-            console.log(data);
+            // console.log(data);
             $scope.revisionTwo = data;
           })
       })
@@ -752,13 +742,16 @@ angular.module('codeSide')
     codeObject.$loaded()
       .then(function(data) {
         $scope.loading = false;
+        // change page title dynamically
+        $rootScope.title = data.title;
+
         $scope.formData = {
           createdBy: data.createdBy,
           title: data.title,
           createdAt: data.createdAt,
           description: data.description,
           codeId: data.$id,
-          uid: data.uid
+          uid: data.uid,
         }
 
         snippetsArray.$loaded()
