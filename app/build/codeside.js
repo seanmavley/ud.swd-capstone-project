@@ -10,7 +10,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       url: '/',
       templateUrl: 'home/home.html',
       controller: 'HomeController',
-      data: {
+      meta: {
         title: 'Homepage'
       },
     })
@@ -21,23 +21,26 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       resolve: {
         currentAuth: ['Auth', function(Auth) {
           return Auth.$requireSignIn()
-        }],
-        $title: function() {
-          return 'Verify Email';
-        }
+        }]
+      },
+      meta: {
+        title: 'Verify Email',
+        description: 'Email Verification'
       }
     })
     .state('about', {
       url: '/about',
       templateUrl: 'templates/about.html',
-      data: {
-        title: 'About'
+      meta: {
+        title: 'About',
+        description: 'CodeBySide, a simple and fast way to compare code, side by side.' +
+        ' Find out what CodeBySide is all about'
       }
     })    
     .state('tos', {
       url: '/tos-privacy',
       templateUrl: 'templates/privacy-terms.html',
-      data: {
+      meta: {
         title: 'ToS and Privacy Policy'
       }
     })
@@ -50,7 +53,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
           return Auth.$requireSignIn()
         }]
       },
-      data: {
+      meta: {
         title: 'Create new'
       }
     })
@@ -58,10 +61,6 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       url: '/codes/:codeId',
       templateUrl: 'codes/detail.html',
       controller: 'DetailController',
-      // data: {
-      //   title: 'Code Detail',
-      //   description: 'Code Description'
-      // },
       meta: {
         title: 'Code Detail',
         description: 'Code Description'
@@ -75,7 +74,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       url: '/register',
       templateUrl: 'auth/register.html',
       controller: 'LogRegController',
-      data: {
+      meta: {
         title: 'Sign up'
       }
     })
@@ -87,7 +86,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
         message: null,
         toWhere: null
       },
-      data: {
+      meta: {
         title: 'Login'
       }
     })
@@ -100,7 +99,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
           return Auth.$requireSignIn()
         }]
       },
-      data: {
+      meta: {
         title: 'Admin',
         restricted: true
       }
@@ -753,6 +752,8 @@ angular.module('codeSide')
         // change page title dynamically
         ngMeta.setTitle(data.title);
         ngMeta.setTag('description', data.description);
+        ngMeta.setTag('og:url', 'https://code.khophi.co/#/codes/'+data.uid);
+
 
         $scope.formData = {
           createdBy: data.createdBy,

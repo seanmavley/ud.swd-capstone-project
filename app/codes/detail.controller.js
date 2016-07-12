@@ -181,6 +181,8 @@ angular.module('codeSide')
         // change page title dynamically
         ngMeta.setTitle(data.title);
         ngMeta.setTag('description', data.description);
+        ngMeta.setTag('og:url', 'https://code.khophi.co/#/codes/'+data.uid);
+
 
         $scope.formData = {
           createdBy: data.createdBy,
