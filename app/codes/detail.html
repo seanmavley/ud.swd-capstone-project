@@ -58,6 +58,7 @@
                 </div>
                 <textarea ui-codemirror ui-codemirror-opts="editorOneOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
                 <span style="border-top:1px solid grey;" ng-show="codeOne.createdBy">By: <a href="">{{ codeOne.createdBy }}</a> <br/> On {{ codeOne.createdAt | date : 'medium' }}</span>
+                <span style="border-top:1px solid grey;" ng-show="!codeOne.createdBy">Own this snippet. <a ui-sref="new">Create now.</a></span>
             </form>
             <!-- <div style="margin-top:10px;">
             <a ng-click="enableAlternative('one')" class="button">Add {{ codeOne.name }} alternative</a>
@@ -93,6 +94,7 @@
                 </div>
                 <textarea rows="7" ui-codemirror ui-codemirror-opts="editorTwoOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
                 <span style="border-top:1px solid grey;" ng-show="codeTwo.createdBy">By: <a href="">{{ codeTwo.createdBy }}</a> <br/>On {{ codeTwo.createdAt | date : 'medium' }}</span>
+                <span style="border-top:1px solid grey;" ng-show="!codeTwo.createdBy">Own this snippet. <a ui-sref="new">Create now.</a></span>
             </form>
             <!-- <div style="margin-top:10px;">
             <a ng-click="enableAlternative('two')" class="button">Add {{ codeTwo.name }} alternative</a>

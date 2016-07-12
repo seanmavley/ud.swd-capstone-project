@@ -1,6 +1,9 @@
-angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress', 'ui.router.title'])
+angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress', 'ui.router.title', 'ngMeta'])
 
-.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', '$urlRouterProvider', 'ngMetaProvider', function($stateProvider, $urlRouterProvider, ngMetaProvider) {
+  ngMetaProvider.useTitleSuffix(true);
+  ngMetaProvider.setDefaultTitleSuffix(' :: CodeBySide');
+  ngMetaProvider.setDefaultTag('author', 'Rexford Nkansah <hello@khophi.co>');
 
   $stateProvider
     .state('home', {
@@ -9,7 +12,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       controller: 'HomeController',
       data: {
         title: 'Homepage'
-      }
+      },
     })
     .state('emailVerify', {
       url: '/verify-email?mode&oobCode',
@@ -55,8 +58,13 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
       url: '/codes/:codeId',
       templateUrl: 'codes/detail.html',
       controller: 'DetailController',
-      data: {
-        title: 'Code Detail'
+      // data: {
+      //   title: 'Code Detail',
+      //   description: 'Code Description'
+      // },
+      meta: {
+        title: 'Code Detail',
+        description: 'Code Description'
       }
     })
     .state('detailFromTo', {
@@ -101,8 +109,9 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
   $urlRouterProvider.otherwise('/');
 }])
 
-.run(['$rootScope', '$state', '$location', 'Auth', 'ngProgressFactory',
-  function($rootScope, $state, $location, Auth, ngProgressFactory) {
+.run(['$rootScope', '$state', '$location', 'Auth', 'ngProgressFactory', 'ngMeta',
+  function($rootScope, $state, $location, Auth, ngProgressFactory, ngMeta) {
+    ngMeta.init();
     var progress = ngProgressFactory.createInstance();
     var afterLogin;
 
@@ -118,7 +127,8 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
     });
 
     $rootScope.$on('$stateChangeSuccess', function() {
-      $rootScope.title = $state.current.data.title;
+      // $rootScope.title = $state.current.data.title;
+      // $rootScope.description = $state.current.data.description || '';
       progress.complete();
     });
   }

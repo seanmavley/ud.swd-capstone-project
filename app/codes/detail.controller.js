@@ -2,16 +2,16 @@ angular.module('codeSide')
 
 .controller('DetailController', ['$scope', '$rootScope', '$state',
   '$stateParams', 'DatabaseRef', '$firebaseObject',
-  '$firebaseArray', 'Auth',
+  '$firebaseArray', 'Auth', 'ngMeta',
   function($scope, $rootScope, $state, $stateParams,
-    DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
+    DatabaseRef, $firebaseObject, $firebaseArray, Auth, ngMeta) {
     // codemirror options
     $scope.editorOneOptions = {
       lineWrapping: true,
       lineNumbers: true,
       readOnly: 'nocursor',
     };
-
+    
     $scope.editorTwoOptions = {
       lineWrapping: true,
       lineNumbers: true,
@@ -179,7 +179,8 @@ angular.module('codeSide')
       .then(function(data) {
         $scope.loading = false;
         // change page title dynamically
-        $rootScope.title = data.title;
+        ngMeta.setTitle(data.title);
+        ngMeta.setTag('description', data.description);
 
         $scope.formData = {
           createdBy: data.createdBy,
@@ -212,8 +213,11 @@ angular.module('codeSide')
               if (returnedCode.code) {
                 console.log('something came out');
                 $scope.codeOne = returnedCode;
+                toastr.clear();
               } else {
+                toastr.clear();
                 console.log('nothing came out');
+                toastr.info('This code snippet has not been created. <br/><a href="#/new" class="button secondary">Add now</a>', 'Create me', { timeOut: 0 });
                 $scope.codeOne = {
                   name: language,
                   code: ''
@@ -238,8 +242,11 @@ angular.module('codeSide')
               if (returnedCode.code) {
                 console.log('something came out');
                 $scope.codeTwo = returnedCode;
+                toastr.clear();
               } else {
+                toastr.clear();
                 console.log('nothing came out');
+                toastr.info('This code snippet has not been created. <br/><a href="#/new" class="button secondary">Add now</a>', 'Create me', { timeOut: 0 });
                 $scope.codeTwo = {
                   name: language,
                   code: ''
