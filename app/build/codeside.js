@@ -1,7 +1,7 @@
-angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress', 'ui.router.title', 'ngMeta'])
+angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress', 'ui.router.title'])
 
-.config(['$stateProvider', '$urlRouterProvider', 'ngMetaProvider', '$locationProvider',
-  function($stateProvider, $urlRouterProvider, ngMetaProvider, $locationProvider) {
+.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
+  function($stateProvider, $urlRouterProvider, $locationProvider) {
     // ngMetaProvider.useTitleSuffix(true);
     // ngMetaProvider.setDefaultTitleSuffix(' :: CodeBySide');
     // ngMetaProvider.setDefaultTag('author', 'Rexford Nkansah <hello@khophi.co>');
@@ -112,9 +112,9 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
   }
 ])
 
-.run(['$rootScope', '$state', '$location', 'Auth', 'ngProgressFactory', 'ngMeta',
-  function($rootScope, $state, $location, Auth, ngProgressFactory, ngMeta) {
-    ngMeta.init();
+.run(['$rootScope', '$state', '$location', 'Auth', 'ngProgressFactory',
+  function($rootScope, $state, $location, Auth, ngProgressFactory) {
+    // ngMeta.init();
     var progress = ngProgressFactory.createInstance();
     var afterLogin;
 
@@ -250,9 +250,14 @@ angular.module('codeSide')
           Auth.$signInWithEmailAndPassword($scope.formData.email, $scope.formData.password)
             .then(function(firebaseUser) {
               // if rootscope is set
-              if ($stateParams.toWhere != null) {
+              if ($stateParams.toWhere !== null) {
+                console.log($stateParams.toWhere);
                 // console.log('I should go to ', $stateParams.toWhere.name);
                 $state.go($stateParams.toWhere.name);
+                $stateParams.toWhere = null;
+                console.log($stateParams.toWhere);
+              } else {
+                $state.go('admin');
               };
 
               if (!firebaseUser.emailVerified) {
@@ -577,9 +582,9 @@ angular.module('codeSide')
 
 .controller('DetailController', ['$scope', '$rootScope', '$state',
   '$stateParams', 'DatabaseRef', '$firebaseObject',
-  '$firebaseArray', 'Auth', 'ngMeta',
+  '$firebaseArray', 'Auth',
   function($scope, $rootScope, $state, $stateParams,
-    DatabaseRef, $firebaseObject, $firebaseArray, Auth, ngMeta) {
+    DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
     // codemirror options
     $scope.editorOneOptions = {
       lineWrapping: true,
@@ -753,6 +758,8 @@ angular.module('codeSide')
     codeObject.$loaded()
       .then(function(data) {
         $scope.loading = false;
+        console.log(data.title);
+        $rootScope.title = data.title;
         // change page title dynamically
         // ngMeta.setTitle(data.title);
         // ngMeta.setTag('description', data.description);

@@ -10,9 +10,14 @@ angular.module('codeSide')
           Auth.$signInWithEmailAndPassword($scope.formData.email, $scope.formData.password)
             .then(function(firebaseUser) {
               // if rootscope is set
-              if ($stateParams.toWhere != null) {
+              if ($stateParams.toWhere !== null) {
+                console.log($stateParams.toWhere);
                 // console.log('I should go to ', $stateParams.toWhere.name);
                 $state.go($stateParams.toWhere.name);
+                $stateParams.toWhere = null;
+                console.log($stateParams.toWhere);
+              } else {
+                $state.go('admin');
               };
 
               if (!firebaseUser.emailVerified) {

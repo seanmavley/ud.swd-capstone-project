@@ -1,4 +1,4 @@
-angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress', 'ui.router.title', 'ngMeta'])
+angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgress', 'ui.router.title'])
 
 .config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
   function($stateProvider, $urlRouterProvider, $locationProvider) {
@@ -114,7 +114,7 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
 
 .run(['$rootScope', '$state', '$location', 'Auth', 'ngProgressFactory',
   function($rootScope, $state, $location, Auth, ngProgressFactory) {
-    ngMeta.init();
+    // ngMeta.init();
     var progress = ngProgressFactory.createInstance();
     var afterLogin;
 
