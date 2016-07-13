@@ -2,9 +2,9 @@ angular.module('codeSide')
 
 .controller('DetailController', ['$scope', '$rootScope', '$state',
   '$stateParams', 'DatabaseRef', '$firebaseObject',
-  '$firebaseArray', 'Auth', 'ngMeta',
+  '$firebaseArray', 'Auth',
   function($scope, $rootScope, $state, $stateParams,
-    DatabaseRef, $firebaseObject, $firebaseArray, Auth, ngMeta) {
+    DatabaseRef, $firebaseObject, $firebaseArray, Auth) {
     // codemirror options
     $scope.editorOneOptions = {
       lineWrapping: true,
@@ -178,10 +178,12 @@ angular.module('codeSide')
     codeObject.$loaded()
       .then(function(data) {
         $scope.loading = false;
+        console.log(data.title);
+        $rootScope.title = data.title;
         // change page title dynamically
-        ngMeta.setTitle(data.title);
-        ngMeta.setTag('description', data.description);
-        ngMeta.setTag('og:url', 'https://code.khophi.co/#/codes/'+data.uid);
+        // ngMeta.setTitle(data.title);
+        // ngMeta.setTag('description', data.description);
+        // ngMeta.setTag('og:url', 'https://code.khophi.co/#/codes/'+data.uid);
 
 
         $scope.formData = {

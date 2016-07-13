@@ -2,20 +2,12 @@
 <html class="no-js" lang="en" ng-app="codeSide">
 
 <head>
+    <base href="/">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title ng-bind="ngMeta.title"></title>
-    <meta name="description" content="{{ ngMeta.description || 'Your Favorite Programming Languages, Side By Side' }}">
-    <!-- Open Graph properties -->
-    <meta property="og:title" content="{{ ngMeta.title }}">
-    <meta property="og:description" content="{{ ngMeta.description }}">
-    <meta property="og:url" content="{{ ngMeta['og:url'] }}">
-    <meta property="og:site_name" content="Blog">
-
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:description" content="{{ ngMeta.description }}">
-    <meta name="twitter:title" content="{{ ngMeta.title }}">
+    <title ng-bind="(title || 'Home') + ' :: CodeBySide'">CodeBySide</title>
+    <meta name="description" content="Your favorite languages, side by side!">
 
     <!-- into assets -->   
     <link rel="shortcut icon " href="./assets/images/favicon.png ">
@@ -64,7 +56,7 @@
     <!-- Maybe -->
     <!-- Angular imports -->
     <script src="vendor/jquery/dist/jquery.min.js "></script>
-    <script src="vendor/angular/angular.min.js "></script>
+    <script src="vendor/angular/angular.js "></script>
     <script src="vendor/firebase/firebase.js "></script>
     <script>
     // Initialize Firebase
