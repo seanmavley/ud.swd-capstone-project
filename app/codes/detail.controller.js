@@ -17,57 +17,11 @@ angular.module('codeSide')
       lineNumbers: true,
       readOnly: 'nocursor',
     };
-    // for revisions
-    $scope.revisionsShow = {
-      lineWrapping: true,
-      lineNumbers: true,
-      readOnly: 'nocursor',
-    };
-
-    $scope.revisionsAdd = {
-      lineWrapping: true,
-      lineNumbers: true,
-      readOnly: false,
-    };
 
     var now = new Date().getTime();
 
     $scope.loading = true;
     $scope.editAllowed = true;
-    $scope.showRevOne = false;
-    $scope.showRevTwo = false;
-
-    $scope.revisionTwo = {};
-    $scope.revisionOne = {};
-
-    $scope.enableAlternative = function(number) {
-      if (number == 'one') {
-        $scope.showRevOne = !$scope.showRevOne;
-      }
-
-      if (number == 'two') {
-        $scope.showRevTwo = !$scope.showRevTwo;
-      }
-    };
-
-    // TODO: get it fixed.
-    $scope.addAlternative = function(revision, code) {
-      if (revision.code) {
-        DatabaseRef.child('revision')
-          .child($stateParams.codeId)
-          .push({
-            codeId: $stateParams.codeId,
-            code: revision.code,
-            createdBy: $scope.profile.username,
-            uid: currentAuth.uid,
-            createdAt: now,
-            language: code.name
-          })
-        toastr.success('Added your code!', 'Successful');
-      } else {
-        toastr.error('Kindly add code', 'Code missing!');
-      }
-    }
 
     $scope.enableEditing = function() {
       $scope.editorOneOptions.readOnly = false;
@@ -221,7 +175,7 @@ angular.module('codeSide')
               } else {
                 toastr.clear();
                 console.log('nothing came out');
-                toastr.info('This code snippet has not been created. <br/><a href="#/new" class="button secondary">Add now</a>', 'Create me', { timeOut: 0 });
+                toastr.info('This code snippet has not been created. Start typing, then click "Save"', 'Create snippet!', { timeOut: 0 });
                 $scope.codeOne = {
                   name: language,
                   code: ''
@@ -250,7 +204,7 @@ angular.module('codeSide')
               } else {
                 toastr.clear();
                 console.log('nothing came out');
-                toastr.info('This code snippet has not been created. <br/><a href="#/new" class="button secondary">Add now</a>', 'Create me', { timeOut: 0 });
+                toastr.info('This code snippet has not been created. Start typing, then click "Save"', 'Create snippet!', { timeOut: 0 });
                 $scope.codeTwo = {
                   name: language,
                   code: ''

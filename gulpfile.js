@@ -36,6 +36,12 @@ gulp.task('minify-css', function() {
 
 gulp.task('build', ['scripts']);
 
+// run this in background to rebuild js files
+// serve content using firebase serve
+gulp.task('watch', ['build'], function() {
+  gulp.watch(['app/**/*.js', '!app/build/', '!app/build/**'], ['build'])
+});
+
 // templates and styles will be processed in parallel.
 // clean will be guaranteed to complete before either start.
 // clean will not be run twice, even though it is called as a dependency twice.

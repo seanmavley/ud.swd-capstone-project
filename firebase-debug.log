@@ -1,0 +1,14 @@
+[debug] ----------------------------------------------------------------------
+[debug] Command:      /usr/bin/nodejs /home/khophi/npm-global/bin/firebase serve --port 3000
+[debug] CLI Version:  3.0.4
+[debug] Platform:     linux
+[debug] Node Version: v5.12.0
+[debug] Time:         Mon Jul 18 2016 13:20:54 GMT+0000 (GMT)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[info] Starting Firebase development server...
+[info] 
+[info] Project Directory: /home/khophi/Developments/Angular/CodebySide
+[info] Public Directory: app
+[info] 
+[info] Server listening at: http://localhost:3000
