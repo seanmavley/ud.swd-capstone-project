@@ -52,13 +52,14 @@
                     <select class="input-group-field" ng-model="codeOne.name" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
                         <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                     </select>
-                    <div class="input-group-button" ng-show="!editAllowed && profile.username === codeOne.createdBy || !codeOne.createdBy">
+                    <div class="input-group-button" ng-show="!editAllowed && profile.username === codeOne.createdBy || !codeOne.createdBy && profile.username">
                         <input type="submit" class="button" value="Save">
                     </div>
                 </div>
                 <textarea ui-codemirror ui-codemirror-opts="editorOneOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
-                <span style="border-top:1px solid grey;" ng-show="codeOne.createdBy">By: <a href="">{{ codeOne.createdBy }}</a> <br/> On {{ codeOne.createdAt | date : 'medium' }}</span>
-                <span style="border-top:1px solid grey;" ng-show="!codeOne.createdBy">Start typing, and "Save".</span>
+                <span class="undersnippet" ng-show="codeOne.createdBy">By: <a href="">{{ codeOne.createdBy }}</a> <br/> On {{ codeOne.createdAt | date : 'medium' }}</span>
+                <span class="undersnippet" ng-show="!codeOne.createdBy && profile.username">Start typing, and "Save".</span>
+                <span class="undersnippet" ng-show="!codeOne.createdBy && !profile.username"><a ui-sref='login'>Login</a> first to share snippet.</span>
             </form>
         </div>
         <div class="small-12 medium-6 large-6 columns" ng-show="!loading">
@@ -68,13 +69,14 @@
                     <select class="input-group-field" ng-model="codeTwo.name" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
                         <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
                     </select>
-                    <div class="input-group-button" ng-show="!editAllowed && profile.username === codeTwo.createdBy || !codeTwo.createdBy">
+                    <div class="input-group-button" ng-show="!editAllowed && profile.username === codeTwo.createdBy || !codeTwo.createdBy && profile.username">
                         <input type="submit" class="button" value="Save">
                     </div>
                 </div>
                 <textarea rows="7" ui-codemirror ui-codemirror-opts="editorTwoOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
-                <span style="border-top:1px solid grey;" ng-show="codeTwo.createdBy">By: <a href="">{{ codeTwo.createdBy }}</a> <br/>On {{ codeTwo.createdAt | date : 'medium' }}</span>
-                <span style="border-top:1px solid grey;" ng-show="!codeTwo.createdBy">Start typing, and "Save".</span>
+                <span class="undersnippet" ng-show="codeTwo.createdBy">By: <a href="">{{ codeTwo.createdBy }}</a> <br/>On {{ codeTwo.createdAt | date : 'medium' }}</span>
+                <span class="undersnippet" ng-show="!codeTwo.createdBy && profile.username">Start typing, and "Save".</span>
+                <span class="undersnippet" ng-show="!codeTwo.createdBy && !profile.username"><a ui-sref='login'>Login</a> first to share snippet.</span>
             </form>
         </div>
     </div>

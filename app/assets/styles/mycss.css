@@ -151,3 +151,7 @@
     margin-top:30px;
     padding:10px;
 }
+
+.undersnippet {
+    border-top:1px solid grey;
+}

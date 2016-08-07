@@ -755,7 +755,7 @@ angular.module('codeSide')
               } else {
                 toastr.clear();
                 console.log('nothing came out');
-                toastr.info('This code snippet has not been created. Start typing, then click "Save"', 'Create snippet!', { timeOut: 0 });
+                toastr.info('This code snippet has not been created. Start typing, then click "Save"', 'Create snippet!', { timeOut: 8000 });
                 $scope.codeOne = {
                   name: language,
                   code: ''
@@ -784,7 +784,7 @@ angular.module('codeSide')
               } else {
                 toastr.clear();
                 console.log('nothing came out');
-                toastr.info('This code snippet has not been created. Start typing, then click "Save"', 'Create snippet!', { timeOut: 0 });
+                toastr.info('This code snippet has not been created. Start typing, then click "Save"', 'Create snippet!', { timeOut: 8000 });
                 $scope.codeTwo = {
                   name: language,
                   code: ''
