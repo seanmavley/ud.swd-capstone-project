@@ -68,6 +68,20 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
           description: 'Code Description'
         }
       })
+      .state('delete', {
+        url: '/delete/:codeId',
+        templateUrl: 'codes/delete.html',
+        controller: 'DeleteController',
+        resolve: {
+          currentAuth: ['Auth', function(Auth) {
+            return Auth.$requireSignIn()
+          }]
+        },
+        meta: {
+          title: 'Code Detail',
+          description: 'Code Description'
+        }
+      })
       .state('detailFromTo', {
         url: '/:title/:from/to/:to',
         templateUrl: 'codes/detailfromto.html',

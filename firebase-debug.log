@@ -1,9 +1,9 @@
 [debug] ----------------------------------------------------------------------
 [debug] Command:      /usr/bin/nodejs /home/khophi/npm-global/bin/firebase serve --port 3000
-[debug] CLI Version:  3.0.4
+[debug] CLI Version:  3.0.6
 [debug] Platform:     linux
 [debug] Node Version: v5.12.0
-[debug] Time:         Sun Aug 07 2016 20:19:57 GMT+0000 (GMT)
+[debug] Time:         Wed Aug 17 2016 07:49:26 GMT+0000 (GMT)
 [debug] ----------------------------------------------------------------------
 [debug] 
 [info] Starting Firebase development server...

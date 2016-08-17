@@ -13,9 +13,12 @@
                 <br/> <strong>Description:</strong> {{ formData.description }}
                 <br/> <strong>Languages available:</strong> <span ng-repeat="name in formData.snippets">{{ name.name }} &bull; </span>
                 <br/>
-                <div class="button-group margin-top">
-                    <a ng-click="enableEditing()" class="button small" ng-show="profile">{{ editAllowed ? 'Enable' : 'Disable' }} editing</a>
-                    <a class="button tiny hollow secondary"><i class="step fi-share size-14"></i></a>
+                <div class="small button-group margin-top">
+                    <a ng-click="enableEditing()" class="button" ng-show="profile">{{ editAllowed ? 'Enable' : 'Disable' }} editing</a>
+                    <a ng-show="formData.uid == profile.$id" class="button alert" ui-sref="delete({ codeId: formData.codeId })">Delete</a>
+                </div>
+                <div class="tiny button-group margin-top">
+                    <a class="button tiny hollow secondary"><i class="step fi-share size-12"></i></a>
                     <a class="button small hollow alert" target="new" href="https://plus.google.com/share?url=https%3A//code.khophi.co/%23/codes/{{ formData.codeId }}">Google+</a>
                     <a class="button small hollow" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//code.khophi.co/%23/codes/{{ formData.codeId }}">Facebook</a>
                 </div>
@@ -82,3 +85,6 @@
     </div>
     <!-- for Disqus -->
 </div>
+<script type="text/javascript">
+    $(document).foundation();
+</script>

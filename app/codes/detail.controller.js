@@ -11,7 +11,7 @@ angular.module('codeSide')
       lineNumbers: true,
       readOnly: 'nocursor',
     };
-    
+
     $scope.editorTwoOptions = {
       lineWrapping: true,
       lineNumbers: true,
@@ -27,7 +27,7 @@ angular.module('codeSide')
       $scope.editorOneOptions.readOnly = false;
       $scope.editorTwoOptions.readOnly = false;
       $scope.editAllowed = !$scope.editAllowed;
-    }
+    };
 
     // global ref to root of app db
     var ref = DatabaseRef;
@@ -69,7 +69,7 @@ angular.module('codeSide')
             // console.log(data);
             $scope.revisionTwo = data;
           })
-      })
+      });
 
     // Save changes to language
     $scope.saveLanguage = function(data) {
@@ -78,7 +78,7 @@ angular.module('codeSide')
       } else {
         toastr.error('You are not logged in', 'Log in first!');
       }
-    }
+    };
 
     function saveLanguage(data) {
       if (data.createdBy == null) {
@@ -121,7 +121,7 @@ angular.module('codeSide')
       } else {
         toastr.error('Because you did not create this snippet, you cannot edit', 'Not allowed')
       }
-    }
+    };
 
     langObject.$loaded()
       .then(function(data) {
@@ -157,7 +157,7 @@ angular.module('codeSide')
             $scope.codeOne = loadLanguage(snippets.$keyAt(0));
             $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
           })
-      })
+      });
 
     $scope.codeOneChanged = function(language) {
       codeObject.$loaded()
@@ -237,6 +237,6 @@ angular.module('codeSide')
             toastr.success('Updated succefully');
           }
         })
-    };
+    }
   }
 ]);

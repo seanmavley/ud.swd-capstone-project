@@ -68,6 +68,20 @@ angular.module('codeSide', ['ui.router', 'firebase', 'ui.codemirror', 'ngProgres
           description: 'Code Description'
         }
       })
+      .state('delete', {
+        url: '/delete/:codeId',
+        templateUrl: 'codes/delete.html',
+        controller: 'DeleteController',
+        resolve: {
+          currentAuth: ['Auth', function(Auth) {
+            return Auth.$requireSignIn()
+          }]
+        },
+        meta: {
+          title: 'Code Detail',
+          description: 'Code Description'
+        }
+      })
       .state('detailFromTo', {
         url: '/:title/:from/to/:to',
         templateUrl: 'codes/detailfromto.html',
@@ -579,6 +593,53 @@ angular.module('codeSide')
 ])
 
 angular.module('codeSide')
+  .controller('DeleteController', ['$scope', '$stateParams', 'currentAuth', 'DatabaseRef', '$firebaseObject',
+    function($scope, $stateParams, currentAuth, DatabaseRef, $firebaseObject) {
+      $scope.codeId = $stateParams.codeId;
+
+      $scope.loading = true;
+      var allowed = false;
+
+      var ref = DatabaseRef.child('codes').child($stateParams.codeId);
+      var deleteObject = $firebaseObject(ref);
+      deleteObject.$loaded()
+        .then(function(data) {
+          $scope.loading = false;
+          if (data.uid == currentAuth.uid) {
+            toastr.success('User id matches', 'User match');
+            console.log('You created this');
+            $scope.allowed = true;
+            allowed = true;
+          } else {
+            console.log('Did not create this');
+            toastr.error('You did not create this', 'Does not belong to you');
+            $scope.allowed = false;
+          }
+        }, function(error) {
+          toast.error('Error: ', error);
+          console.log(error.message, error.reason);
+        });
+
+
+      $scope.deleteCode = function() {
+        console.log(allowed);
+        if (allowed) {
+          console.log('delete happened');
+          // deleteObject.$remove()
+          //   .then(function(ref) {
+          //     console.log('deletion happened');
+          //     toastr.error('Deletion happened', 'Gone for good');
+          //   }, function(error) {
+          //     toastr.error('Error: ', error);
+          //   });
+        } else {
+          toastr.error('You aint doing anything');
+        }
+      }
+    }
+  ])
+
+angular.module('codeSide')
 
 .controller('DetailController', ['$scope', '$rootScope', '$state',
   '$stateParams', 'DatabaseRef', '$firebaseObject',
@@ -591,7 +652,7 @@ angular.module('codeSide')
       lineNumbers: true,
       readOnly: 'nocursor',
     };
-    
+
     $scope.editorTwoOptions = {
       lineWrapping: true,
       lineNumbers: true,
@@ -607,7 +668,7 @@ angular.module('codeSide')
       $scope.editorOneOptions.readOnly = false;
       $scope.editorTwoOptions.readOnly = false;
       $scope.editAllowed = !$scope.editAllowed;
-    }
+    };
 
     // global ref to root of app db
     var ref = DatabaseRef;
@@ -649,7 +710,7 @@ angular.module('codeSide')
             // console.log(data);
             $scope.revisionTwo = data;
           })
-      })
+      });
 
     // Save changes to language
     $scope.saveLanguage = function(data) {
@@ -658,7 +719,7 @@ angular.module('codeSide')
       } else {
         toastr.error('You are not logged in', 'Log in first!');
       }
-    }
+    };
 
     function saveLanguage(data) {
       if (data.createdBy == null) {
@@ -701,7 +762,7 @@ angular.module('codeSide')
       } else {
         toastr.error('Because you did not create this snippet, you cannot edit', 'Not allowed')
       }
-    }
+    };
 
     langObject.$loaded()
       .then(function(data) {
@@ -737,7 +798,7 @@ angular.module('codeSide')
             $scope.codeOne = loadLanguage(snippets.$keyAt(0));
             $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
           })
-      })
+      });
 
     $scope.codeOneChanged = function(language) {
       codeObject.$loaded()
@@ -817,7 +878,7 @@ angular.module('codeSide')
             toastr.success('Updated succefully');
           }
         })
-    };
+    }
   }
 ]);
 
