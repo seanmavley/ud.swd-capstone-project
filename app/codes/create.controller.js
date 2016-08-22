@@ -131,12 +131,12 @@ angular.module('codeSide')
                 createdAt: now,
                 description: $scope.formData.description
               })
-              .then(function(added) {
+              .then(function(added) {                
                 // add first snippet
                 DatabaseRef.child('snippets')
                   .child(added.key)
                   .child($scope.formData.from)
-                  .set({
+                  .update({
                     name: $scope.formData.from,
                     code: $scope.formData.fromCode,
                     createdAt: now,
@@ -148,13 +148,23 @@ angular.module('codeSide')
                 DatabaseRef.child('snippets')
                   .child(added.key)
                   .child($scope.formData.to)
-                  .set({
+                  .update({
                     name: $scope.formData.to,
                     code: $scope.formData.toCode,
                     uid: currentAuth.uid,
                     createdAt: now,
                     createdBy: $scope.profile.username,
                   })
+
+                // this should be last if using .set({ ... })
+                DatabaseRef.child('snippets')
+                  .child(added.key)
+                  .update({
+                    uid: currentAuth.uid,
+                    createdBy: $scope.profile.username,
+                    createdAt: now
+                  });
+
                 console.log('Hands are clean now');
                 $state.go('detail', { codeId: added.key });
               })

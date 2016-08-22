@@ -8,6 +8,7 @@
     "snippets": {
       ".read": "true",
       "$snipId": {
+        ".write":"true",
         "$language": {
           ".write": "(!data.exists() && newData.child('uid').val() == auth.uid ) || (data.child('uid').val() == newData.child('uid').val())"
         }

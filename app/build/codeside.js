@@ -377,11 +377,6 @@ angular.module('codeSide')
     }
   ])
 
-angular.module("codeSide")
-
-.factory("Auth", ['$firebaseAuth', function($firebaseAuth) {
-  return $firebaseAuth();
-}]);
 angular.module('codeSide')
 
 .controller('emailVerifyController', ['$scope', '$stateParams', 'currentAuth', 'DatabaseRef',
@@ -555,12 +550,12 @@ angular.module('codeSide')
                 createdAt: now,
                 description: $scope.formData.description
               })
-              .then(function(added) {
+              .then(function(added) {                
                 // add first snippet
                 DatabaseRef.child('snippets')
                   .child(added.key)
                   .child($scope.formData.from)
-                  .set({
+                  .update({
                     name: $scope.formData.from,
                     code: $scope.formData.fromCode,
                     createdAt: now,
@@ -572,13 +567,23 @@ angular.module('codeSide')
                 DatabaseRef.child('snippets')
                   .child(added.key)
                   .child($scope.formData.to)
-                  .set({
+                  .update({
                     name: $scope.formData.to,
                     code: $scope.formData.toCode,
                     uid: currentAuth.uid,
                     createdAt: now,
                     createdBy: $scope.profile.username,
                   })
+
+                // this should be last if using .set({ ... })
+                DatabaseRef.child('snippets')
+                  .child(added.key)
+                  .update({
+                    uid: currentAuth.uid,
+                    createdBy: $scope.profile.username,
+                    createdAt: now
+                  });
+
                 console.log('Hands are clean now');
                 $state.go('detail', { codeId: added.key });
               })
@@ -593,20 +598,24 @@ angular.module('codeSide')
 ])
 
 angular.module('codeSide')
-  .controller('DeleteController', ['$scope', '$stateParams', 'currentAuth', 'DatabaseRef', '$firebaseObject',
-    function($scope, $stateParams, currentAuth, DatabaseRef, $firebaseObject) {
+  .controller('DeleteController', ['$scope', '$state', '$stateParams', 'currentAuth', 'DatabaseRef', '$firebaseObject',
+    function($scope, $state, $stateParams, currentAuth, DatabaseRef, $firebaseObject) {
       $scope.codeId = $stateParams.codeId;
 
       $scope.loading = true;
       var allowed = false;
 
       var ref = DatabaseRef.child('codes').child($stateParams.codeId);
+      var refSnippet = DatabaseRef.child('snippets').child($stateParams.codeId);
+
       var deleteObject = $firebaseObject(ref);
+      var deleteSnippet = $firebaseObject(refSnippet);
+
       deleteObject.$loaded()
         .then(function(data) {
           $scope.loading = false;
           if (data.uid == currentAuth.uid) {
-            toastr.success('User id matches', 'User match');
+            toastr.error('Are you sure?', 'About to Delete');
             console.log('You created this');
             $scope.allowed = true;
             allowed = true;
@@ -623,15 +632,25 @@ angular.module('codeSide')
 
       $scope.deleteCode = function() {
         console.log(allowed);
+
         if (allowed) {
           console.log('delete happened');
-          // deleteObject.$remove()
-          //   .then(function(ref) {
-          //     console.log('deletion happened');
-          //     toastr.error('Deletion happened', 'Gone for good');
-          //   }, function(error) {
-          //     toastr.error('Error: ', error);
-          //   });
+          deleteObject.$remove()
+            .then(function(ref) {
+              // delete the related snippet
+              deleteSnippet.$remove()
+                .then(function(ref) {
+                  console.log('deletion happened');
+                  toastr.info('Deletion ongoing');
+                  $state.go('home');
+                }, function(error) {
+                  toastr.error('Error: ', error.message);
+                })
+              toastr.success('Floor scrubbing done!', 'Finished Deletion')
+            });
+
+          //TODO: Delete accompanying Snippet object
+
         } else {
           toastr.error('You aint doing anything');
         }
@@ -915,6 +934,11 @@ angular.module('codeSide')
   }
 ])
 
+angular.module("codeSide")
+
+.factory("Auth", ['$firebaseAuth', function($firebaseAuth) {
+  return $firebaseAuth();
+}]);
 angular.module("codeSide")
 .factory("DatabaseRef", function() {
   return firebase.database().ref();
