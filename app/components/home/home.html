@@ -1,22 +1,43 @@
-<div class="small-12 medium-10 medium-centered large-8 large-centered columns">
+<div class="container">
     <div class="row">
-        <div class="small-12 columns">
-            <div class="callout clearfix" style="margin-top:20px;">
-                <h5 class="float-center">Recent snippets:</h5>
-                <div ng-show="!list.length ">
-                    No recent snippets
+        <div class="col-sm-4 col-md-4 col-lg-5">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">About CodeBySide</h3>
                 </div>
-                <div ng-show="!list" class="float-center">
-                    <div class="loader">
-                        <span>{</span><span>}</span>
+                <div class="panel-body">
+                    <p>
+                        Panel content Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                    </p>
+                    <p class="hidden-sm hidden-xs">
+                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                    <p><a class="btn btn-primary" ui-sref="about" role="button">Learn more</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8 col-md-8 col-lg-7">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Recent snippets:</h3>
+                </div>
+                <div class="panel-body">
+                    <div ng-show="!list.length ">
+                        <h4 class="text-muted">No recent snippets</h4>
                     </div>
-                </div>
-                <div class="cards" ng-repeat="item in list | orderBy: '-createdAt'" ng-show="list">
-                    <a ui-sref="detail({ codeId: item.$id })">{{ item.title }}</a> | {{ item.description }}
-                    <br/>
-                    <small>{{ item.createdAt | date : 'medium' }} by <a href="">{{ item.createdBy }}</a></small>
+                    <div ng-show="!list" class="float-center">
+                        <div class="loader">
+                            <span>{</span><span>}</span>
+                        </div>
+                    </div>
+                    <div class="list-group">
+                        <a ui-sref="detail({ codeId: item.$id })" class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt'" ng-show="list">
+                            <h4 class="list-group-item-heading">{{ item.title }}</h4>
+                            <p class="list-group-item-text">{{ item.description }}</p>
+                            <small>{{ item.createdAt | date : 'medium' }} by <a href="">{{ item.createdBy }}</a></small>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>

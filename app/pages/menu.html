@@ -1,32 +1,36 @@
-<div class="row">
-    <div class="small-12 medium-10 medium-centered columns">
-        <div class="myMenu menu-centered" ng-controller="MenuController">
-            <span class="show-for-small-only">
-      <a ui-sref="home" class="button" title="Home"><i class="step fi-home size-18"></i></a>
-        <a ui-sref="new" class="button success" title="Add Code"><i class="step fi-plus size-18"></i></a>
-        <a ui-sref="about" class="button small" title="About CodeSide"><i class="step fi-info size-18"></i></a>
-        <span ng-show="loggedIn">
-        <a ui-sref="admin" class="button small" title="Admin Page"><i class="step fi-widget size-18"></i></a>
-        <a ng-click="logout()" class="button small" title="Logout"><i class="step fi-power size-18"></i></a>
-        </span>
-            <span ng-show="!loggedIn">
-        <a ui-sref="login" class="button small" title="Login">Login</a>
-        <a ui-sref="signup" class="button small" title="Register">Register</a>
-        </span>
-            </span>
-            <div class="show-for-medium">
-                <a ui-sref="home" class="button hollow">CodeBySide <small>beta</small></a>
-                <a ui-sref="new" class="button success">New Snippet</a>
-                <a ui-sref="about" class="button small hollow">About</a>
-                <span ng-show="loggedIn">
-        <a ui-sref="admin" class="button small hollow">Dashboard</a>
-        <a ng-click="logout()" class="button small hollow">Logout</a>
-        </span>
-                <span ng-show="!loggedIn">
-        <a ui-sref="login" class="button small secondary">Login</a>
-        <a ui-sref="signup" class="button small secondary">Register</a>
-        </span>
-            </div>
+<!-- Static navbar -->
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">CodeBySide <small>beta</small></a>
         </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a ui-sref="new">New</a></li>
+                <li><a ui-sref="about">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" ng-show="loggedIn">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">Username here</li>
+                        <li><a href="#">Dashboard</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>            
+            <ul class="nav navbar-nav navbar-right" ng-show="!loggedIn">
+                <li><a ui-sref="login">Login</a></li>
+                <li><a ui-sref="signup">Register</a></li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
     </div>
-</div>
+</nav>

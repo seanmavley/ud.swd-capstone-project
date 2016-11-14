@@ -39,9 +39,9 @@ gulp.task('scripts', ['clean'], function() {
 // Minify css to at least ie8 compatibility
 gulp.task('stylesheets', function() {
   var stream = gulp.src(cssFiles)
-    .pipe(concat('app.css'))
+    .pipe(concat('code.css'))
     .pipe(gulp.dest('app/build'))
-    .pipe(rename('app.min.css'))
+    .pipe(rename('code.min.css'))
     .pipe(cleanCSS({ compatibility: 'ie8' }))
     .pipe(gulp.dest('app/build'));
   return stream;
