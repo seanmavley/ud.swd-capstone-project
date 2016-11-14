@@ -39,18 +39,16 @@ angular.module('codeSide')
           deleteObject.$remove()
             .then(function(ref) {
               // delete the related snippet
+              toastr.info('Deletion ongoing');
+              
               deleteSnippet.$remove()
                 .then(function(ref) {
-                  console.log('deletion happened');
-                  toastr.info('Deletion ongoing');
                   $state.go('home');
                 }, function(error) {
                   toastr.error('Error: ', error.message);
                 })
               toastr.success('Floor scrubbing done!', 'Finished Deletion')
             });
-
-          //TODO: Delete accompanying Snippet object
 
         } else {
           toastr.error('You aint doing anything');

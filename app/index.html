@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js" lang="en" ng-app="codeSide">
-
+<html lang="en" ng-app="codeSide">
 <head>
     <base href="/">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title ng-bind="(title || 'Home') + ' :: CodeBySide'">CodeBySide</title>
     <meta name="description" content="CodeBySide - Compare source codes snippets, side by side.">
     <meta property="og:description" content="CodeBySide - Compare source codes snippets, side by side.">
@@ -46,14 +46,14 @@
 
 <body>
     <!-- Header menu -->
-    <ng-include src=" 'templates/menu.html' "></ng-include>
+    <ng-include src=" 'pages/menu.html' "></ng-include>
     <!-- Main body -->
     <div class="wrapper ">
         <div class="row ">
             <ui-view></ui-view>
         </div>
         <!-- Footer under wrapper -->
-        <ng-include src=" 'templates/footer.html' "></ng-include>
+        <ng-include src=" 'pages/footer.html' "></ng-include>
     </div>
     <!-- Footer menu -->
     <!-- Maybe -->

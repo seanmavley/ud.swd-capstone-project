@@ -5,15 +5,29 @@ var rename = require('gulp-rename');
 var del = require('del'); // rm -rf
 var cleanCSS = require('gulp-clean-css');
 var browser = require('browser-sync').create();
+var historyApiFallback = require('connect-history-api-fallback');
 
 var port = process.env.SERVER_PORT || 3000;
+
+var jsFiles = [
+  'app/app.js',
+  'app/app.routing.js',
+  'app/components/**/*.js',
+  'app/services/**/*.js',
+  'app/assets/scripts/**/*.js',
+  '!app/assets/scripts/ga.js',
+]
+
+var cssFiles = [
+  'app/assets/**/*.css'
+]
 
 gulp.task('clean', function() {
   return del(['app/build']);
 });
 
 gulp.task('scripts', ['clean'], function() {
-  var stream = gulp.src(['app/**/*.js', '!app/vendor/', '!app/vendor/**'])
+  var stream = gulp.src(jsFiles)
     .pipe(concat('codeside.js'))
     .pipe(gulp.dest('app/build'))
     .pipe(rename('codeside.min.js'))
@@ -22,10 +36,9 @@ gulp.task('scripts', ['clean'], function() {
   return stream;
 });
 
-// not much of custom css to minify, but worth
-// having available just in case 
-gulp.task('minify-css', function() {
-  var stream = gulp.src(['app/assets/styles/*.css'])
+// Minify css to at least ie8 compatibility
+gulp.task('stylesheets', function() {
+  var stream = gulp.src(cssFiles)
     .pipe(concat('app.css'))
     .pipe(gulp.dest('app/build'))
     .pipe(rename('app.min.css'))
@@ -34,23 +47,27 @@ gulp.task('minify-css', function() {
   return stream;
 })
 
-gulp.task('build', ['scripts']);
-
-// run this in background to rebuild js files
-// serve content using firebase serve
-gulp.task('watch', ['build'], function() {
-  gulp.watch(['app/**/*.js', '!app/build/', '!app/build/**'], ['build'])
-});
-
 // templates and styles will be processed in parallel.
 // clean will be guaranteed to complete before either start.
 // clean will not be run twice, even though it is called as a dependency twice.
 
-gulp.task('serve', ['build'], function() {
-  browser.init({ server: 'app/', port: port });
-  // watch and rebuild scripts
-  gulp.watch(['app/**/*.js', '!app/build/', '!app/build/**'], ['build'])
-    // .on('change', browser.reload);
+gulp.task('serve', ['scripts', 'stylesheets'], function() {
+  browser.init({
+    server: 'app/',
+    port: port,
+    middleware: [historyApiFallback()]
+  });
+  // watch and rebuild Scripts
+  gulp.watch(jsFiles, ['scripts'])
+    .on('change', browser.reload);
+
+  // watch and rebuild Stylesheets
+  gulp.watch(cssFiles, ['stylesheets'])
+    .on('change', browser.reload);
+
+  // Reload when html changes
+  gulp.watch('app/**/*.html')
+    .on('change', browser.reload);
 });
 
 gulp.task('default', ['serve']);

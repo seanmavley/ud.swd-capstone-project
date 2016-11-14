@@ -8,19 +8,6 @@ angular.module('codeSide')
 
     var list = $firebaseArray(query);
 
-    // TODO email verification
-    // Auth.$onAuthStateChanged(function(firebaseUser) {
-    //   if (firebaseUser) {
-    //     console.log(firebaseUser);
-    //     if (firebaseUser.emailVerified) {
-    //       console.log(firebaseUser);
-    //       toastr.success('Email verified');
-    //     } else {
-    //       toastr.info('Do verify email');
-    //     }
-    //   }
-    // })
-
     list.$loaded()
       .then(function(data) {
         $scope.list = data;
