@@ -1,26 +1,28 @@
-<div class="row">
-    <div class="small-12 medium-8 medium-centered">
-        <div ng-show="loading" class="float-center">
-            <div class="loader">
-                <span>{</span><span>}</span>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-sm-4 col-sm-offset-4 col-md-6 col-md-offset-3" ng-show="loading">
+                <div class="loader">
+                    <span>{</span><span>}</span>
+                </div>
+            </div>
+            <div ng-show="!allowed && !loading" class="page-header">
+                <h2>You are not allowed</h2>
+                <p>
+                    Why do you want to delete what does not belong to you?
+                </p>
+                <div class="small button-group margin-top">
+                    <a class="button success" ui-sref="detail({ codeId: codeId })" aria-label="Close modal">Cancel</a>
+                </div>
+            </div>
+            <div class="page-header" ng-show="allowed && !loading">
+                <h2>Proceed with deletion?</h2>
+                <p>When deleted, the snippet is deleted, and deleted for real!</p>
+                <div class="small button-group margin-top">
+                    <a class="btn btn-default" ui-sref="detail({ codeId: codeId })">Cancel</a>
+                    <a class="btn btn-danger" ng-click="deleteCode();">Delete</a>
+                </div>
             </div>
         </div>
-        <div ng-show="!allowed && !loading">
-            <p class="lead">You are not allowed</p>
-            <p>
-                Why do you want to delete what does not belong to you?
-            </p>
-            <div class="small button-group margin-top">
-                <a class="button success" ui-sref="detail({ codeId: codeId })" aria-label="Close modal">Cancel</a>
-            </div>
-        </div>
-        <span ng-show="allowed && !loading">
-        <p class="lead">Proceed with deletion.</p>
-        <p>Are you sure?</p>
-        <div class="small button-group margin-top">
-            <a class="button success" ui-sref="detail({ codeId: codeId })">Cancel</a>
-            <a class="button alert hollow" ng-click="deleteCode();">Delete</a>
-        </div>
-        </span>
     </div>
 </div>

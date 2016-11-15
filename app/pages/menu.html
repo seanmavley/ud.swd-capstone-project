@@ -1,5 +1,5 @@
 <!-- Static navbar -->
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-default navbar-static-top" ng-controller="MenuController">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -12,17 +12,17 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a ui-sref="new">New</a></li>
+                <li><a ui-sref="new" class="btn-default">New</a></li>
                 <li><a ui-sref="about">About</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-show="loggedIn">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-header">Username here</li>
-                        <li><a href="#">Dashboard</a></li>
+                        <li class="dropdown-header" ng-if="username">Username here</li>
+                        <li><a ui-sref="admin">Dashboard</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Logout</a></li>
+                        <li><a ng-click="logout()">Logout</a></li>
                     </ul>
                 </li>
             </ul>            

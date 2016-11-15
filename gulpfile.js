@@ -61,7 +61,7 @@ gulp.task('serve', ['scripts', 'stylesheets'], function() {
     middleware: [historyApiFallback()]
   });
   // watch and rebuild Scripts
-  gulp.watch(jsFiles, ['scripts'])
+  gulp.watch(jsFiles, ['scripts', 'stylesheets'])
     .on('change', browser.reload);
 
   // watch and rebuild Stylesheets
