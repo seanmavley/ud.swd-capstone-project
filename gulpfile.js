@@ -26,6 +26,9 @@ gulp.task('clean', function() {
   return del(['app/build']);
 });
 
+// TODO:
+// Concat and Uglify all codemirror js
+
 gulp.task('scripts', ['clean'], function() {
   var stream = gulp.src(jsFiles)
     .pipe(concat('codeside.js'))
