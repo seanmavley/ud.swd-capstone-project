@@ -1,48 +1,53 @@
-<div class="small-12 columns">
-    <div class="callout alert margin-top" ng-show="!emailVerified">
-        <p class="lead">
-            Please verify your email before you can add code!
-        </p>
-        <p>
-            Kindly visit the <a ui-sref="admin">Admin Page</a> to verify email. Thank you!
-        </p>
-    </div>
-    <div class="show-for-small-only margin-top" ng-show="emailVerified">
-        <p>Code is best written on a PC. Kindly switch to PC to bring the best in you!</p>
-    </div>
-    <form ng-submit="addNew()" name="addForm" ng-show="emailVerified" class="margin-top">
-        <div class="row">
-            <div class="small-12 medium-6 columns callout">
-                <label>Choose code title and describe
-                    <input type="text" ng-model="formData.title" required autofocus placeholder="eg. Fibonacci Function">
-                </label>
-                <label>
-                    <textarea ng-model="formData.description" placeholder="Add description here" required>Add description</textarea>
-                </label>
-            </div>
-            <div class="small-12 medium-3 columns end">
-                <input type="submit" class="button large expanded" ng-disabled="sending || addForm.$invalid || codeDuplicate" style="margin-top:13px;" />
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3" ng-show="!emailVerified">
+            <p class="lead">
+                Please verify your email before you can add code!
+            </p>
+            <p>
+                Kindly visit the <a ui-sref="admin">Admin Page</a> to verify email. Thank you!
+            </p>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <form ng-submit="addNew()" name="addForm" ng-show="emailVerified" class="margin-top">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="title">Choose code title and describe</label>
+                            <input type="text" class="form-control" id="title" name="title" ng-model="formData.title" required autofocus placeholder="eg. Fibonacci Function">
+                        </div>
+                        <div class="form-group">
+                            <label for="describe">What's snippet about?</label>
+                            <textarea class="form-control" ng-model="formData.description" id="describe" name="describe" placeholder="Add description here" required>Add description</textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-large {{ addForm.$valid ? 'btn-success' : 'btn-danger' }}" ng-disabled="sending || addForm.$invalid || codeDuplicate" value="{{ addForm.$valid ? 'Send now!' : 'Fill form' }}"/>
+                            <a href="" class="pull-right">Need help?</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">From</span>
+                                <select class="form-control" ng-disabled="notReady" ng-model="formData.from" ng-model-options="{ updateOn: 'blur' }" ng-change="code1Change(formData.from)" type='text' required>
+                                    <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                                </select>
+                            </div>
+                            <textarea ui-codemirror ui-codemirror-opts="editorOneOptions" ng-model="formData.fromCode" id="from_snippet" required>Write code here</textarea>
+                        </div>
+                        <hr class="visible-xs">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <select class="form-control" ng-disabled="notReady" ng-change="code2Change(formData.to)" ng-model="formData.to" type='text' required>
+                                    <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                                </select>
+                                <span class="input-group-addon">To</span>
+                            </div>
+                            <textarea rows="7" ui-codemirror ui-codemirror-opts="editorTwoOptions" ng-model="formData.toCode" id="to_snippet" required>Write code here</textarea>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="row">
-            <div class="medium-6 large-6 column with-border padding margin-bottom">
-                <div class="input-group">
-                    <span class="input-group-label">From</span>
-                    <select class="input-group-field" ng-disabled="notReady" ng-model="formData.from" ng-model-options="{ updateOn: 'blur' }" ng-change="code1Change(formData.from)" type='text' required>
-                        <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-                    </select>
-                </div>
-                <textarea ui-codemirror ui-codemirror-opts="editorOneOptions" ng-model="formData.fromCode" id="from_snippet" required>Write code here</textarea>
-            </div>
-            <div class="medium-6 large-6 column with-border padding">
-                <div class="input-group">
-                    <select class="input-group-field" ng-disabled="notReady" ng-change="code2Change(formData.to)" ng-model="formData.to" type='text' required>
-                        <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-                    </select>
-                    <span class="input-group-label">To</span>
-                </div>
-                <textarea rows="7" ui-codemirror ui-codemirror-opts="editorTwoOptions" ng-model="formData.toCode" id="to_snippet" required>Write code here</textarea>
-            </div>
-        </div>
-    </form>
+    </div>
 </div>
