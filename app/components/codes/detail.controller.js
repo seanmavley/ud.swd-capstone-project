@@ -222,6 +222,7 @@ angular.module('codeSide')
     };
 
     $scope.updateCode = function() {
+      toastr.info('Saving ongoing', 'Hold on');
       var updateData = {
         title: $scope.formData.title,
         description: $scope.formData.description,
@@ -234,6 +235,7 @@ angular.module('codeSide')
           if (error) {
             toastr.error(error.message, error.reason)
           } else {
+            toastr.clear();
             toastr.success('Updated succefully');
           }
         })

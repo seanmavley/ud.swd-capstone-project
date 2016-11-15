@@ -15,3 +15,26 @@ toastr.options = {
   "showMethod": "fadeIn",
   "hideMethod": "fadeOut"
 }
+
+Offline.options = {
+  reconnect: {
+    // Try to reconnect every 30 seconds
+    initialDelay: 30
+  }
+};
+
+Offline.on('down', function() {
+  // clear any toastr notification on screen
+  // already
+  toastr.clear();
+  toastr.warning('You are not connected to the internet', 'Offline mode', {
+    timeOut: 10000
+  });
+});
+
+Offline.on('up', function() {
+  toastr.clear()
+  toastr.success('Network is back', 'Now online', {
+    timeOut: 8000
+  });
+});
