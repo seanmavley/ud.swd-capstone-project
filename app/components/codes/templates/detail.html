@@ -1,90 +1,61 @@
-<div class="small-12 columns">
+<div class="container">
     <div class="row">
-        <div class="small-4 medium-4 medium-centered small-centered columns" ng-show="loading">
+        <div class="col-sm-4 col-sm-offset-4 col-md-6 col-md-offset-3" ng-show="loading">
             <div class="loader">
                 <span>{</span><span>}</span>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="small-12 medium-6 columns" ng-show="!loading">
-            <div class="callout margin-top">
-                <strong>Title:</strong> {{ formData.title }} &#x2299; <strong>Created by:</strong> <a href="">{{ formData.createdBy }}</a> &#x2299; <strong>On</strong> {{ formData.createdAt | date : 'medium' }}
-                <br/> <strong>Description:</strong> {{ formData.description }}
-                <br/> <strong>Languages available:</strong> <span ng-repeat="name in formData.snippets">{{ name.name }} &bull; </span>
-                <br/>
-                <div class="small button-group margin-top">
-                    <a ng-click="enableEditing()" class="button" ng-show="profile">{{ editAllowed ? 'Enable' : 'Disable' }} editing</a>
-                    <a ng-show="formData.uid == profile.$id" class="button alert" ui-sref="delete({ codeId: formData.codeId })">Delete</a>
+        <div class="col-sm-12">
+            <div class="page-header" ng-show="!loading">
+                <h1>{{ formData.title }} 
+                <small><a data-toggle="modal" style="cursor:pointer;" data-target="#myModal">more/edit</a> Languages: <span ng-repeat="name in formData.snippets">{{ name.name }} <span ng-if="!$last">&bull;</span> </span></small>
+                </h1>
+                <hr>
+                <div class="btn-group">
+                    <a class="btn btn-primary" ng-show="profile" ng-click="enableEditing()" class="success">{{ editAllowed ? 'Enable' : 'Disable' }} editing</a>
+                    <div class="btn-group">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Share
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a target="new" href="https://plus.google.com/share?url=https%3A//code.khophi.co/%23/codes/{{ formData.codeId }}">Google+</a></li>
+                            <li><a target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//code.khophi.co/%23/codes/{{ formData.codeId }}">Facebook</a></li>
+                        </ul>
+                    </div>
+                    <a ng-show="formData.uid == profile.$id" class="btn btn-danger" ui-sref="delete({ codeId: formData.codeId })">Delete</a>
                 </div>
-                <div class="tiny button-group margin-top">
-                    <a class="button tiny hollow secondary"><i class="step fi-share size-12"></i></a>
-                    <a class="button small hollow alert" target="new" href="https://plus.google.com/share?url=https%3A//code.khophi.co/%23/codes/{{ formData.codeId }}">Google+</a>
-                    <a class="button small hollow" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//code.khophi.co/%23/codes/{{ formData.codeId }}">Facebook</a>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Modal Header</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Description: {{ formData.description}}</p>
+                            Created by: <a href="">{{ formData.createdBy }}</a>
+                            <br> {{ formData.createdAt | date : 'medium' }}
+                            <br> Languages available: <span ng-repeat="name in formData.snippets">{{ name.name }} &bull; </span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="small-12 medium-6 columns" ng-show="!loading && !editAllowed && profile.username !== formData.createdBy">
-            <div class="callout margin-top">
-                <p class="lead">
-                    You can only edit the code 'Title' and 'Description' created by you. This was created by "{{ formData.created }}".
-                </p>
+        <hr>
+        <div class="row">
+            <div class="col-sm-6">
+                From language section
             </div>
-        </div>
-        <div class="small-12 medium-6 columns" ng-show="!loading && !editAllowed && profile.username === formData.createdBy">
-            <div class="callout margin-top">
-                <form ng-submit="updateCode()" novalidate>
-                    <div class="small-12 columns">
-                        <label>Name
-                            <input type="text" ng-model="formData.title">
-                        </label>
-                    </div>
-                    <div class="small-12 columns">
-                        <textarea ng-model="formData.description" rows="3"></textarea>
-                    </div>
-                    <input type="submit" class="button" ng-disabled="updatingCode">
-                </form>
+            <div class="col-sm-6">
+                To language section
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="small-12 medium-6 columns" ng-show="!loading">
-            <form ng-submit="saveLanguage(codeOne)" name="myForm" novalidate>
-                <div class="input-group">
-                    <span class="input-group-label">From</span>
-                    <select class="input-group-field" ng-model="codeOne.name" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
-                        <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-                    </select>
-                    <div class="input-group-button" ng-show="!editAllowed && profile.username === codeOne.createdBy || !codeOne.createdBy && profile.username">
-                        <input type="submit" class="button" value="Save">
-                    </div>
-                </div>
-                <textarea ui-codemirror ui-codemirror-opts="editorOneOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
-                <span class="undersnippet" ng-show="codeOne.createdBy">By: <a href="">{{ codeOne.createdBy }}</a> <br/> On {{ codeOne.createdAt | date : 'medium' }}</span>
-                <span class="undersnippet" ng-show="!codeOne.createdBy && profile.username">Start typing, and "Save".</span>
-                <span class="undersnippet" ng-show="!codeOne.createdBy && !profile.username"><a ui-sref='login'>Login</a> first to share snippet.</span>
-            </form>
-        </div>
-        <div class="small-12 medium-6 large-6 columns" ng-show="!loading">
-            <form ng-submit="saveLanguage(codeTwo)" novalidate>
-                <div class="input-group">
-                    <span class="input-group-label">To</span>
-                    <select class="input-group-field" ng-model="codeTwo.name" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
-                        <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-                    </select>
-                    <div class="input-group-button" ng-show="!editAllowed && profile.username === codeTwo.createdBy || !codeTwo.createdBy && profile.username">
-                        <input type="submit" class="button" value="Save">
-                    </div>
-                </div>
-                <textarea rows="7" ui-codemirror ui-codemirror-opts="editorTwoOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
-                <span class="undersnippet" ng-show="codeTwo.createdBy">By: <a href="">{{ codeTwo.createdBy }}</a> <br/>On {{ codeTwo.createdAt | date : 'medium' }}</span>
-                <span class="undersnippet" ng-show="!codeTwo.createdBy && profile.username">Start typing, and "Save".</span>
-                <span class="undersnippet" ng-show="!codeTwo.createdBy && !profile.username"><a ui-sref='login'>Login</a> first to share snippet.</span>
-            </form>
-        </div>
-    </div>
-    <!-- for Disqus -->
 </div>
-<script type="text/javascript">
-    $(document).foundation();
-</script>
