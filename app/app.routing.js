@@ -70,6 +70,14 @@ angular.module('codeSide')
         /* 
           CRUD ROUTES
         */
+        .state('all', {
+          url: '/all',
+          templateUrl: 'components/codes/templates/all.html',
+          controller: 'AllController',
+          meta: {
+            title: 'View all snippets'
+          }
+        })
         .state('new', {
           url: '/new',
           templateUrl: 'components/codes/templates/new.html',

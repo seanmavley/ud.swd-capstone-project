@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Snippets</h3>
+                </div>
+                <div class="panel-body">
+                    <div ng-show="!list" class="float-center">
+                        <div class="loader">
+                            <span>{</span><span>}</span>
+                        </div>
+                    </div>
+                    <div class="list-group">
+                        <a ui-sref="detail({ codeId: item.$id })" class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt'" ng-show="list">
+                            <h4 class="list-group-item-heading">{{ item.title }}</h4>
+                            <p class="list-group-item-text">{{ item.description }}</p>
+                            <small>{{ item.createdAt | date : 'medium' }} by <a href="">{{ item.createdBy }}</a></small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
