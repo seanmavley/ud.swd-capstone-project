@@ -18,6 +18,7 @@ $(document).ready(function() {
   }
 
   Offline.options = {
+    checkOnLoad: true,
     reconnect: {
       // Try to reconnect every 30 seconds
       initialDelay: 30

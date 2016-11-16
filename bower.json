@@ -9,8 +9,6 @@
   "license": "MIT",
   "homepage": "codebyside.io",
   "dependencies": {
-    "foundation-sites": "~6.2.0",
-    "motion-ui": "~1.2.2",
     "angular": "^1.5.6",
     "angular-ui-router": "^0.3.1",
     "angularfire": "^2.0.1",
