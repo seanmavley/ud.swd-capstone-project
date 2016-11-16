@@ -20,5 +20,5 @@
   }],
   "start_url": "./app/index.html",
   "display": "standalone",
-  "orientation": "portrait"
+  "orientation": "any"
 }

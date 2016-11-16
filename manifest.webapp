@@ -19,6 +19,6 @@
     "type": "image/png"
   }],
   "start_url": "./app/index.html",
-  "display": "standalone",
+  "display": "any",
   "orientation": "portrait"
 }

@@ -74,6 +74,11 @@ gulp.task('clean', function() {
   return del(toDelete);
 });
 
+gulp.task('copyFont', function() {
+  return gulp.src('app/vendor/bootstrap/dist/fonts/**/*')
+    .pipe(gulp.dest('app/build/fonts'))
+})
+
 // concats and minifys all codemirror vendor files
 gulp.task('codemirror', function() {
   var stream = gulp.src(codemirrorFiles)
@@ -148,4 +153,14 @@ gulp.task('browser', function() {
     .on('change', browser.reload);
 })
 
-gulp.task('serve', gulp.series('clean', gulp.parallel('vendor', 'vendorCSS', 'codemirror', 'scripts', 'stylesheets'), 'browser'));
+gulp.task('serve', gulp.series('clean',
+  gulp.parallel(
+    'vendor',
+    'vendorCSS',
+    'codemirror',
+    'scripts',
+    'stylesheets',
+    'copyFont'),
+  'browser'));
+
+gulp.task('default', gulp.series('serve'));
