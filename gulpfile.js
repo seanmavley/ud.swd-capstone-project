@@ -18,16 +18,68 @@ var jsFiles = [
   '!app/assets/scripts/ga.js',
 ]
 
+var codemirrorFiles = [
+  'app/vendor/codemirror/mode/javascript/javascript.js',
+  'app/vendor/codemirror/mode/python/python.js',
+  'app/vendor/codemirror/mode/clike/clike.js',
+  'app/vendor/codemirror/mode/php/php.js',
+  'app/vendor/codemirror/mode/css/css.js',
+  'app/vendor/codemirror/mode/xml/xml.js',
+  'app/vendor/codemirror/mode/htmlmixed/htmlmixed.js',
+  'app/vendor/codemirror/mode/htmlembedded/htmlembedded.js'
+]
+
+var vendorFiles = [
+  'app/vendor/jquery/dist/jquery.min.js',
+  'app/vendor/angular/angular.js',
+  'app/vendor/firebase/firebase.js',
+  'app/vendor/angular-ui-router/release/angular-ui-router.min.js',
+  'app/vendor/angularfire/dist/angularfire.min.js',
+  'app/vendor/codemirror/lib/codemirror.js',
+  'app/vendor/angular-ui-codemirror/ui-codemirror.js',
+  'app/vendor/angular-ui-router-title/angular-ui-router-title.js',
+  'app/vendor/ngMeta/dist/ngMeta.min.js',
+  'app/vendor/ngprogress/build/ngprogress.min.js',
+  'app/vendor/toastr/toastr.min.js',
+  'app/vendor/offline/offline.min.js',
+  'app/vendor/bootstrap/dist/js/bootstrap.min.js'
+]
+
 var cssFiles = [
   'app/assets/**/*.css'
 ]
 
+// refers to my build files to
+// to delete
+var toDelete = [
+  'app/build/codeside.*',
+]
+
+// deletes all files beginning with codeside
 gulp.task('clean', function() {
-  return del(['app/build']);
+  return del(toDelete);
 });
 
-// TODO:
-// Concat and Uglify all codemirror js
+// concats and minifys all codemirror vendor files
+gulp.task('codemirror', function() {
+  var stream = gulp.src(codemirrorFiles)
+    .pipe(concat('allcodemirror.js'))
+    .pipe(gulp.dest('app/build'))
+    .pipe(rename('allcodemirror.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('app/build'))
+  return stream;
+})
+
+gulp.task('vendor', function() {
+  var stream = gulp.src(vendorFiles)
+    .pipe(concat('allvendor.js'))
+    .pipe(gulp.dest('app/build'))
+    .pipe(rename('allvendor.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('app/build'))
+  return stream;
+})
 
 gulp.task('scripts', ['clean'], function() {
   var stream = gulp.src(jsFiles)
@@ -42,9 +94,9 @@ gulp.task('scripts', ['clean'], function() {
 // Minify css to at least ie8 compatibility
 gulp.task('stylesheets', function() {
   var stream = gulp.src(cssFiles)
-    .pipe(concat('code.css'))
+    .pipe(concat('codeside.css'))
     .pipe(gulp.dest('app/build'))
-    .pipe(rename('code.min.css'))
+    .pipe(rename('codeside.min.css'))
     .pipe(cleanCSS({ compatibility: 'ie8' }))
     .pipe(gulp.dest('app/build'));
   return stream;

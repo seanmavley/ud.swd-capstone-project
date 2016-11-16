@@ -47,17 +47,23 @@
 
 <body>
     <!-- Header menu -->
-    <ng-include src=" 'pages/menu.html' "></ng-include>
+    <ng-include src=" 'pages/includes/menu.html' "></ng-include>
     <!-- Main body -->
     <ui-view></ui-view>
     <!-- Min body end -->
     <!-- Footer -->
-    <ng-include src=" 'pages/footer.html' "></ng-include>
+    <ng-include src=" 'pages/includes/footer.html' "></ng-include>
     <!-- Footer End -->
     <!-- Angular imports -->
-    <script src="vendor/jquery/dist/jquery.min.js "></script>
-    <script src="vendor/angular/angular.js "></script>
-    <script src="vendor/firebase/firebase.js "></script>
+    <!-- 
+        All Vendor Files 
+        This import MUST come first before codeside.js AND allcodemirror.min.js
+        The keyword is, MUST
+    -->
+    <script src="build/allvendor.min.js"></script>
+    <!-- Offline -->
+    <script src="vendor/offline/offline.min.js"></script>
+    <!-- Initialize Firebase -->
     <script>
     // Initialize Firebase
     var config = {
@@ -68,29 +74,10 @@
     };
     firebase.initializeApp(config);
     </script>
-    <script src="vendor/angular-ui-router/release/angular-ui-router.min.js "></script>
-    <script src="vendor/angularfire/dist/angularfire.min.js "></script>
-    <script src="vendor/codemirror/lib/codemirror.js "></script>
-    <script src="vendor/angular-ui-codemirror/ui-codemirror.js "></script>
-    <script src="vendor/angular-ui-router-title/angular-ui-router-title.js "></script>
-    <script src="vendor/ngMeta/dist/ngMeta.min.js "></script>
-    <script src="vendor/ngprogress/build/ngprogress.min.js "></script>
-    <script src="vendor/toastr/toastr.min.js"></script>
-    <!-- Offline -->
-    <script src="vendor/offline/offline.min.js"></script>
     <!-- CodeBySide -->
     <script src="build/codeside.js "></script>
-    <!-- Bootstrap -->
-    <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- Codemirror Modes -->
-    <script src="vendor/codemirror/mode/javascript/javascript.js "></script>
-    <script src="vendor/codemirror/mode/python/python.js "></script>
-    <script src="vendor/codemirror/mode/clike/clike.js "></script>
-    <script src="vendor/codemirror/mode/php/php.js "></script>
-    <script src="vendor/codemirror/mode/css/css.js "></script>
-    <script src="vendor/codemirror/mode/xml/xml.js "></script>
-    <script src="vendor/codemirror/mode/htmlmixed/htmlmixed.js "></script>
-    <script src="vendor/codemirror/mode/htmlembedded/htmlembedded.js "></script>
+    <!-- Codemirror Built -->
+    <script src="build/allcodemirror.min.js"></script>
 </body>
 
 </html>
