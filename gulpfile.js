@@ -9,6 +9,7 @@ var historyApiFallback = require('connect-history-api-fallback');
 
 var port = process.env.SERVER_PORT || 3000;
 
+// personally written JS
 var jsFiles = [
   'app/app.js',
   'app/app.routing.js',
@@ -18,6 +19,14 @@ var jsFiles = [
   '!app/assets/scripts/ga.js',
 ]
 
+// personally written CSS
+var cssFiles = [
+  'app/assets/**/*.css'
+]
+
+/* 
+  THIRD PARTY VENDOR FILES SECTION
+*/
 var codemirrorFiles = [
   'app/vendor/codemirror/mode/javascript/javascript.js',
   'app/vendor/codemirror/mode/python/python.js',
@@ -29,6 +38,8 @@ var codemirrorFiles = [
   'app/vendor/codemirror/mode/htmlembedded/htmlembedded.js'
 ]
 
+// includes jquery, angular and firebase
+// with other crucial files, see items
 var vendorFiles = [
   'app/vendor/jquery/dist/jquery.min.js',
   'app/vendor/angular/angular.js',
@@ -45,17 +56,20 @@ var vendorFiles = [
   'app/vendor/bootstrap/dist/js/bootstrap.min.js'
 ]
 
-var cssFiles = [
-  'app/assets/**/*.css'
+var vendorCSS = [
+  'app/vendor/bootstrap/dist/css/bootstrap.css',
+  'app/vendor/codemirror/lib/codemirror.css',
+  'app/vendor/toastr/toastr.min.css',
+  'app/vendor/ngprogress/ngProgress.css'
 ]
 
 // refers to my build files to
 // to delete
 var toDelete = [
-  'app/build/codeside.*',
+  'app/build/*.js',
 ]
 
-// deletes all files beginning with codeside
+// deletes files
 gulp.task('clean', function() {
   return del(toDelete);
 });
@@ -64,65 +78,74 @@ gulp.task('clean', function() {
 gulp.task('codemirror', function() {
   var stream = gulp.src(codemirrorFiles)
     .pipe(concat('allcodemirror.js'))
-    .pipe(gulp.dest('app/build'))
+    .pipe(gulp.dest('app/build/js'))
     .pipe(rename('allcodemirror.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('app/build'))
+    .pipe(gulp.dest('app/build/js'))
   return stream;
 })
 
+// concats and minifys all AngularJS etc vendor files
 gulp.task('vendor', function() {
   var stream = gulp.src(vendorFiles)
     .pipe(concat('allvendor.js'))
-    .pipe(gulp.dest('app/build'))
+    .pipe(gulp.dest('app/build/js'))
     .pipe(rename('allvendor.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('app/build'))
+    .pipe(gulp.dest('app/build/js'))
   return stream;
 })
 
-gulp.task('scripts', ['clean'], function() {
+// concacts and minifys all personally written JS
+gulp.task('scripts', function() {
   var stream = gulp.src(jsFiles)
     .pipe(concat('codeside.js'))
-    .pipe(gulp.dest('app/build'))
+    .pipe(gulp.dest('app/build/js'))
     .pipe(rename('codeside.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('app/build'));
+    .pipe(gulp.dest('app/build/js'));
   return stream;
 });
 
-// Minify css to at least ie8 compatibility
+// Minify personally written css to at least ie8 compatibility
 gulp.task('stylesheets', function() {
   var stream = gulp.src(cssFiles)
     .pipe(concat('codeside.css'))
-    .pipe(gulp.dest('app/build'))
+    .pipe(gulp.dest('app/build/css'))
     .pipe(rename('codeside.min.css'))
     .pipe(cleanCSS({ compatibility: 'ie8' }))
-    .pipe(gulp.dest('app/build'));
+    .pipe(gulp.dest('app/build/css'));
   return stream;
 })
 
-// templates and styles will be processed in parallel.
-// clean will be guaranteed to complete before either start.
-// clean will not be run twice, even though it is called as a dependency twice.
+// Minify vendor CSS
+gulp.task('vendorCSS', function() {
+  var stream = gulp.src(vendorCSS)
+    .pipe(concat('allvendor.css'))
+    .pipe(gulp.dest('app/build/css'))
+    .pipe(rename('allvendor.min.css'))
+    .pipe(cleanCSS({ compatibility: 'ie8' }))
+    .pipe(gulp.dest('app/build/css'));
+  return stream;
+})
 
-gulp.task('serve', ['scripts', 'stylesheets'], function() {
+gulp.task('browser', function() {
   browser.init({
     server: 'app/',
     port: port,
     middleware: [historyApiFallback()]
   });
   // watch and rebuild Scripts
-  gulp.watch(jsFiles, ['scripts', 'stylesheets'])
+  gulp.watch(jsFiles, gulp.parallel('scripts'))
     .on('change', browser.reload);
 
   // watch and rebuild Stylesheets
-  gulp.watch(cssFiles, ['stylesheets'])
+  gulp.watch(cssFiles, gulp.parallel('stylesheets'))
     .on('change', browser.reload);
 
   // Reload when html changes
   gulp.watch('app/**/*.html')
     .on('change', browser.reload);
-});
+})
 
-gulp.task('default', ['serve']);
+gulp.task('serve', gulp.series('clean', gulp.parallel('vendor', 'vendorCSS', 'codemirror', 'scripts', 'stylesheets'), 'browser'));

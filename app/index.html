@@ -37,11 +37,8 @@
     <meta name="msapplication-navbutton-color " content="#303F9F ">
     <!-- Foundation style -->
     <!-- Boostrap -->
-    <link rel="stylesheet" type="text/css" href="./vendor/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./vendor/codemirror/lib/codemirror.css ">
-    <link rel="stylesheet" href="./vendor/toastr/toastr.min.css ">
-    <link rel="stylesheet" type="text/css " href="./vendor/ngprogress/ngProgress.css ">
-    <link rel="stylesheet" type="text/css" href="./build/code.css">
+    <link rel="stylesheet" type="text/css" href="./build/css/allvendor.min.css">
+    <link rel="stylesheet" type="text/css" href="./build/css/codeside.css">
     <!-- <link rel="stylesheet" type="text/css" href="./vendor/offline/themes/offline-language-english.css"> -->
 </head>
 
@@ -54,13 +51,14 @@
     <!-- Footer -->
     <ng-include src=" 'pages/includes/footer.html' "></ng-include>
     <!-- Footer End -->
-    <!-- Angular imports -->
+    <!--##################END OF PAGE##################-->
+    <!-- IMPORTS -->
     <!-- 
         All Vendor Files 
         This import MUST come first before codeside.js AND allcodemirror.min.js
         The keyword is, MUST
     -->
-    <script src="build/allvendor.min.js"></script>
+    <script src="build/js/allvendor.min.js"></script>
     <!-- Offline -->
     <script src="vendor/offline/offline.min.js"></script>
     <!-- Initialize Firebase -->
@@ -75,9 +73,9 @@
     firebase.initializeApp(config);
     </script>
     <!-- CodeBySide -->
-    <script src="build/codeside.js "></script>
+    <script src="build/js/codeside.js "></script>
     <!-- Codemirror Built -->
-    <script src="build/allcodemirror.min.js"></script>
+    <script src="build/js/allcodemirror.min.js"></script>
 </body>
 
 </html>
