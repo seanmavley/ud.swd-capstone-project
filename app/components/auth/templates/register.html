@@ -1,22 +1,40 @@
 <div ng-controller="LogRegController">
     <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
-        <form ng-submit="register()" name="registerForm">
+        <form ng-submit="register()" name="registerForm" data-toggle="validator" role="form">
             <h4>Register</h4>
-            <div class="form-group">
+            <hr>
+            <div class="form-group has-feedback">
                 <label for="username">Username </label>
-                <input ng-model="formData.username" type="text" class="form-control" name="username" id="username" placeholder="eg. e-equals-mcsquare" required autofocus>
+                <input ng-model="formData.username" type="text" class="form-control" name="username" id="username" placeholder="eg. e-equals-mcsquare" required data-minlength="3" autofocus>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <div class="help-block with-errors"></div>
             </div>
-            <div class="form-group">
+            <div class="form-group has-feedback">
                 <label for="email">Email</label>
                 <input ng-model="formData.email" class="form-control" type="email" name="email" id="email" placeholder="my@email.com" required autofocus>
+                <div class="help-block with-errors"></div>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group has-feedback">
                 <label for="password">Password</label>
-                <input type="password" name="password" class="form-control" id="password" ng-model="formData.password" placeholder="********" max="32" min="8" required>
+                <input type="password" name="password" data-minlength="6" class="form-control" id="password" ng-model="formData.password" placeholder="Enter password" max="32" min="8" required>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <div class="help-block with-errors"></div>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-default">Sign in</button>
+                <label for="password-confirm">Confirm password</label>
+                <input type="password" class="form-control" id="password-confirm" data-match="#password" data-match-error="Whoops, properly confirm your password" placeholder="Confirm password above" required>
+                <div class="help-block with-errors"></div>
+            </div>
+            <div class="form-group">
+                <button type="submit" ng-disabled="registerForm.$invalid" class="btn btn-primary">Proceed</button>
+                <a ui-sref="login" class="btn btn-link pull-right">Already have an account?</a>
             </div>
         </form>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('form[name="registerForm"]').validator()
+    })
+</script>

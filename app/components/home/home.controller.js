@@ -30,6 +30,9 @@ angular.module('codeSide')
     };
 
     Offline.on('down', function() {
+      // TODO:
+      // clean the retrieved stringified data
+      // currently works, but look for better way?
       localforage.getItem('homepage')
         .then(function(data) {
           console.log(data);
