@@ -4,8 +4,7 @@ angular.module('codeSide')
   function($scope, Auth, DatabaseRef, $firebaseArray) {
 
     var doRequest = function() {
-      var ref = DatabaseRef;
-      var codeDataRef = ref.child('codes');
+      var codeDataRef = DatabaseRef.child('codes');
       var query = codeDataRef.orderByChild("createdAt").limitToLast(25);
 
       var list = $firebaseArray(query);

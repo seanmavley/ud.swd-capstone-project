@@ -117,6 +117,20 @@ angular.module('codeSide')
         /* 
           ADMINISTRATION
         */
+        .state('dashboard', {
+          url: '/dashboard',
+          templateUrl: 'components/admin/dashboard.html',
+          controller: 'DashboardController',
+          resolve: {
+            currentAuth: ['Auth', function(Auth) {
+              return Auth.$requireSignIn()
+            }]
+          },
+          meta: {
+            title: 'Admin',
+            restricted: true
+          }
+        })
         .state('admin', {
           url: '/admin',
           templateUrl: 'components/admin/admin.html',

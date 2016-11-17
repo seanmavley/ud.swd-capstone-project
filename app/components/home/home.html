@@ -6,9 +6,6 @@
                     <h3 class="panel-title">Recent snippets <small>(showing 25, <a ui-sref="all">view all</a></small></h3>
                 </div>
                 <div class="panel-body">
-                    <div ng-show="!list.length ">
-                        <h4 class="text-muted">No recent snippets</h4>
-                    </div>
                     <div ng-show="!list" class="float-center">
                         <div class="loader">
                             <span>{</span><span>}</span>
@@ -23,7 +20,7 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                   Showing 25 <a ui-sref="all">view all</a>
+                    Showing 25 <a ui-sref="all">view all</a>
                 </div>
             </div>
         </div>
@@ -35,12 +32,18 @@
                             <h3 class="panel-title">Featured snippets</h3>
                         </div>
                         <div class="panel-body">
-                            <p>
-                                Panel content Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            </p>
-                            <p class="hidden-sm hidden-xs">
-                                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
+                            <div ng-show="!list" class="float-center">
+                                <div class="loader">
+                                    <span>{</span><span>}</span>
+                                </div>
+                            </div>
+                            <div class="list-group">
+                                <a ui-sref="detail({ codeId: item.$id })" class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt' track by $index" ng-show="list" ng-if="item.featured">
+                                    <h4 class="list-group-item-heading">{{ item.title }}</h4>
+                                    <p class="list-group-item-text">{{ item.description }}</p>
+                                    <small>{{ item.createdAt | date : 'medium' }} by <a href="">{{ item.createdBy }}</a></small>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -48,21 +51,6 @@
                     <div class="panel panel-success">
                         <div class="panel-heading">
                             <h3 class="panel-title">Popular snippets</h3>
-                        </div>
-                        <div class="panel-body">
-                            <p>
-                                Panel content Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            </p>
-                            <p class="hidden-sm hidden-xs">
-                                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Recent Comments</h3>
                         </div>
                         <div class="panel-body">
                             <p>
