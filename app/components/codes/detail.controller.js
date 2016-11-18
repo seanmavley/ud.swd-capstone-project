@@ -132,6 +132,14 @@ angular.module('codeSide')
           uid: data.uid,
         }
 
+        localforage.setItem($stateParams.codeId, JSON.stringify($scope.formData))
+          .then(function(data) {
+            console.log(data);
+          })
+          .catch(function(error) {
+            console.log(error);
+          })
+
         snippetsArray.$loaded()
           // default languages to load on load
           // based on first two items in snippets array
@@ -139,6 +147,16 @@ angular.module('codeSide')
             $scope.formData.snippets = snippets;
             $scope.codeOne = loadLanguage(snippets.$keyAt(0));
             $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
+
+            localforage.setItem($stateParams.codeId + '-snippets', JSON.stringify($scope.formData.snippets))
+              .then(function(data) {
+                toastr.success('Data available Offline', 'Data saved for offline viewing');
+                console.log(data);
+              })
+              .catch(function(error) {
+                console.log(error);
+              })
+
           })
 
 
@@ -168,7 +186,6 @@ angular.module('codeSide')
               }
             })
 
-          // console.log($scope.codeOne);
           $scope.refreshOne = false;
         })
     };
