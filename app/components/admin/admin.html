@@ -11,6 +11,7 @@
                 <th>Description</th>
                 <th>Featured?</th>
                 <th>Upvote</th>
+                <th>Vote count</th>
             </thead>
             <tbody>
                 <tr ng-repeat="item in list | orderBy: '-createdAt' ">
@@ -21,9 +22,12 @@
                         <label for="featured" class="{{ item.featured ? 'text-success' : 'text-muted' }}" ng-bind="item.featured ? 'Yep, featured!' : 'Not featured'"></label>
                     </td>
                     <td>
-                        <a class="btn btn-default">
+                        <a class="btn btn-default" ng-click="upVote(item, vote);">
                             <span class="glyphicon glyphicon-chevron-up"></span>
                         </a>
+                    </td>
+                    <td>
+                        {{ votes.votes }}
                     </td>
                 </tr>
             </tbody>
