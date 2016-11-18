@@ -111,56 +111,105 @@ angular.module('codeSide')
       }
     };
 
-    langObject.$loaded()
-      .then(function(data) {
-        // console.log(data);
-      });
+    // LOAD ENTIRE CODE
+    // with snippets
+    doRequest = function() {
+      $scope.offline = false;
+      // load the list of languages
+      langObject.$loaded()
+        .then(function(data) {
+          // console.log(data);
+          $scope.languages = data;
+          localforage.setItem('languages', JSON.stringify(data))
+            .then(function(res) {
+              console.log(res);
+            })
+            .catch(function(error) {
+              console.log(error);
+            })
+        });
 
-    codeObject.$loaded()
-      .then(function(data) {
+      codeObject.$loaded()
+        .then(function(data) {
 
-        $scope.loading = false;
+          $scope.loading = false;
 
-        $rootScope.title = data.title;
+          $rootScope.title = data.title;
 
-        $scope.formData = {
-          createdBy: data.createdBy,
-          title: data.title,
-          createdAt: data.createdAt,
-          description: data.description,
-          codeId: data.$id,
-          uid: data.uid,
-        }
+          $scope.formData = {
+            createdBy: data.createdBy,
+            title: data.title,
+            createdAt: data.createdAt,
+            description: data.description,
+            codeId: data.$id,
+            uid: data.uid,
+          }
 
-        localforage.setItem($stateParams.codeId, JSON.stringify($scope.formData))
-          .then(function(data) {
-            console.log(data);
-          })
-          .catch(function(error) {
-            console.log(error);
-          })
+          localforage.setItem($stateParams.codeId, JSON.stringify($scope.formData))
+            .then(function(data) {
+              console.log(data);
+            })
+            .catch(function(error) {
+              console.log(error);
+            })
 
-        snippetsArray.$loaded()
-          // default languages to load on load
-          // based on first two items in snippets array
-          .then(function(snippets) {
-            $scope.formData.snippets = snippets;
-            $scope.codeOne = loadLanguage(snippets.$keyAt(0));
-            $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
+          snippetsArray.$loaded()
+            // default languages to load on load
+            // based on first two items in snippets array
+            .then(function(snippets) {
+              $scope.formData.snippets = snippets;
+              $scope.codeOne = loadLanguage(snippets.$keyAt(0));
+              $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
 
-            localforage.setItem($stateParams.codeId + '-snippets', JSON.stringify($scope.formData.snippets))
-              .then(function(data) {
-                toastr.success('Data available Offline', 'Data saved for offline viewing');
-                console.log(data);
-              })
-              .catch(function(error) {
-                console.log(error);
-              })
+              localforage.setItem($stateParams.codeId + '-snippets', JSON.stringify($scope.formData.snippets))
+                .then(function(data) {
+                  toastr.success('Data available Offline', 'Data saved for offline viewing');
+                  console.log(data);
+                })
+                .catch(function(error) {
+                  console.log(error);
+                })
 
-          })
+            })
+
+        });
+    };
+
+    // HANDLE OFFLINE ONLINE FUNCTIONALITY
+    if (Offline.state === 'up') {
+      doRequest();
+    };
+
+    Offline.on('down', function() {
+      $scope.offline = true;
+      // LOAD LANGUAGES FROM LOCAL
+      localforage.getItem('languages')
+        .then(function(data) {
+          $scope.languages = data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        })
+
+      // LOAD CODE ID FROM LOCAL
+      localforage.getItem($stateParams.codeId)
+        .then(function(data) {
+          console.log(data);
+          $scope.formData = data;
+        })
+
+      // LOAD CODE ID RELATED SNIPPETS FROM LOCAL
+      localforage.getItem($stateParams.codeId + '-snippets')
+        .then(function(data) {
+          console.log(data);
+          $scope.snippets = data;
+        })
+    });
 
 
-      });
+    Offline.on('up', function() {
+      doRequest();
+    });
 
     $scope.codeOneChanged = function(language) {
       codeObject.$loaded()
