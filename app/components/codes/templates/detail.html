@@ -92,6 +92,31 @@
                         <span class="undersnippet" ng-show="!codeOne.createdBy && profile.username">Start typing, and "Save".</span>
                         <span class="undersnippet" ng-show="!codeOne.createdBy && !profile.username"><a ui-sref='login'>Login</a> first to share snippet.</span>
                     </form>
+                    <hr>
+                    <div ng-show="loadCommentsClicked">
+                        <form name="commentOneForm" ng-submit="saveCommentOne()">
+                            <h3>Comments</h3>
+                            <div class="form-group">
+                                <label for="codecomment"></label>
+                                <textarea id="codecomment" ng-model="commentOne" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-default" value="Send" />
+                            </div>
+                        </form>
+                        <hr>
+                        <div class="panel panel-default" ng-repeat="item in comments">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Comment by</h4>
+                            </div>
+                            <div class="panel-body">
+                                {{ item }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <a href="" class="btn btn-primary btn-lg" disabled>Load comments</a>
+                    </div>
                 </div>
                 <hr class="visible-xs">
                 <div class="col-sm-6">

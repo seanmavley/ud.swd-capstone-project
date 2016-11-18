@@ -33,12 +33,15 @@ angular.module('codeSide')
     var ref = DatabaseRef;
     var codeRef = ref.child('codes').child($stateParams.codeId);
     var snippetRef = ref.child('snippets').child($stateParams.codeId);
+    var commentsRef = ref.child('comments').child($stateParams.codeId)
     var langRef = ref.child('languages');
     var usersRef = ref.child('users');
 
     var codeObject = $firebaseObject(codeRef);
     var snippetsArray = $firebaseArray(snippetRef);
     var langObject = $firebaseObject(langRef);
+
+    var commentsArray = $firebaseArray(commentsRef);
 
     Auth.$waitForSignIn()
       .then(function(loggedIn) {
@@ -54,21 +57,6 @@ angular.module('codeSide')
         } else {
           console.log('You are not logged in!');
         }
-
-        // load revisions
-        var query = DatabaseRef
-          .child('revision')
-          .child($stateParams.codeId)
-          //   .orderByChild('uid')
-          //   .equalTo(currentAuth.uid);
-
-        var list = $firebaseArray(query);
-
-        list.$loaded()
-          .then(function(data) {
-            // console.log(data);
-            $scope.revisionTwo = data;
-          })
       });
 
     // Save changes to language
@@ -125,20 +113,15 @@ angular.module('codeSide')
 
     langObject.$loaded()
       .then(function(data) {
-        $scope.languages = data;
         // console.log(data);
       });
 
     codeObject.$loaded()
       .then(function(data) {
-        $scope.loading = false;
-        console.log(data.title);
-        $rootScope.title = data.title;
-        // change page title dynamically
-        // ngMeta.setTitle(data.title);
-        // ngMeta.setTag('description', data.description);
-        // ngMeta.setTag('og:url', 'https://code.khophi.co/#/codes/'+data.uid);
 
+        $scope.loading = false;
+
+        $rootScope.title = data.title;
 
         $scope.formData = {
           createdBy: data.createdBy,
@@ -157,6 +140,8 @@ angular.module('codeSide')
             $scope.codeOne = loadLanguage(snippets.$keyAt(0));
             $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
           })
+
+
       });
 
     $scope.codeOneChanged = function(language) {
@@ -238,6 +223,28 @@ angular.module('codeSide')
             toastr.clear();
             toastr.success('Updated succefully');
           }
+        })
+    }
+
+    $scope.saveCommentOne = function() {
+      var currentAuth = Auth.$getAuth();
+      console.log(currentAuth.uid);
+      console.log('Save comment One');
+      console.log($scope.codeOne);
+
+      DatabaseRef.child('comments').child($stateParams.codeId)
+        .push({
+          createdBy: $scope.profile.username,
+          createdAt: new Date().getTime(),
+          message: $scope.commentOne,
+          uid: currentAuth.uid,
+          language: $scope.codeOne.name
+        })
+        .then(function(data) {
+          console.log(data);
+        })
+        .catch(function(error) {
+          console.log(error);
         })
     }
   }

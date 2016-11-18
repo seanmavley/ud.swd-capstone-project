@@ -17,13 +17,13 @@ angular.module('codeSide')
                 $stateParams.toWhere = null;
                 console.log($stateParams.toWhere);
               } else {
-                $state.go('admin');
+                $state.go('dashboard');
               };
 
               if (!firebaseUser.emailVerified) {
                 // firebaseUser.sendEmailVerification();
                 toastr.info('Your email is NOT verified.', 'Verify email!');
-                $state.go('admin');
+                $state.go('dashboard');
               }
               // $state.go('home');
             })
@@ -58,7 +58,7 @@ angular.module('codeSide')
               firebaseUser.sendEmailVerification();
 
               toastr.success('Awesome! Welcome aboard. Login to begin coding!', 'Register Successful', { timeOut: 7000 });
-              $state.go('admin');
+              $state.go('dashboard');
             })
             .catch(function(error) {
               toastr.error(error.message, error.reason);
@@ -99,7 +99,7 @@ angular.module('codeSide')
 
             toastr.success('Logged in with Google successfully', 'Success');
             // updateUserIfEmpty(firebaseUser);
-            $state.go('admin');
+            $state.go('dashboard');
           })
           .catch(function(error) {
             toastr.error(error.message, error.reason);
