@@ -1,6 +1,6 @@
 angular.module('codeSide')
 
-.controller('emailVerifyController', ['$scope', '$stateParams', 'currentAuth', 'DatabaseRef',
+.controller('EmailVerifyController', ['$scope', '$stateParams', 'currentAuth', 'DatabaseRef',
   function($scope, $stateParams, currentAuth, DatabaseRef) {
     console.log(currentAuth);
     $scope.doVerify = function() {

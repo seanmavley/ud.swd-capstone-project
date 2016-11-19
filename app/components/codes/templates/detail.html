@@ -8,7 +8,7 @@
         <div class="container">
             <div class="col-sm-12">
                 <div class="page-header" ng-show="!loading">
-                    <h1>{{ formData.title }} 
+                    <h1>{{ formData.title }} - {{ offline }}
                 <small><a data-toggle="modal" style="cursor:pointer;" data-target="#myModal">more/edit</a> Languages: <span ng-repeat="name in formData.snippets">{{ name.name }} <span ng-if="!$last">&bull;</span> </span></small>
                 </h1>
                     <hr>
@@ -66,8 +66,8 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" ng-click="updateCode()" ng-disabled="updatingCode" class="btn btn-primary">Save changes</button>
-                                <button type="button" ng-click="updateCode()" data-dismiss="modal" class="btn btn-success">Save & Close</button>
+                                <button type="button" ng-click="updateCode()" ng-show="!offline" ng-disabled="updatingCode" class="btn btn-primary">Save changes</button>
+                                <button type="button" ng-click="updateCode()" ng-show="!offline" data-dismiss="modal" class="btn btn-success">Save & Close</button>
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                         <div class="input-group">
                             <span class="input-group-addon">From</span>
                             <select class="form-control" ng-model="codeOne.name" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
-                                <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                                <option ng-repeat="(lang, name) in languages track by $index" value="{{ lang }}"> {{ name }} </option>
                             </select>
                             <div class="input-group-btn" ng-show="!editAllowed && profile.username === codeOne.createdBy || !codeOne.createdBy && profile.username">
                                 <input type="submit" class="btn btn-default" value="Save">
@@ -124,7 +124,7 @@
                         <div class="input-group">
                             <span class="input-group-addon">To</span>
                             <select class="form-control" ng-model="codeTwo.name" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
-                                <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+                                <option ng-repeat="(lang, name) in languages track by $index" value="{{ lang }}"> {{ name }} </option>
                             </select>
                             <div class="input-group-btn" ng-show="!editAllowed && profile.username === codeTwo.createdBy || !codeTwo.createdBy && profile.username">
                                 <input type="submit" class="btn btn-default" value="Save">

@@ -56,7 +56,7 @@ angular.module('codeSide')
         .state('emailVerify', {
           url: '/verify-email?mode&oobCode',
           templateUrl: 'components/auth/templates/verify-email.html',
-          controller: 'emailVerifyController',
+          controller: 'EmailVerifyController',
           resolve: {
             currentAuth: ['Auth', function(Auth) {
               return Auth.$requireSignIn()

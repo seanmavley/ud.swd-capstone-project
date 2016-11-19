@@ -43,6 +43,13 @@ angular.module('codeSide')
 
     var commentsArray = $firebaseArray(commentsRef);
 
+    this.$onInit = function() {
+      console.log('Init function run');
+      if (Offline.state === 'down') {
+        whenOffline();
+      }
+    }
+
     Auth.$waitForSignIn()
       .then(function(loggedIn) {
         var currentAuth = loggedIn;
@@ -113,14 +120,25 @@ angular.module('codeSide')
 
     // LOAD ENTIRE CODE
     // with snippets
-    doRequest = function() {
+    var whenOffline = function() {
       $scope.offline = false;
       // load the list of languages
       langObject.$loaded()
         .then(function(data) {
-          // console.log(data);
+          console.log(data);
           $scope.languages = data;
-          localforage.setItem('languages', JSON.stringify(data))
+          // trying to stringify the data object causes circular structure
+          // to JSON error
+          var languages = {
+            cpp: "C++",
+            csharp: "C#",
+            java: "Java",
+            javascript: "Javascript",
+            php: "PHP",
+            python: "Python"
+          };
+
+          localforage.setItem('languages', languages)
             .then(function(res) {
               console.log(res);
             })
@@ -147,7 +165,8 @@ angular.module('codeSide')
 
           localforage.setItem($stateParams.codeId, JSON.stringify($scope.formData))
             .then(function(data) {
-              console.log(data);
+              console.log('Detail item saved to localforage');
+              // console.log(data);
             })
             .catch(function(error) {
               console.log(error);
@@ -164,7 +183,7 @@ angular.module('codeSide')
               localforage.setItem($stateParams.codeId + '-snippets', JSON.stringify($scope.formData.snippets))
                 .then(function(data) {
                   toastr.success('Data available Offline', 'Data saved for offline viewing');
-                  console.log(data);
+                  // console.log(data);
                 })
                 .catch(function(error) {
                   console.log(error);
@@ -175,17 +194,13 @@ angular.module('codeSide')
         });
     };
 
-    // HANDLE OFFLINE ONLINE FUNCTIONALITY
-    if (Offline.state === 'up') {
-      doRequest();
-    };
-
-    Offline.on('down', function() {
+    var whenOnline = function() {
       $scope.offline = true;
       // LOAD LANGUAGES FROM LOCAL
       localforage.getItem('languages')
         .then(function(data) {
           $scope.languages = data;
+          console.log(data);
         })
         .catch(function(error) {
           console.log(error);
@@ -194,21 +209,37 @@ angular.module('codeSide')
       // LOAD CODE ID FROM LOCAL
       localforage.getItem($stateParams.codeId)
         .then(function(data) {
-          console.log(data);
+          console.log('Loading detail item from localforage');
+          // console.log(data);
           $scope.formData = data;
         })
 
       // LOAD CODE ID RELATED SNIPPETS FROM LOCAL
       localforage.getItem($stateParams.codeId + '-snippets')
         .then(function(data) {
-          console.log(data);
+          console.log('Loading detail related snippets from localforage');
+          // console.log(data);
           $scope.snippets = data;
         })
+    }
+
+    // HANDLE OFFLINE ONLINE FUNCTIONALITY
+    // on first load
+    if (Offline.state === 'up') {
+      $scope.offline = false;
+      whenOffline();
+    };
+
+    // HANDLE WHEN NETWORK GOES DOWN
+    Offline.on('down', function() {
+      whenOnline();
     });
 
-
+    // IF NETWORK COMES BACK,
+    // resume online request
     Offline.on('up', function() {
-      doRequest();
+      $scope.offline = false;
+      whenOffline();
     });
 
     $scope.codeOneChanged = function(language) {
