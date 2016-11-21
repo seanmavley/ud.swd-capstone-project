@@ -3,9 +3,9 @@
         <div class="col-sm-6 col-md-5 col-lg-6">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="panel panel-primary">
+                    <div class="panel {{ offline ? 'panel-danger' : 'panel-primary' }}">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Featured snippets</h3>
+                            <h3 class="panel-title">Featured snippets <span ng-bind="offline ? 'Offline' : ''"></span></h3>
                         </div>
                         <div class="panel-body">
                             <div ng-show="!list" class="float-center">
@@ -13,11 +13,18 @@
                                     <span>{</span><span>}</span>
                                 </div>
                             </div>
-                            <div class="list-group">
+                            <div class="list-group" ng-show="!offline">
                                 <a ui-sref="detail({ codeId: item.$id })" class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt' track by $index" ng-show="list" ng-if="item.featured">
                                     <h4 class="list-group-item-heading">{{ item.title }}</h4>
                                     <p class="list-group-item-text">{{ item.description }}</p>
-                                    <small>{{ item.createdAt | date : 'medium' }} by <a href="">{{ item.createdBy }}</a></small>
+                                    <small>{{ item.createdAt | date : 'medium' }}</small>
+                                </a>
+                            </div>                            
+                            <div class="list-group" ng-show="offline">
+                                <a class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt' track by $index" ng-show="list" ng-if="item.featured">
+                                    <h4 class="list-group-item-heading">{{ item.title }}</h4>
+                                    <p class="list-group-item-text">{{ item.description }}</p>
+                                    <small>{{ item.createdAt | date : 'medium' }}</small>
                                 </a>
                             </div>
                         </div>
@@ -26,7 +33,7 @@
             </div>
         </div>
         <div class="col-sm-6 col-md-7 col-lg-6">
-            <div class="panel panel-default">
+            <div class="panel {{ offline ? 'panel-danger' : 'panel-default' }}">
                 <div class="panel-heading">
                     <h3 class="panel-title">Recent snippets <small>(showing 25, <a ui-sref="all">view all</a></small></h3>
                 </div>
@@ -36,11 +43,18 @@
                             <span>{</span><span>}</span>
                         </div>
                     </div>
-                    <div class="list-group">
+                    <div class="list-group" ng-show="!offline">
                         <a ui-sref="detail({ codeId: item.$id })" class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt' track by $index" ng-show="list">
                             <h4 class="list-group-item-heading">{{ item.title }}</h4>
                             <p class="list-group-item-text">{{ item.description }}</p>
-                            <small>{{ item.createdAt | date : 'medium' }} by <a href="">{{ item.createdBy }}</a></small>
+                            <small>{{ item.createdAt | date : 'medium' }}</small>
+                        </a>
+                    </div>                    
+                    <div class="list-group" ng-show="offline">
+                        <a class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt' track by $index" ng-show="list">
+                            <h4 class="list-group-item-heading">{{ item.title }}</h4>
+                            <p class="list-group-item-text">{{ item.description }}</p>
+                            <small>{{ item.createdAt | date : 'medium' }}</small>
                         </a>
                     </div>
                 </div>

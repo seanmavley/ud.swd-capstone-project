@@ -1,9 +1,12 @@
 angular.module('codeSide')
 
-.controller('HomeController', ['$scope', 'Auth', 'DatabaseRef', '$firebaseArray',
-  function($scope, Auth, DatabaseRef, $firebaseArray) {
+.controller('HomeController', ['$scope', 'Auth', 'DatabaseRef', '$firebaseArray', '$window',
+  function($scope, Auth, DatabaseRef, $firebaseArray, $window) {
 
     var doRequest = function() {
+      $scope.offline = false;
+      console.log($scope.offline);
+
       var codeDataRef = DatabaseRef.child('codes');
       var query = codeDataRef.orderByChild("createdAt").limitToLast(25);
 
@@ -25,10 +28,17 @@ angular.module('codeSide')
     }
 
     if (Offline.state === 'up') {
+      $scope.offline = false;
       doRequest();
+    } else {
+      $scope.offline = true;
+      doOffline();
     };
 
-    Offline.on('down', function() {
+    var doOffline = function() {
+      $scope.offline = true;
+      $scope.$apply();
+      console.log($scope.offline);
       // TODO:
       // clean the retrieved stringified data
       // currently works, but look for better way?
@@ -37,6 +47,10 @@ angular.module('codeSide')
           console.log(data);
           $scope.list = data;
         })
+    }
+
+    Offline.on('down', function() {
+      doOffline();
     });
 
 

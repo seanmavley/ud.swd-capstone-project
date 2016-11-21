@@ -43,12 +43,7 @@ angular.module('codeSide')
 
     var commentsArray = $firebaseArray(commentsRef);
 
-    this.$onInit = function() {
-      console.log('Init function run');
-      if (Offline.state === 'down') {
-        whenOffline();
-      }
-    }
+    this.$onInit = function() {}
 
     Auth.$waitForSignIn()
       .then(function(loggedIn) {
@@ -120,132 +115,42 @@ angular.module('codeSide')
 
     // LOAD ENTIRE CODE
     // with snippets
-    var whenOffline = function() {
-      $scope.offline = false;
-      // load the list of languages
-      langObject.$loaded()
-        .then(function(data) {
-          console.log(data);
-          $scope.languages = data;
-          // trying to stringify the data object causes circular structure
-          // to JSON error
-          var languages = {
-            cpp: "C++",
-            csharp: "C#",
-            java: "Java",
-            javascript: "Javascript",
-            php: "PHP",
-            python: "Python"
-          };
+    // load the list of languages
+    langObject.$loaded()
+      .then(function(data) {
+        $scope.languages = data;
+      });
 
-          localforage.setItem('languages', languages)
-            .then(function(res) {
-              console.log(res);
-            })
-            .catch(function(error) {
-              console.log(error);
-            })
-        });
+    codeObject.$loaded()
+      .then(function(data) {
 
-      codeObject.$loaded()
-        .then(function(data) {
+        $scope.loading = false;
 
-          $scope.loading = false;
+        $rootScope.title = data.title;
 
-          $rootScope.title = data.title;
+        $scope.formData = {
+          createdBy: data.createdBy,
+          title: data.title,
+          createdAt: data.createdAt,
+          description: data.description,
+          codeId: data.$id,
+          uid: data.uid,
+        };
 
-          $scope.formData = {
-            createdBy: data.createdBy,
-            title: data.title,
-            createdAt: data.createdAt,
-            description: data.description,
-            codeId: data.$id,
-            uid: data.uid,
-          }
+        snippetsArray.$loaded()
+          // default languages to load on load
+          // based on first two items in snippets array
+          .then(function(snippets) {
+            $scope.formData.snippets = snippets;
+            $scope.codeOne = loadLanguage(snippets.$keyAt(0));
+            $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
+          })
 
-          localforage.setItem($stateParams.codeId, JSON.stringify($scope.formData))
-            .then(function(data) {
-              console.log('Detail item saved to localforage');
-              // console.log(data);
-            })
-            .catch(function(error) {
-              console.log(error);
-            })
-
-          snippetsArray.$loaded()
-            // default languages to load on load
-            // based on first two items in snippets array
-            .then(function(snippets) {
-              $scope.formData.snippets = snippets;
-              $scope.codeOne = loadLanguage(snippets.$keyAt(0));
-              $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
-
-              localforage.setItem($stateParams.codeId + '-snippets', JSON.stringify($scope.formData.snippets))
-                .then(function(data) {
-                  toastr.success('Data available Offline', 'Data saved for offline viewing');
-                  // console.log(data);
-                })
-                .catch(function(error) {
-                  console.log(error);
-                })
-
-            })
-
-        });
-    };
-
-    var whenOnline = function() {
-      $scope.offline = true;
-      // LOAD LANGUAGES FROM LOCAL
-      localforage.getItem('languages')
-        .then(function(data) {
-          $scope.languages = data;
-          console.log(data);
-        })
-        .catch(function(error) {
-          console.log(error);
-        })
-
-      // LOAD CODE ID FROM LOCAL
-      localforage.getItem($stateParams.codeId)
-        .then(function(data) {
-          console.log('Loading detail item from localforage');
-          // console.log(data);
-          $scope.formData = data;
-        })
-
-      // LOAD CODE ID RELATED SNIPPETS FROM LOCAL
-      localforage.getItem($stateParams.codeId + '-snippets')
-        .then(function(data) {
-          console.log('Loading detail related snippets from localforage');
-          // console.log(data);
-          $scope.snippets = data;
-        })
-    }
-
-    // HANDLE OFFLINE ONLINE FUNCTIONALITY
-    // on first load
-    if (Offline.state === 'up') {
-      $scope.offline = false;
-      whenOffline();
-    };
-
-    // HANDLE WHEN NETWORK GOES DOWN
-    Offline.on('down', function() {
-      whenOnline();
-    });
-
-    // IF NETWORK COMES BACK,
-    // resume online request
-    Offline.on('up', function() {
-      $scope.offline = false;
-      whenOffline();
-    });
+      });
 
     $scope.codeOneChanged = function(language) {
       codeObject.$loaded()
         .then(function() {
-          // toastr.success('Running to fetch the code');
           $scope.refreshOne = true;
           var returnedCode = loadLanguage(language);
           returnedCode
