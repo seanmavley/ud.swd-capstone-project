@@ -8,7 +8,7 @@
     "snippets": {
       ".read": "true",
       "$snipId": {
-        ".write":"true",
+        ".write": "true",
         "$language": {
           ".write": "(!data.exists() && newData.child('uid').val() == auth.uid ) || (data.child('uid').val() == newData.child('uid').val())"
         }
@@ -25,6 +25,14 @@
       ".read": "true"
     },
     "revision": {
+      ".write": "true",
+      ".read": "true"
+    },
+    "voting": {
+      ".write": "true",
+      ".read": "true"
+    },
+    "comments": {
       ".write": "true",
       ".read": "true"
     }
