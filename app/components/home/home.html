@@ -1,53 +1,63 @@
 <div class="container">
-    <div class="row">
-        <div class="col-sm-6 col-md-5 col-lg-6">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Featured snippets <span ng-bind="offline ? 'Offline' : ''"></span></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div ng-show="!list" class="float-center">
-                                <div class="loader">
-                                    <span>{</span><span>}</span>
-                                </div>
-                            </div>
-                            <div class="list-group">
-                                <a ui-sref="detail({ codeId: item.$id })" class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt' track by $index" ng-show="list" ng-if="item.featured">
-                                    <h4 class="list-group-item-heading">{{ item.title }}</h4>
-                                    <p class="list-group-item-text">{{ item.description }}</p>
-                                    <small>{{ item.createdAt | date : 'medium' }}</small>
-                                </a>
-                            </div>                            
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3" ng-show="offline">
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          You're in offline mode. You may not use CodeBySide.
         </div>
-        <div class="col-sm-6 col-md-7 col-lg-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Recent snippets <small>(showing 25, <a ui-sref="all">view all</a></small></h3>
-                </div>
-                <div class="panel-body">
-                    <div ng-show="!list" class="float-center">
-                        <div class="loader">
-                            <span>{</span><span>}</span>
-                        </div>
-                    </div>
-                    <div class="list-group">
-                        <a ui-sref="detail({ codeId: item.$id })" class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt' track by $index" ng-show="list">
-                            <h4 class="list-group-item-heading">{{ item.title }}</h4>
-                            <p class="list-group-item-text">{{ item.description }}</p>
-                            <small>{{ item.createdAt | date : 'medium' }}</small>
-                        </a>
-                    </div>                    
-                </div>
-                <div class="panel-footer">
-                    Showing 25 <a ui-sref="all">view all</a>
-                </div>
-            </div>
+        <div class="panel-body">
+          Reconnect to internet to continue browsing.
         </div>
+      </div>
     </div>
+    <div class="col-sm-6 col-md-5 col-lg-6" ng-show="!offline">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel {{ offline ? 'panel-danger' : 'panel-primary' }}">
+            <div class="panel-heading">
+              <h3 class="panel-title">Featured snippets</h3>
+            </div>
+            <div class="panel-body">
+              <div ng-show="!list" class="float-center">
+                <div class="loader">
+                  <span>{</span><span>}</span>
+                </div>
+              </div>
+              <div class="list-group">
+                <a ui-sref='detail({ codeId: item.$id })' class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt' track by $index" ng-show="list" ng-if="item.featured">
+                  <h4 class="list-group-item-heading">{{ item.title }}</h4>
+                  <p class="list-group-item-text">{{ item.description }}</p>
+                  <small>{{ item.createdAt | date : 'medium' }}</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-7 col-lg-6" ng-show="!offline">
+      <div class="panel {{ offline ? 'panel-danger' : 'panel-default' }}">
+        <div class="panel-heading">
+          <h3 class="panel-title">Recent snippets <small>(showing 25, <a ui-sref="all">view all</a></small></h3>
+        </div>
+        <div class="panel-body">
+          <div ng-show="!list" class="float-center">
+            <div class="loader">
+              <span>{</span><span>}</span>
+            </div>
+          </div>
+          <div class="list-group">
+            <a ui-sref='detail({ codeId: item.$id })' class="list-group-item" ng-repeat="item in list | orderBy: '-createdAt' track by $index" ng-show="list">
+              <h4 class="list-group-item-heading">{{ item.title }}</h4>
+              <p class="list-group-item-text">{{ item.description }}</p>
+              <small>{{ item.createdAt | date : 'medium' }}</small>
+            </a>
+          </div>
+        </div>
+        <div class="panel-footer">
+          Showing 25 <a ui-sref="all">view all</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

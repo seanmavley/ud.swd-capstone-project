@@ -38,6 +38,7 @@ self.addEventListener('install', function(event) {
         // Includes 
         './pages/includes/footer.html',
         './pages/includes/menu.html',
+        // Pages
         './pages/about.html',
         './pages/privacy-terms.html',
       ]);
