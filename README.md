@@ -10,10 +10,11 @@ Bring back the fun in coding, and see how your code will be or is approached in 
 
  - Backend: Firebase
  - Front-End: AngularJS
+ - Hosting: Firebase Hosting
 
 ## Online
 
-Visit [CodeBySide]('https://code.khophi.co') to see the platform in action.
+Visit [CodeBySide]('https://code.khophi.co') (https://code.khophi.co) to see the platform in action.
 
 ## Locally
 
