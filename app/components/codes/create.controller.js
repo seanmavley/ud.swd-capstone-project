@@ -101,6 +101,9 @@ angular.module('codeSide')
     }
 
     $scope.addNew = function() {
+      if (Offline.state == 'down') {
+        toastr.error('No network connection. Connect now to save or try again later', 'No internet connection', {timeOut: 20000});
+      };
       if ($scope.addForm.$invalid) {
         toastr.error('Please fill the form, all of it!',
           'Throw in the best of your coding spices.',

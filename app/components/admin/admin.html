@@ -18,8 +18,8 @@
                     <td>{{ item.title }}</td>
                     <td>{{ item.description }} </td>
                     <td>
-                        <input type="checkbox" ng-model="item.featured" ng-change="list.$save(item)" name="featured" id="featured">
-                        <label for="featured" class="{{ item.featured ? 'text-success' : 'text-muted' }}" ng-bind="item.featured ? 'Yep, featured!' : 'Not featured'"></label>
+                        <input type="checkbox" ng-model="item.featured" ng-change="list.$save(item)" name="featured" id="featured-{{$index}}">
+                        <label for="featured-{{$index}}" class="{{ item.featured ? 'text-success' : 'text-muted' }}" ng-bind="item.featured ? 'Yep, featured!' : 'Not featured'"></label>
                     </td>
                     <td>
                         <a class="btn btn-default" ng-click="upVote(item, vote);">
