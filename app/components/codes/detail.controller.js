@@ -116,37 +116,39 @@ angular.module('codeSide')
     // LOAD ENTIRE CODE
     // with snippets
     // load the list of languages
-    langObject.$loaded()
-      .then(function(data) {
-        $scope.languages = data;
-      });
+    var doRequest = function() {
+      langObject.$loaded()
+        .then(function(data) {
+          $scope.languages = data;
+        });
 
-    codeObject.$loaded()
-      .then(function(data) {
+      codeObject.$loaded()
+        .then(function(data) {
 
-        $scope.loading = false;
+          $scope.loading = false;
 
-        $rootScope.title = data.title;
+          $rootScope.title = data.title;
 
-        $scope.formData = {
-          createdBy: data.createdBy,
-          title: data.title,
-          createdAt: data.createdAt,
-          description: data.description,
-          codeId: data.$id,
-          uid: data.uid,
-        };
+          $scope.formData = {
+            createdBy: data.createdBy,
+            title: data.title,
+            createdAt: data.createdAt,
+            description: data.description,
+            codeId: data.$id,
+            uid: data.uid,
+          };
 
-        snippetsArray.$loaded()
-          // default languages to load on load
-          // based on first two items in snippets array
-          .then(function(snippets) {
-            $scope.formData.snippets = snippets;
-            $scope.codeOne = loadLanguage(snippets.$keyAt(0));
-            $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
-          })
+          snippetsArray.$loaded()
+            // default languages to load on load
+            // based on first two items in snippets array
+            .then(function(snippets) {
+              $scope.formData.snippets = snippets;
+              $scope.codeOne = loadLanguage(snippets.$keyAt(0));
+              $scope.codeTwo = loadLanguage(snippets.$keyAt(1));
+            })
 
-      });
+        });
+    }
 
     $scope.codeOneChanged = function(language) {
       codeObject.$loaded()
@@ -229,25 +231,48 @@ angular.module('codeSide')
     }
 
     $scope.saveCommentOne = function() {
-      var currentAuth = Auth.$getAuth();
-      console.log(currentAuth.uid);
-      console.log('Save comment One');
-      console.log($scope.codeOne);
+        var currentAuth = Auth.$getAuth();
+        console.log(currentAuth.uid);
+        console.log('Save comment One');
+        console.log($scope.codeOne);
 
-      DatabaseRef.child('comments').child($stateParams.codeId)
-        .push({
-          createdBy: $scope.profile.username,
-          createdAt: new Date().getTime(),
-          message: $scope.commentOne,
-          uid: currentAuth.uid,
-          language: $scope.codeOne.name
-        })
-        .then(function(data) {
-          console.log(data);
-        })
-        .catch(function(error) {
-          console.log(error);
-        })
+        DatabaseRef.child('comments').child($stateParams.codeId)
+          .push({
+            createdBy: $scope.profile.username,
+            createdAt: new Date().getTime(),
+            message: $scope.commentOne,
+            uid: currentAuth.uid,
+            language: $scope.codeOne.name
+          })
+          .then(function(data) {
+            console.log(data);
+          })
+          .catch(function(error) {
+            console.log(error);
+          })
+      }
+      // Offline Mode
+    Offline.on('down', function() {
+      console.log('network down');
+      $scope.offline = true;
+      $scope.$apply();
+    })
+
+    Offline.on('up', function() {
+      doRequest();
+      console.log('network up on event');
+      $scope.offline = false;
+      $scope.$apply();
+    })
+
+    if (Offline.state == 'up') {
+      console.log('network up on load');
+      $scope.offline = false;
+      doRequest();
+    } else {
+      $scope.offline = true;
+      console.log('offline, show offline message');
     }
+
   }
 ]);

@@ -1,99 +1,109 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-4 col-sm-offset-4 col-md-6 col-md-offset-3" ng-show="loading">
-            <div class="loader">
-                <span>{</span><span>}</span>
-            </div>
+  <div class="row">
+    <div class="col-sm-4 col-sm-offset-4 col-md-6 col-md-offset-3" ng-show="loading">
+      <div class="loader">
+        <span>{</span><span>}</span>
+      </div>
+    </div>
+    <div class="container">
+      <div class="col-sm-6 col-sm-offset-3" ng-show="offline">
+        <div class="panel panel-danger">
+          <div class="panel-heading">
+            You're in offline mode. You may not use CodeBySide.
+          </div>
+          <div class="panel-body">
+            Reconnect to internet to continue browsing.
+          </div>
         </div>
-        <div class="container">
-            <div class="col-sm-12">
-                <div class="page-header" ng-show="!loading">
-                    <h1>{{ formData.title }}
+      </div>
+      <div class="col-sm-12">
+        <div class="page-header" ng-show="!loading">
+          <h1>{{ formData.title }}
                 <small><a data-toggle="modal" style="cursor:pointer;" data-target="#myModal">more/edit</a> Languages: <span ng-repeat="name in formData.snippets">{{ name.name }} <span ng-if="!$last">&bull;</span> </span></small>
                 </h1>
-                    <hr>
-                    <div class="btn-group">
-                        <a class="btn btn-primary" ng-show="profile" ng-click="enableEditing()" class="success">{{ editAllowed ? 'Enable' : 'Disable' }} view/editing</a>
-                        <div class="btn-group">
-                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                Share
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><a target="new" href="https://plus.google.com/share?url=https%3A//code.khophi.co/%23/codes/{{ formData.codeId }}">Google+</a></li>
-                                <li><a target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//code.khophi.co/%23/codes/{{ formData.codeId }}">Facebook</a></li>
-                            </ul>
-                        </div>
-                        <a ng-show="formData.uid == profile.$id" class="btn btn-danger" ui-sref="delete({ codeId: formData.codeId })">Delete</a>
-                    </div>
-                </div>
-                <!-- Modal -->
-                <div class="modal fade" id="myModal" role="dialog">
-                    <div class="modal-dialog modal-lg">
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">{{ formData.title }}</h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="page-title">
-                                    <h1>{{ formData.title }}</h1>
-                                </div>
-                                <p>Description: {{ formData.description}}</p>
-                                Created by: <a href="">{{ formData.createdBy }}</a>
-                                <br> {{ formData.createdAt | date : 'medium' }}
-                                <br> Languages available: <span ng-repeat="name in formData.snippets">{{ name.name }} <span ng-if="!$last">&bull;</span> </span>
-                                <hr>
-                                <div ng-show="profile.username === formData.createdBy">
-                                    <form ng-submit="updateCode()" novalidate>
-                                        <div class="form-group">
-                                            <label for="title">Name</label>
-                                            <input type="text" class="form-control" id="title" autofocus ng-model="formData.title">
-                                        </div>
-                                        <div class="form-group">
-                                            <textarea class="form-control" ng-model="formData.description" rows="3"></textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div ng-show="profile.username !== formData.createdBy">
-                                    <div class="callout margin-top">
-                                        <p class="lead">
-                                            You can only edit the code 'Title' and 'Description' created by you. This was created by "{{ formData.createdBy }}".
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" ng-click="updateCode()" ng-disabled="updatingCode" class="btn btn-primary">Save changes</button>
-                                <button type="button" ng-click="updateCode()" data-dismiss="modal" class="btn btn-success">Save & Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <hr>
+          <div class="btn-group">
+            <a class="btn btn-primary" ng-show="profile" ng-click="enableEditing()" class="success">{{ editAllowed ? 'Enable' : 'Disable' }} view/editing</a>
+            <div class="btn-group" ng-show="!offline">
+              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Share
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a target="new" href="https://plus.google.com/share?url=https%3A//code.khophi.co/%23/codes/{{ formData.codeId }}">Google+</a></li>
+                <li><a target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//code.khophi.co/%23/codes/{{ formData.codeId }}">Facebook</a></li>
+              </ul>
             </div>
+            <a ng-show="formData.uid == profile.$id && !offline" class="btn btn-danger" ui-sref="delete({ codeId: formData.codeId })">Delete</a>
+          </div>
         </div>
-        <div class="container-fluid">
-            <div class="row" ng-show="!loading">
-                <div class="col-sm-6">
-                    <form ng-submit="saveLanguage(codeOne)" name="myForm" novalidate>
-                        <div class="input-group">
-                            <span class="input-group-addon">From</span>
-                            <select class="form-control" ng-model="codeOne.name" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
-                                <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-                            </select>
-                            <div class="input-group-btn" ng-show="!editAllowed && profile.username === codeOne.createdBy || !codeOne.createdBy && profile.username">
-                                <input type="submit" class="btn btn-default" value="Save">
-                            </div>
-                        </div>
-                        <textarea ui-codemirror ui-codemirror-opts="editorOneOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
-                        <span class="undersnippet" ng-show="codeOne.createdBy">By: <a href="">{{ codeOne.createdBy }}</a> <br/> On {{ codeOne.createdAt | date : 'medium' }}</span>
-                        <span class="undersnippet" ng-show="!codeOne.createdBy && profile.username">Start typing, and "Save".</span>
-                        <span class="undersnippet" ng-show="!codeOne.createdBy && !profile.username"><a ui-sref='login'>Login</a> first to share snippet.</span>
-                    </form>
-                    <hr>
-                    <!-- <div ng-show="loadCommentsClicked">
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ formData.title }}</h4>
+              </div>
+              <div class="modal-body">
+                <div class="page-title">
+                  <h1>{{ formData.title }}</h1>
+                </div>
+                <p>Description: {{ formData.description}}</p>
+                Created by: <a href="">{{ formData.createdBy }}</a>
+                <br> {{ formData.createdAt | date : 'medium' }}
+                <br> Languages available: <span ng-repeat="name in formData.snippets">{{ name.name }} <span ng-if="!$last">&bull;</span> </span>
+                <hr>
+                <div ng-show="profile.username === formData.createdBy && !offline">
+                  <form ng-submit="updateCode()" novalidate>
+                    <div class="form-group">
+                      <label for="title">Name</label>
+                      <input type="text" class="form-control" id="title" autofocus ng-model="formData.title">
+                    </div>
+                    <div class="form-group">
+                      <textarea class="form-control" ng-model="formData.description" rows="3"></textarea>
+                    </div>
+                  </form>
+                </div>
+                <div ng-show="profile.username !== formData.createdBy">
+                  <div class="callout margin-top">
+                    <p class="lead">
+                      You can only edit the code 'Title' and 'Description' created by you. This was created by "{{ formData.createdBy }}".
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" ng-click="updateCode()" ng-disabled="updatingCode" class="btn btn-primary" ng-show="!offline">Save changes</button>
+                <button type="button" ng-click="updateCode()" data-dismiss="modal" class="btn btn-success" ng-show="!offline">Save & Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row" ng-show="!loading">
+        <div class="col-sm-6">
+          <form ng-submit="saveLanguage(codeOne)" name="myForm" novalidate>
+            <div class="input-group">
+              <span class="input-group-addon">From</span>
+              <select class="form-control" ng-model="codeOne.name" ng-change="codeOneChanged(codeOne.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
+                <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+              </select>
+              <div class="input-group-btn" ng-show="!editAllowed && profile.username === codeOne.createdBy || !codeOne.createdBy && profile.username">
+                <input type="submit" class="btn btn-default" value="Save" ng-show="!offline">
+              </div>
+            </div>
+            <textarea ui-codemirror ui-codemirror-opts="editorOneOptions" ui-refresh="codeOne.code" ng-model="codeOne.code" id="from_snippet" required></textarea>
+            <span class="undersnippet" ng-show="codeOne.createdBy">By: <a href="">{{ codeOne.createdBy }}</a> <br/> On {{ codeOne.createdAt | date : 'medium' }}</span>
+            <span class="undersnippet" ng-show="!codeOne.createdBy && profile.username">Start typing, and "Save".</span>
+            <span class="undersnippet" ng-show="!codeOne.createdBy && !profile.username"><a ui-sref='login'>Login</a> first to share snippet.</span>
+          </form>
+          <hr>
+          <!-- <div ng-show="loadCommentsClicked">
                         <form name="commentOneForm" ng-submit="saveCommentOne()">
                             <h3>Comments</h3>
                             <div class="form-group">
@@ -117,26 +127,26 @@
                     <div class="">
                         <a href="" class="btn btn-primary btn-lg" disabled>Load comments</a>
                     </div> -->
-                </div>
-                <hr class="visible-xs">
-                <div class="col-sm-6">
-                    <form ng-submit="saveLanguage(codeTwo)" novalidate>
-                        <div class="input-group">
-                            <span class="input-group-addon">To</span>
-                            <select class="form-control" ng-model="codeTwo.name" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
-                                <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
-                            </select>
-                            <div class="input-group-btn" ng-show="!editAllowed && profile.username === codeTwo.createdBy || !codeTwo.createdBy && profile.username">
-                                <input type="submit" class="btn btn-default" value="Save">
-                            </div>
-                        </div>
-                        <textarea rows="7" ui-codemirror ui-codemirror-opts="editorTwoOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
-                        <span class="undersnippet" ng-show="codeTwo.createdBy">By: <a href="">{{ codeTwo.createdBy }}</a> <br/>On {{ codeTwo.createdAt | date : 'medium' }}</span>
-                        <span class="undersnippet" ng-show="!codeTwo.createdBy && profile.username">Start typing, and "Save".</span>
-                        <span class="undersnippet" ng-show="!codeTwo.createdBy && !profile.username"><a ui-sref='login'>Login</a> first to share snippet.</span>
-                    </form>
-                </div>
-            </div>
         </div>
+        <hr class="visible-xs">
+        <div class="col-sm-6">
+          <form ng-submit="saveLanguage(codeTwo)" novalidate>
+            <div class="input-group">
+              <span class="input-group-addon">To</span>
+              <select class="form-control" ng-model="codeTwo.name" ng-change="codeTwoChanged(codeTwo.name)" ng-disabled="editAllowed && profile" ng-class="{ dimmed: refreshOne == true }" type='text' required>
+                <option ng-repeat="(lang, name) in languages" value="{{ lang }}"> {{ name }} </option>
+              </select>
+              <div class="input-group-btn" ng-show="!editAllowed && profile.username === codeTwo.createdBy || !codeTwo.createdBy && profile.username">
+                <input type="submit" class="btn btn-default" value="Save">
+              </div>
+            </div>
+            <textarea rows="7" ui-codemirror ui-codemirror-opts="editorTwoOptions" ui-refresh="codeTwo.code" ng-model="codeTwo.code" id="to_snippet" required></textarea>
+            <span class="undersnippet" ng-show="codeTwo.createdBy">By: <a href="">{{ codeTwo.createdBy }}</a> <br/>On {{ codeTwo.createdAt | date : 'medium' }}</span>
+            <span class="undersnippet" ng-show="!codeTwo.createdBy && profile.username">Start typing, and "Save".</span>
+            <span class="undersnippet" ng-show="!codeTwo.createdBy && !profile.username"><a ui-sref='login'>Login</a> first to share snippet.</span>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
