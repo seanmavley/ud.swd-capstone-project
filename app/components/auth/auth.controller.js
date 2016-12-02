@@ -64,6 +64,7 @@ angular.module('codeSide')
               toastr.error(error.message, error.reason);
               // reset the form
               $scope.formData = {};
+              $scope.confirm_password = '';
             });
         } else {
           toastr.error('Kindly complete the form', 'Some parts missing!');

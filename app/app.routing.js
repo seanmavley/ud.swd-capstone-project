@@ -127,7 +127,7 @@ angular.module('codeSide')
             }]
           },
           meta: {
-            title: 'Admin',
+            title: 'Dashboard',
             restricted: true
           }
         })

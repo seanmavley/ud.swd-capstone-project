@@ -71,6 +71,7 @@ angular.module('codeSide')
     };
 
     function saveLanguage(data) {
+      var currentAuth = Auth.$getAuth();
       if (data.createdBy == null) {
         // console.log(data);
         var update = {
@@ -78,7 +79,8 @@ angular.module('codeSide')
           name: data.name,
           code: data.code,
           createdAt: new Date().getTime(),
-          createdBy: $scope.profile.username
+          createdBy: $scope.profile.username,
+          uid: currentAuth.uid
         };
 
         console.log(update);
