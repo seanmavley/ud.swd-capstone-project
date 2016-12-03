@@ -77,8 +77,8 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" ng-click="updateCode()" ng-disabled="updatingCode" class="btn btn-primary" ng-show="!offline">Save changes</button>
-                <button type="button" ng-click="updateCode()" data-dismiss="modal" class="btn btn-success" ng-show="!offline">Save & Close</button>
+                <button type="button" ng-click="updateCode()" ng-disabled="updatingCode" class="btn btn-primary" ng-show="!offline && profile.username !== formData.createdBy">Save changes</button>
+                <button type="button" ng-click="updateCode()" data-dismiss="modal" class="btn btn-success" ng-show="!offline && profile.username !== formData.createdBy">Save & Close</button>
               </div>
             </div>
           </div>
