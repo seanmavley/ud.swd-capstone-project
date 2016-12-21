@@ -142,9 +142,6 @@ angular.module('codeSide')
                   .update({
                     name: $scope.formData.from,
                     code: $scope.formData.fromCode,
-                    createdAt: now,
-                    uid: currentAuth.uid,
-                    createdBy: $scope.profile.username
                   });
 
                 // add second snippet
@@ -154,9 +151,6 @@ angular.module('codeSide')
                   .update({
                     name: $scope.formData.to,
                     code: $scope.formData.toCode,
-                    uid: currentAuth.uid,
-                    createdAt: now,
-                    createdBy: $scope.profile.username,
                   })
 
                 // this should be last if using .set({ ... })
