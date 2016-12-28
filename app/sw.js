@@ -16,8 +16,8 @@ self.addEventListener('install', function(event) {
         'sw-register.js',
         'sw.js',
         'vendor/offline/offline.min.js',
-        'vendor/localforage/dist/localforage.min.js',
-        'vendor/localforage/dist/localforage.js',
+        // 'vendor/localforage/dist/localforage.min.js',
+        // 'vendor/localforage/dist/localforage.js',
         // Fonts
         'build/fonts/glyphicons-halflings-regular.eot',
         'build/fonts/glyphicons-halflings-regular.svg',

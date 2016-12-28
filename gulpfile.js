@@ -16,7 +16,7 @@ var jsFiles = [
   'app/components/**/*.js',
   'app/services/**/*.js',
   'app/assets/scripts/**/*.js',
-  '!app/assets/scripts/ga.js',
+  // '!app/assets/scripts/ga.js',
 ]
 
 // personally written CSS
